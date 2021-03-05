@@ -4,3 +4,9 @@
 
 layout: home
 ---
+
+# Here is a header
+Here is a line
+
+## Here is a subheader
+Here is another line
