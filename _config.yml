@@ -33,6 +33,7 @@ github_username:  mbosley
 remote_theme: riggraz/no-style-please
 plugins:
   - jekyll-feed
+  - jekyll-org
 
 # Exclude from processing.
 # The following items will not be processed, by default.
