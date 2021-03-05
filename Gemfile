@@ -34,3 +34,4 @@ gem "webrick"
 
 # org-ruby
 gem "org-ruby"
+gem 'jekyll-org', '>= 1.1.0'
