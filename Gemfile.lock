@@ -215,6 +215,8 @@ GEM
     octokit (4.20.0)
       faraday (>= 0.9)
       sawyer (~> 0.8.0, >= 0.5.3)
+    org-ruby (0.9.12)
+      rubypants (~> 0.2)
     pathutil (0.16.2)
       forwardable-extended (~> 2.6)
     public_suffix (3.1.1)
@@ -226,6 +228,7 @@ GEM
     ruby-enum (0.9.0)
       i18n
     ruby2_keywords (0.0.4)
+    rubypants (0.7.1)
     rubyzip (2.3.0)
     safe_yaml (1.0.5)
     sass (3.7.4)
@@ -249,6 +252,7 @@ GEM
       unf_ext
     unf_ext (0.0.7.7)
     unicode-display_width (1.7.0)
+    webrick (1.7.0)
     zeitwerk (2.4.2)
 
 PLATFORMS
@@ -258,9 +262,11 @@ DEPENDENCIES
   github-pages
   jekyll-feed (~> 0.12)
   no-style-please
+  org-ruby
   tzinfo (~> 1.2)
   tzinfo-data
   wdm (~> 0.1.1)
+  webrick
 
 BUNDLED WITH
    2.2.13
