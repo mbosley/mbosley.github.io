@@ -29,11 +29,15 @@ url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: mitchellbosley
 github_username:  mbosley
 
+feed_items: 10
+feed_update_period: daily
+feed_update_frequency: 1
+
 # Build settings
-remote_theme: inukshuk/jekyll-scholar
+remote_theme: riggraz/no-style-please
 plugins:
   - jekyll-feed
-  - jekyll-org
+  # - ['jekyll/scholar']
 
 # Exclude from processing.
 # The following items will not be processed, by default.
@@ -54,3 +58,6 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
+
+exclude:
+  - "*.org"

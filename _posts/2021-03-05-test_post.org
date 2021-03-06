@@ -1,5 +1,6 @@
 #+TITLE: Jekyll and Org together
 #+LAYOUT: posts
 #+TAGS: jekyll org-mode
+#+date: 2021-03-05 
 
 This is a blog post about Jekyll and Org mode.

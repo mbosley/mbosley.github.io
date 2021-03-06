@@ -1,0 +1,11 @@
+#+TITLE: My Cool Post
+#+SUBTITLE: This will be the excerpt.
+#+DATE: 2021-03-05
+
+#+STARTUP: showall indent
+#+OPTIONS: toc:nil
+#+OPTIONS: tex:t
+
+Get ready for some cool posty stuff
+
+ * Org Mode and the Meaning of Life
