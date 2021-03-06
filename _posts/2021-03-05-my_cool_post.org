@@ -1,6 +1,7 @@
 #+TITLE: My Cool Post
 #+SUBTITLE: This will be the excerpt.
 #+DATE: 2021-03-05
+#+CATEGORIES: blog_post
 
 #+STARTUP: showall indent
 #+OPTIONS: toc:nil

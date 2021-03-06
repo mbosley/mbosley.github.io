@@ -1,3 +1,6 @@
 [submodule "_plugins/jekyll-org"]
 	path = _plugins/jekyll-org
 	url = https://github.com/eggcaker/jekyll-org.git
+[submodule "cv"]
+	path = cv
+	url = https://github.com/mbosley/cv

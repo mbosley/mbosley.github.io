@@ -1,0 +1,16 @@
+entries :
+  - title: Info
+    entries:
+      - title: PhD Candidate at the University of Michigan studying legislatures using machine learning.
+      - title: email
+        url: mailto:mcbosley@umich.edu
+      - title: twitter
+        url: https://www.twitter.com/mitchellbosley
+      - title: github
+        url: https://www.github.com/mbosley
+  - title: Curriculum Vitae
+    url: /cv
+  - title: Research
+    url: /research
+  - title: Blog Posts
+    post_list: true

@@ -21,20 +21,19 @@
 title: Mitchell Bosley
 email: mcbosley@umich.edu
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+ Academic blog
+# baseurl: "" # the subpath of your site, e.g. /blog
+# url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: mitchellbosley
 github_username:  mbosley
-
-feed_items: 10
-feed_update_period: daily
-feed_update_frequency: 1
+author: Mitchell Bosley
+# permalink: /:year/:month/:day/:title:output_ext
 
 # Build settings
 remote_theme: riggraz/no-style-please
+# theme : minima
+theme: jekyll-theme-minimal
+# theme_config.show_description: true
 plugins:
   - jekyll-feed
   # - ['jekyll/scholar']

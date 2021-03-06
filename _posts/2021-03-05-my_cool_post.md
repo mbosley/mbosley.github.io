@@ -6,8 +6,6 @@ categories:
 - post
 tags: 
 ---
-Hello world!
-
 Get ready for some cool posty stuff
 
 -   Org Mode and the Meaning of Life
