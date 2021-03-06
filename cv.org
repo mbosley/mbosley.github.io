@@ -1,6 +1,0 @@
-#+TITLE: Curriculum Vitae
-#+LAYOUT: page
-#+PERMALINK: /cv/
-
-* Here's a subheader
-Here's my CV!
