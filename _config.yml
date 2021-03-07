@@ -20,18 +20,25 @@
 
 title: Mitchell Bosley
 email: mcbosley@umich.edu
-description: >- # this means to ignore newlines until "baseurl:"
- Academic blog
+description: >
+  Political Science PhD Candidate at the University of Michigan,
+  Ann Arbor studying legislatures using game theory, bayesian statistics,
+  and machine learning.
 # baseurl: "" # the subpath of your site, e.g. /blog
 # url: "" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: mitchellbosley
 github_username:  mbosley
 author: Mitchell Bosley
 # permalink: /:year/:month/:day/:title:output_ext
+theme_config:
+  appearance: "day"
+  back_home_text: ".."
+  date_format: "%Y-%m-%d"
+  show_description: true
 
 # Build settings
-# remote_theme: riggraz/no-style-please
-theme : minima
+remote_theme: riggraz/no-style-please
+# theme : minima
 # theme: jekyll-theme-minimal
 # theme_config.show_description: true
 markdown: kramdown
