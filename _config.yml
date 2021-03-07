@@ -30,10 +30,18 @@ author: Mitchell Bosley
 # permalink: /:year/:month/:day/:title:output_ext
 
 # Build settings
-remote_theme: riggraz/no-style-please
-# theme : minima
-theme: jekyll-theme-minimal
+# remote_theme: riggraz/no-style-please
+theme : minima
+# theme: jekyll-theme-minimal
 # theme_config.show_description: true
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  syntax_highlighter_opts:
+    default_lang: html
+    css_class   : 'syntax'
+
 plugins:
   - jekyll-feed
   # - ['jekyll/scholar']

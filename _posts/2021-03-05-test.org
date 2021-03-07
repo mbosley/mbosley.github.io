@@ -1,5 +1,0 @@
-#+TITLE: Test
-#+DATE: 2021-03-05
-#+LAYOUT: post
-
-Here is a post
