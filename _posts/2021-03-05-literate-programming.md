@@ -9,7 +9,7 @@ tags:
 Here&rsquo;s a blog post on literate programming!
 
 
-# Literate Programming With R
+### Literate Programming With R
 
 ```R
 new_function <- function(a, b) {
@@ -20,6 +20,9 @@ new_function(10, 20)
 ```
 
     30
+
+
+### Literate Programming with Python
 
 ```python
 def new_func(a, b):

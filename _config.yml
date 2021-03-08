@@ -42,7 +42,7 @@ remote_theme: riggraz/no-style-please
 # theme: jekyll-theme-minimal
 # theme_config.show_description: true
 markdown: kramdown
-highlighter: rouge
+# highlighter: rouge
 kramdown:
   input: GFM
   syntax_highlighter_opts:

@@ -1,28 +1,12 @@
 entries :
-  - title: Research
-    entries:
-      - title: Measuring Obstruction in Legislatures
-        # url: /obstruction/
-        entries:
-          - title: I measure obstruction by MPs in the British House of Commons from 1800 to 2000, and estimate the effect of rule changes on the frequency of obstructive speech.
-      - title: activetext
-        # url: https://www.github.com/ksaki/active
-        entries:
-          - title: With <a href="https://ksaki.github.io">Saki Kuzushima</a>, <a href="https://shiraito.github.io">Yuki Shiraito</a>, and <a href="https://www.tedenamorado.com">Ted Enamorado</a>.
-          - title: An R package for active learning text classification.
-      - title: Historical British India Legislative Debates
-        # url: /hist-india/
-        entries:
-          - title: With <a href="https://sites.lsa.umich.edu/htzaw/">Thet Thiha Zaw</a>.
-          - title: We provide a new dataset of over one million legislative speeches between 1845 and 1945 from British India.
-      - title: A New Measure of Agenda Control in the US Senate
-        entries:
-          - title: With <a href="https://sites.lsa.umich.edu/cjfong/">Christian Fong</a>.
-          - title: We provide a new dataset of paired unanimous consent requests and objections to those requests from the 103rd to the 114th Congress.
-  # - title: Blog Posts
-  #   post_list: true
+  - title: Dissertation
+    url: /research/
+  - title: Projects
+    url: /projects/
   - title: Curriculum Vitae
     url: cv-bosley.pdf
+  - title: Blog Posts
+    post_list: true
   - title: Contact
     entries:
       - title: email

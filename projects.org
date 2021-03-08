@@ -1,0 +1,16 @@
+#+TITLE: Projects
+#+LAYOUT: page
+#+PERMALINK: /projects/
+#+OPTIONS: toc:nil
+
+- activetext
+  + An R package for active learning text classification.
+  + With [[https://ksaki.github.io][Saku Kuzushima]], [[https://shiraito.github.io][Yuki Shiraito]], and [[https://www.tedenamorado.com][Ted Enamorado]].
+- Historical British India Legislative Debates
+  + We provide a new dataset of over one million legislative speeches between
+    1845 and 1945 from British India.
+  + With [[https://sites.lsa.umich.edu/htzaw/][Thet Thiha Zaw]].
+- A New Measure of Agenda Control in the US Senate
+  + We provide a new dataset of paired unanimous consent requests and objections
+    to those requests from the 103rd to the 114th Congress.
+  + With [[https://sites.lsa.umich.edu/cjfong/][Christian Fong]].
