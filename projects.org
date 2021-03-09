@@ -1,7 +1,13 @@
 #+TITLE: Projects
-#+LAYOUT: page
-#+PERMALINK: /projects/
 #+OPTIONS: toc:nil
+
+#+begin_export html
+---
+title: Projects
+layout: page
+permalink: /projects
+---
+#+end_export
 
 - activetext
   + An R package for active learning text classification.

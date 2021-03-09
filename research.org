@@ -1,7 +1,13 @@
 #+TITLE: Dissertation
-#+LAYOUT: page
-#+PERMALINK: /research/
 #+OPTIONS: toc:nil
+
+#+begin_export html
+---
+title: Dissertation
+permalink: /research/
+layout: page
+---
+#+end_export
 
 - Measuring Obstruction in Legislatures
   + I measure obstruction by MPs in the British House of Commons from 1800 to

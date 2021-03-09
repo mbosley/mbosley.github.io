@@ -1,11 +1,9 @@
 ---
-title: "Projects"
-excerpt: ""
-date: 
-categories: 
-- post
-tags: 
+title: Projects
+layout: page
+permalink: /projects
 ---
+
 -   activetext
     -   An R package for active learning text classification.
     -   With [Saku Kuzushima](https://ksaki.github.io), [Yuki Shiraito](https://shiraito.github.io), and [Ted Enamorado](https://www.tedenamorado.com).
@@ -17,7 +15,4 @@ tags:
     -   We provide a new dataset of paired unanimous consent requests and objections
         to those requests from the 103rd to the 114th Congress.
     -   With [Christian Fong](https://sites.lsa.umich.edu/cjfong/).
-
-
-<!----- Footnotes ----->
 
