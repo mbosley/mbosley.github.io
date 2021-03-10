@@ -4,8 +4,10 @@ permalink: /research/
 layout: page
 ---
 
--   Measuring Obstruction in Legislatures
-    -   I measure obstruction by MPs in the British House of Commons from 1800 to
-        2000, and estimate the effect of rule changes on the frequency of
-        obstructive speech.
+-   Measuring the Effect of Legislative Rule Change on Obstruction in the British House of Commons, 1800-2000.
+    -   I use Item-Response Theory (IRT) and Natural Language Processing (NLP) to
+        measure the prevalence of obstruction in a corpus of over one million
+        legislative speeches. With this measure, I investigate whether rules that
+        limit the ability of legislators to obstruct represent *new* restrictions on
+        behavior, or whether they are codifications of existing informal norms.
 

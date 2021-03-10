@@ -5,8 +5,8 @@ entries :
     url: /projects/
   - title: Curriculum Vitae
     url: cv-bosley.pdf
-  - title: Blog Posts
-    post_list: true
+  # - title: Blog Posts
+  #   post_list: true
   - title: Contact
     entries:
       - title: email

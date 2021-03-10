@@ -1,15 +1,14 @@
 ---
 title: Projects
 layout: page
-permalink: /projects
+permalink: /projects/
 ---
 
--   activetext
+-   [activeText](active.pdf)
     -   An R package for active learning text classification.
     -   With [Saku Kuzushima](https://ksaki.github.io), [Yuki Shiraito](https://shiraito.github.io), and [Ted Enamorado](https://www.tedenamorado.com).
--   Historical British India Legislative Debates
-    -   We provide a new dataset of over one million legislative speeches between
-        1845 and 1945 from British India.
+-   [Colonial India Legislative Debates](Does_Franchise_Expansion_Affect_Legislative_Activity_-2.pdf)
+    -   Scraping, parsing, and analyzing 100 years of Indian legislative debates to estimate the effect of suffrage expansion on legislative behavior.
     -   With [Thet Thiha Zaw](https://sites.lsa.umich.edu/htzaw/).
 -   A New Measure of Agenda Control in the US Senate
     -   We provide a new dataset of paired unanimous consent requests and objections
