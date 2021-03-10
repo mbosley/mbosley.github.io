@@ -4,7 +4,7 @@ permalink: /research/
 layout: page
 ---
 
--   Measuring the Effect of Legislative Rule Change on Obstruction in the British House of Commons, 1800-2000.
+-   [Measuring the Effect of Legislative Rule Change on Obstruction in the British House of Commons, 1800-2000](bosley_methods_minor_paper.pdf)
     -   I use Item-Response Theory (IRT) and Natural Language Processing (NLP) to
         measure the prevalence of obstruction in a corpus of over one million
         legislative speeches. With this measure, I investigate whether rules that
