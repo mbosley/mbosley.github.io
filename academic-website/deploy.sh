@@ -15,6 +15,6 @@ echo "Committing changes..."
 git commit -m "Update site"
 
 echo "Pushing changes to GitHub..."
-git push origin github-pages
+git push origin gh-pages
 
 echo "Deployment complete."
