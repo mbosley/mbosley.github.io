@@ -54,7 +54,7 @@ weight = 4
   googleAnalyticsAsync = true # use asynchronous tracking. Synchronous tracking by default
   showAllPostsArchive = false # default
 
-  description = "I am a PhD candidate in the Department of Political Science at the University of Michigan studying legislative institutions and political methodology. My research focuses on the relationship between unwritten norms and formal rules in legislatures, and the process by which rule changes either codify or undermine these norms.\n\n I am also interested in the development and applications of statistical methods for political science research, particularly those related to Large Language Models (LLMs) such as BERT and GPT."
+  description = "I am a PhD candidate in the Department of Political Science at the University of Michigan studying legislative institutions and political methodology. My research focuses on the relationship between unwritten norms and formal rules in legislatures, and the process by which rule changes either codify or undermine these norms.\n\n I am also interested in the development and applications of statistical methods for political science research, particularly those related to Large Language Models (LLMs) such as BERT and GPT.\n\n [See my CV here.](/cv/cv-bosley.pdf)"
   mainSection = "blog" # your main section
   mainSectionTitle = "Recent Posts"
   showAllPostsOnHomePage = false # default
