@@ -4,9 +4,9 @@ echo "Building site..."
 hugo
 
 echo "Copying public folder contents to mbosley.github.io repository..."
-cp -R public/* ../mbosley.github.io/
+cp -R public/* ../
 
-cd ../mbosley.github.io/
+cd ../
 
 echo "Adding changes to git..."
 git add .
