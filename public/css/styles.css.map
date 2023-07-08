@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "styles.css",
-	"sourceRoot": "/Users/mitchellbosley/Documents/website/mbosley.github.io/academic-website",
+	"sourceRoot": "/Users/mitchellbosley/Documents/website/mbosley.github.io",
 	"sources": [
 		"themes/cactus/assets/scss/style.scss",
 		"themes/cactus/assets/scss/_variables.scss",

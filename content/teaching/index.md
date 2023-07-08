@@ -2,7 +2,17 @@
 title: "Teaching"
 ---
 
-# Prepared Courses
+## [Introduction to Political Analysis](https://github.com/mbosley/intro-scientific-analysis)
+
+**Description:** This course prepares students to engage with the field of political science by introducing them to the basic logic and tools used by political scientists to understand and explain the political world. The course will teach students how political scientists ask answerable questions; how we define key political concepts; how we formulate hypotheses and theories about political dynamics; how we measure the phenomena we want to study; how we think about and assess relationships of cause-and-effect; and how we report our findings to the world. 
+
+Taught in the 2023 summer semester at the University of British Columbia.
+
+**Keywords:** political analysis, causal inference, research design, measurement
+
+**[Syllabus](https://github.com/mbosley/intro-scientific-analysis)**
+
+---
 
 ## [Foundations of Large Language Models](https://github.com/mbosley/foundations-of-llms)
 
@@ -11,14 +21,3 @@ title: "Teaching"
 **Keywords:** large language models, GPT-4, machine learning, NLP, AI 
 
 **[Syllabus](https://github.com/mbosley/foundations-of-llms)**
-
----
-
-## [Introduction to Political Analysis](https://github.com/mbosley/intro-scientific-analysis)
-
-**Description:** This first-year course provides students with a comprehensive understanding of political analysis, including the study of political systems, ideologies, institutions, and behaviors. It equips students with the tools and techniques required to analyze political events and trends effectively.
-
-**Keywords:** political analysis, causal inference, research design, measurement
-
-**[Syllabus](https://github.com/mbosley/intro-scientific-analysis)**
-
