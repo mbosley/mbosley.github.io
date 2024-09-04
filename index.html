@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mitchell Bosley</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1c2e4a;
+            --secondary-color: #2c4365;
+            --accent-color: #3498db;  /* Changed accent color to blue */
+            --text-color: #333333;
+            --light-text-color: #666666;
+            --background-color: #ffffff;
+            --light-background: #f7f7f7;
+            --menu-background: rgba(28, 46, 74, 0.95);
+        }
+        body {
+            font-family: 'Lato', sans-serif;
+            line-height: 1.8;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 80px 30px 60px;
+        }
+        header {
+            margin-bottom: 60px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+        }
+        .titles {
+            font-size: 1.1rem;
+            color: var(--secondary-color);
+            line-height: 1.4;
+        }
+        .title-separator {
+            display: block;
+            width: 40px;
+            height: 2px;
+            background-color: var(--accent-color);
+            margin: 8px 0;
+        }
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        p {
+            margin-bottom: 20px;
+            color: var(--light-text-color);
+        }
+        .section {
+            margin-bottom: 60px;
+            padding: 30px;
+            background-color: var(--light-background);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .publication, .working-paper, .course {
+            background-color: var(--background-color);
+            padding: 25px;
+            margin-bottom: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--accent-color);
+        }
+        .publication:hover, .working-paper:hover, .course:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .publication h3, .working-paper h3, .course h3 {
+            font-size: 1.3rem;
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        a:hover {
+            color: var(--accent-color);
+        }
+        .contact-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .contact-links a {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .contact-links a:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        .contact-links a i {
+            margin-right: 8px;
+        }
+        .profile-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+        }
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: var(--menu-background);
+            padding: 15px 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .nav-menu ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .nav-menu li {
+            margin: 0 15px;
+        }
+        .nav-menu a {
+            color: var(--background-color);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+            padding: 5px 0;
+            position: relative;
+        }
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+        .nav-menu a:hover {
+            color: var(--accent-color);
+        }
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: var(--background-color);
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: none;
+            transition: background-color 0.3s ease;
+        }
+        .back-to-top:hover {
+            background-color: var(--secondary-color);
+        }
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .nav-menu {
+                padding: 10px 0;
+            }
+            .nav-menu ul {
+                flex-wrap: wrap;
+            }
+            .nav-menu li {
+                margin: 5px 10px;
+            }
+            .container {
+                padding-top: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav-menu">
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#publications">Publications</a></li>
+            <li><a href="#working-papers">Research</a></li>
+            <li><a href="#teaching">Teaching</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <header>
+            <img src="profile.HEIC" alt="Your Name" class="profile-photo">
+            <div>
+                <h1>Mitchell Bosley</h1>
+                <p>Postdoctoral Researcher, University of Toronto</p>
+                <p>Ph.D. Candidate, Department of Political Science, University of Michigan</p>
+            </div>
+        </header>
+
+        <section class="section" id="about">
+            <h2>About Me</h2>
+            <p>
+              I am a Postdoctoral Researcher at the Schwartz Reisman Institute for Technology and Society at the University of Toronto, and a Ph.D. candidate in the Department of Political Science at the University of Michigan. I am working at the intersection of computational social science, legislative studies, and applied machine learning. My current research focuses on applications of AI and machine learning to the study of political behavior and institutions, with a particular emphasis on the capacities of these models to <em>measure</em> political concepts from text data, <em>persuade</em> individuals to change their political attitudes, and  <em>simulate</em> political processes such as legislative bargaining and coalition formation.
+
+              You can find my CV <a href="cv-bosley.pdf">here</a>.
+            </p>
+        </section>
+
+        <section class="section" id="publications">
+            <h2>Publications</h2>
+            <div class="publication">
+                <h3>Improving Probabilistic Models via Active Learning</h3>
+                <p>with Saki Kuzushima, Ted Enamorado, and Yuki Shiraito. <em>American Political Science Review (APSR)</em>, 2024</p>
+                <p>
+                  We developed a new text classification algorithm that combines a probabilistic model with active learning to significantly reduce the need for human-labeled documents, thus cutting down on labeling costs. Our method performs as effectively as existing state-of-the-art techniques but with much lower computational demands, as demonstrated by our validation study and replication of two published studies using far fewer labeled data.
+                </p>
+                <a href="https://www.cambridge.org/core/journals/american-political-science-review/article/improving-probabilistic-models-in-text-classification-via-active-learning/FF5F8B862A3543BE2BD20010A9FA9663"><i class="fas fa-external-link-alt"></i> View publication</a>
+            </div>
+            <!-- <div class="publication"> -->
+            <!--     <h3>Title of Publication 2</h3> -->
+            <!--     <p>Authors, Journal Name, Year</p> -->
+            <!--     <p>Highlight key findings and the publication's contribution to the academic community.</p> -->
+            <!--     <a href="#"><i class="fas fa-external-link-alt"></i> View publication</a> -->
+            <!-- </div> -->
+        </section>
+
+        <section class="section" id="working-papers">
+            <h2>Current Research</h2>
+            <div class="working-paper">
+                <h3>Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates</h3>
+                <p>
+                  I introduce a prompt-engineering framework using large language models (LLMs) to measure complex constructs like the Discourse Quality Index (DQI) at scale, demonstrating that LLMs can achieve human-level performance in coding parliamentary speeches. This approach allows for rich, qualitative analysis of political communication without the limitations of traditional qualitative methods.
+                </p>
+                <a href="dqi-paper-bosley.pdf"><i class="fas fa-external-link-alt"></i> View working paper</a>
+            </div>
+            <div class="working-paper">
+                <h3>Does Moral Foundations-Based Personalized Persuasion with AI Reduce Anti-Trans Beliefs?</h3>
+                <p>with Semra Sevi, Charles Crabtree, and John Holbein</p>
+                <p>We seek to test whether AI chatbots equipped with information about survey respondents' self-placement on the dimensions of moral foundations theory can durably reduce anti trans beliefs. Our survey is currently in the field, and we expect to have results by the end of 2024.</p>
+                </p>
+                <!-- <a href="#"><i class="fas fa-external-link-alt"></i> View working paper</a> -->
+            </div>
+            <div class="working-paper">
+                <h3>How Did Suffrage Expansion in British Colonial India Affect Legislative Support for Social Policy?</h3>
+                <p>with Thiha Zaw and Ajit Phadnis</p>
+                <p>We provide a new dataset of textual records from the Indian Legislative Assembly and Council from 1919-1947 to study the effects of suffrage expansion on legislative support for social policy, including tabulated data on the number of votes for and against social policy bills. We find that suffrage expansion led to a significant increase in legislative support for social policy.</p>
+                <!-- <a href="#"><i class="fas fa-external-link-alt"></i> View working paper</a> -->
+            </div>
+        </section>
+
+        <section class="section" id="teaching">
+            <h2>Teaching</h2>
+            <div class="course">
+                <h3>Introduction to Political Analysis</h3>
+                <p>University of British Columbia, Summer 2023</p>
+                <p>This course prepares students to engage with the field of political science by introducing them to the basic logic and tools used by political scientists to understand and explain the political world. The course will teach students how political scientists ask answerable questions; how we define key political concepts; how we formulate hypotheses and theories about political dynamics; how we measure the phenomena we want to study; how we think about and assess relationships of cause-and-effect; and how we report our findings to the world.</p>
+                <a href="https://github.com/mbosley/intro-scientific-analysis"><i class="fas fa-external-link-alt"></i> Course details</a>
+            </div>
+            <!-- <div class="course"> -->
+            <!--     <h3>Title of Course 2</h3> -->
+            <!--     <p>Institution, Semester</p> -->
+            <!--     <p>Overview of the course and your teaching responsibilities.</p> -->
+            <!--     <a href="#"><i class="fas fa-external-link-alt"></i> Course details</a> -->
+            <!-- </div> -->
+        </section>
+
+        <section class="section" id="contact">
+            <h2>Contact</h2>
+            <p>Feel free to reach out to me via email or connect with me on any of the following platforms.
+            </p>
+            <div class="contact-links">
+                <a href="mailto:mitchellbosley@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+                <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://github.com/mbosley"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://scholar.google.com/citations?user=lZbhO3EAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
+                <a href="https://twitter.com/mitchellbosley"><i class="fab fa-twitter"></i> Twitter</a>
+            </div>
+        </section>
+    </div>
+
+    <div class="back-to-top" id="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTop = document.getElementById('back-to-top');
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    backToTop.style.display = 'block';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+            });
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        document.querySelectorAll('.nav-menu a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const target = document.querySelector(targetId);
+                const offset = 100; // Adjust this value as needed
+
+                window.scrollTo({
+                    top: target.offsetTop - offset,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
