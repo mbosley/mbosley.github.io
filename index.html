@@ -12,7 +12,7 @@
             --secondary-color: #2c4365;
             --accent-color: #3498db;  /* Changed accent color to blue */
             --text-color: #333333;
-            --light-text-color: #666666;
+            --light-text-color: #333333;
             --background-color: #ffffff;
             --light-background: #f7f7f7;
             --menu-background: rgba(28, 46, 74, 0.95);
@@ -221,6 +221,36 @@
                 padding-top: 120px;
             }
         }
+        .working-paper {
+            cursor: pointer;
+        }
+
+        .working-paper-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .working-paper.active .working-paper-content {
+            max-height: 2000px; /* Adjust this value as needed */
+            transition: max-height 0.5s ease-in;
+        }
+
+        .working-paper-toggle {
+            display: inline-block;
+            margin-left: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .working-paper.active .working-paper-toggle {
+            transform: rotate(180deg);
+        }
+        .working-paper-image {
+        width: 80%;
+        height: auto;
+        margin: 0 auto;
+        display: block;
+        }
     </style>
 </head>
 <body>
@@ -230,7 +260,6 @@
             <li><a href="#publications">Publications</a></li>
             <li><a href="#working-papers">Research</a></li>
             <li><a href="#teaching">Teaching</a></li>
-            <li><a href="#contact">Contact</a></li>
         </ul>
     </nav>
 
@@ -247,16 +276,24 @@
         <section class="section" id="about">
             <h2>About Me</h2>
             <p>
-              I am a Postdoctoral Researcher at the Schwartz Reisman Institute for Technology and Society at the University of Toronto, and a Ph.D. candidate in the Department of Political Science at the University of Michigan. I am working at the intersection of computational social science, legislative studies, and applied machine learning. My current research focuses on applications of AI and machine learning to the study of political behavior and institutions, with a particular emphasis on the capacities of these models to <em>measure</em> political concepts from text data, <em>persuade</em> individuals to change their political attitudes, and  <em>simulate</em> political processes such as legislative bargaining and coalition formation.
+              I am a Postdoctoral Researcher at the Schwartz Reisman Institute for Technology and Society at the University of Toronto, and a Ph.D. candidate in the Department of Political Science at the University of Michigan. I am working at the intersection of computational social science, legislative studies, and applied machine learning. My current research focuses on applications of AI and machine learning to the study of political behavior and institutions, with a particular emphasis on the capacities of these models to <em>measure</em> political concepts from text data, <em>persuade</em> individuals to change their political attitudes, and  <em>simulate</em> political processes such as legislative bargaining and coalition formation. You can find my CV <a href="cv-bosley.pdf">here</a>.
 
-              You can find my CV <a href="cv-bosley.pdf">here</a>.
+            <br><br>
+            </p>
+            <div class="contact-links">
+                <a href="mailto:mitchellbosley@gmail.com"><i class="fas fa-envelope"></i> Email</a>
+                <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <a href="https://github.com/mbosley"><i class="fab fa-github"></i> GitHub</a>
+                <a href="https://scholar.google.com/citations?user=lZbhO3EAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
+                <a href="https://twitter.com/mitchellbosley"><i class="fab fa-twitter"></i> Twitter</a>
+            </div>
             </p>
         </section>
 
         <section class="section" id="publications">
             <h2>Publications</h2>
             <div class="publication">
-                <h3>Improving Probabilistic Models via Active Learning</h3>
+                <h3>Improving Probabilistic Models in Text Classification via Active Learning</h3>
                 <p>with Saki Kuzushima, Ted Enamorado, and Yuki Shiraito. <em>American Political Science Review (APSR)</em>, 2024</p>
                 <p>
                   We developed a new text classification algorithm that combines a probabilistic model with active learning to significantly reduce the need for human-labeled documents, thus cutting down on labeling costs. Our method performs as effectively as existing state-of-the-art techniques but with much lower computational demands, as demonstrated by our validation study and replication of two published studies using far fewer labeled data.
@@ -274,24 +311,44 @@
         <section class="section" id="working-papers">
             <h2>Current Research</h2>
             <div class="working-paper">
-                <h3>Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates</h3>
-                <p>
-                  I introduce a prompt-engineering framework using large language models (LLMs) to measure complex constructs like the Discourse Quality Index (DQI) at scale, demonstrating that LLMs can achieve human-level performance in coding parliamentary speeches. This approach allows for rich, qualitative analysis of political communication without the limitations of traditional qualitative methods.
-                </p>
-                <a href="dqi-paper-bosley.pdf"><i class="fas fa-external-link-alt"></i> View working paper</a>
+                <h3>Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates <span class="working-paper-toggle">▼</span></h3>
+                <div class="working-paper-content">
+                    <p>
+                        This paper introduces a novel approach to automating complex qualitative coding tasks using large language models (LLMs). Focusing on the Discourse Quality Index (DQI), a widely used measure of deliberative quality in political communication, I demonstrate that carefully engineered prompts can enable LLMs to generate high-quality annotations at a level comparable to expert human coders.
+                    </p>
+                    <p>
+                        Key findings:
+                    </p>
+                    <ul>
+                        <li>LLMs can achieve human-level performance in coding parliamentary speeches using the DQI framework</li>
+                        <li>Many-shot in-context learning significantly improves annotation quality, with optimal performance around 25-50 examples</li>
+                        <li>Cost-effective models like DeepSeek Coder 2 can outperform more expensive models like GPT-4 when provided with sufficient examples</li>
+                        <li>LLM-based annotation is significantly faster and more cost-effective than traditional expert coding</li>
+                    </ul>
+                    <img src="performance_vs_icl_mse.png" alt="Figure 1: Model Performance vs Number of In-Context Learning Examples" class="working-paper-image" />
+
+                    <p>
+                        Figure 1: This graph shows how model performance improves with the number of in-context learning examples provided, demonstrating the effectiveness of the prompt-engineering approach.
+                    </p>
+                    <a href="#"><i class="fas fa-external-link-alt"></i> Working paper</a>
+                    &nbsp;
+                    <a href="https://github.com/mbosley/dqi-annotation-pipeline"><i class="fab fa-github"></i> Github Repo</a>
+                </div>
             </div>
             <div class="working-paper">
-                <h3>Does Moral Foundations-Based Personalized Persuasion with AI Reduce Anti-Trans Beliefs?</h3>
+                <h3>Does Moral Foundations-Based Personalized Persuasion with AI Reduce Anti-Trans Beliefs?<span class="working-paper-toggle">▼</span></h3>
+                <div class="working-paper-content">
+
                 <p>with Semra Sevi, Charles Crabtree, and John Holbein</p>
                 <p>We seek to test whether AI chatbots equipped with information about survey respondents' self-placement on the dimensions of moral foundations theory can durably reduce anti trans beliefs. Our survey is currently in the field, and we expect to have results by the end of 2024.</p>
-                </p>
-                <!-- <a href="#"><i class="fas fa-external-link-alt"></i> View working paper</a> -->
+                </div>
             </div>
             <div class="working-paper">
-                <h3>How Did Suffrage Expansion in British Colonial India Affect Legislative Support for Social Policy?</h3>
+                <h3>Did Suffrage Expansion in British Colonial India Affect Legislative Support for Social Policy?<span class="working-paper-toggle">▼</span></h3>
+                <div class="working-paper-content">
                 <p>with Thiha Zaw and Ajit Phadnis</p>
                 <p>We provide a new dataset of textual records from the Indian Legislative Assembly and Council from 1919-1947 to study the effects of suffrage expansion on legislative support for social policy, including tabulated data on the number of votes for and against social policy bills. We find that suffrage expansion led to a significant increase in legislative support for social policy.</p>
-                <!-- <a href="#"><i class="fas fa-external-link-alt"></i> View working paper</a> -->
+              </div>
             </div>
         </section>
 
@@ -300,8 +357,18 @@
             <div class="course">
                 <h3>Introduction to Political Analysis</h3>
                 <p>University of British Columbia, Summer 2023</p>
-                <p>This course prepares students to engage with the field of political science by introducing them to the basic logic and tools used by political scientists to understand and explain the political world. The course will teach students how political scientists ask answerable questions; how we define key political concepts; how we formulate hypotheses and theories about political dynamics; how we measure the phenomena we want to study; how we think about and assess relationships of cause-and-effect; and how we report our findings to the world.</p>
+                <p>This course provides students with a foundational understanding of the principles and methods used in political science. Through interactive lectures and engaging discussions, students will learn how to:</p>
+
+                <ul>
+                <li>Develop answerable research questions and form hypotheses about political phenomena</li>
+                <li>Define and operationalize key political concepts</li>
+                <li>Measure and analyze complex data</li>
+                <li>Evaluate relationships of cause-and-effect</li>
+                <li>Communicate research findings effectively</li>
+                </ul>
+                </p>
                 <a href="https://github.com/mbosley/intro-scientific-analysis"><i class="fas fa-external-link-alt"></i> Course details</a>
+
             </div>
             <!-- <div class="course"> -->
             <!--     <h3>Title of Course 2</h3> -->
@@ -311,18 +378,6 @@
             <!-- </div> -->
         </section>
 
-        <section class="section" id="contact">
-            <h2>Contact</h2>
-            <p>Feel free to reach out to me via email or connect with me on any of the following platforms.
-            </p>
-            <div class="contact-links">
-                <a href="mailto:mitchellbosley@gmail.com"><i class="fas fa-envelope"></i> Email</a>
-                <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a>
-                <a href="https://github.com/mbosley"><i class="fab fa-github"></i> GitHub</a>
-                <a href="https://scholar.google.com/citations?user=lZbhO3EAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
-                <a href="https://twitter.com/mitchellbosley"><i class="fab fa-twitter"></i> Twitter</a>
-            </div>
-        </section>
     </div>
 
     <div class="back-to-top" id="back-to-top">
@@ -341,6 +396,15 @@
             });
             backToTop.addEventListener('click', function() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+            const workingPapers = document.querySelectorAll('.working-paper');
+
+            workingPapers.forEach(paper => {
+                paper.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                });
             });
         });
         document.querySelectorAll('.nav-menu a').forEach(anchor => {
