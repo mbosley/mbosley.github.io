@@ -71,14 +71,14 @@
         }
         .section {
             margin-bottom: 60px;
-            padding: 30px;
+            padding: 15px;
             background-color: var(--light-background);
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .publication, .working-paper, .course {
             background-color: var(--background-color);
-            padding: 25px;
+            padding: 15px;
             margin-bottom: 25px;
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
@@ -256,7 +256,6 @@
 <body>
     <nav class="nav-menu">
         <ul>
-            <li><a href="#about">About</a></li>
             <li><a href="#publications">Publications</a></li>
             <li><a href="#working-papers">Research</a></li>
             <li><a href="#teaching">Teaching</a></li>
@@ -268,8 +267,8 @@
             <img src="profile.HEIC" alt="Your Name" class="profile-photo">
             <div>
                 <h1>Mitchell Bosley</h1>
-                <p>Postdoctoral Researcher, University of Toronto</p>
-                <p>Ph.D. Candidate, Department of Political Science, University of Michigan</p>
+                <p>Postdoctoral Researcher, Schwartzh Reisman Institute, University of Toronto</p>
+                <!-- <p>Ph.D. Candidate, Department of Political Science, University of Michigan</p> -->
             </div>
         </header>
 
@@ -282,7 +281,7 @@
             </p>
             <div class="contact-links">
                 <a href="mailto:mitchellbosley@gmail.com"><i class="fas fa-envelope"></i> Email</a>
-                <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                <!-- <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a> -->
                 <a href="https://github.com/mbosley"><i class="fab fa-github"></i> GitHub</a>
                 <a href="https://scholar.google.com/citations?user=lZbhO3EAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
                 <a href="https://twitter.com/mitchellbosley"><i class="fab fa-twitter"></i> Twitter</a>
@@ -313,6 +312,8 @@
             <div class="working-paper">
                 <h3>Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates <span class="working-paper-toggle">▼</span></h3>
                 <div class="working-paper-content">
+                    <a href="#"><i class="fas fa-external-link-alt"></i> Working paper</a>
+                    <a href="https://github.com/mbosley/dqi-annotation-pipeline"><i class="fab fa-github"></i> Github Repo</a>
                     <p>
                         This paper introduces a novel approach to automating complex qualitative coding tasks using large language models (LLMs). Focusing on the Discourse Quality Index (DQI), a widely used measure of deliberative quality in political communication, I demonstrate that carefully engineered prompts can enable LLMs to generate high-quality annotations at a level comparable to expert human coders.
                     </p>
@@ -330,9 +331,7 @@
                     <p>
                         Figure 1: This graph shows how model performance improves with the number of in-context learning examples provided, demonstrating the effectiveness of the prompt-engineering approach.
                     </p>
-                    <a href="#"><i class="fas fa-external-link-alt"></i> Working paper</a>
                     &nbsp;
-                    <a href="https://github.com/mbosley/dqi-annotation-pipeline"><i class="fab fa-github"></i> Github Repo</a>
                 </div>
             </div>
             <div class="working-paper">
