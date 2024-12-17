@@ -3,282 +3,234 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mitchell Bosley</title>
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+    <title>Your Name - Academic Profile</title>
     <style>
         :root {
-            --primary-color: #1c2e4a;
-            --secondary-color: #2c4365;
-            --accent-color: #3498db;  /* Changed accent color to blue */
-            --text-color: #333333;
-            --light-text-color: #333333;
-            --background-color: #ffffff;
-            --light-background: #f7f7f7;
-            --menu-background: rgba(28, 46, 74, 0.95);
+            --main-color: #2d3436;
+            --accent-color: #0984e3;
+            --bg-color: #ffffff;
+            --secondary-bg: #f5f6fa;
         }
+
         body {
-            font-family: 'Lato', sans-serif;
-            line-height: 1.8;
-            color: var(--text-color);
-            background-color: var(--background-color);
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
             margin: 0;
             padding: 0;
+            color: var(--main-color);
+            background: var(--bg-color);
         }
+
         .container {
-            max-width: 1000px;
+            max-width: 800px;
             margin: 0 auto;
-            padding: 80px 15px 60px;
+            padding: 2rem;
         }
+
         header {
-            margin-bottom: 60px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            gap: 30px;
-        }
-        h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-        }
-        .titles {
-            font-size: 1.1rem;
-            color: var(--secondary-color);
-            line-height: 1.4;
-        }
-        .title-separator {
-            display: block;
-            width: 40px;
-            height: 2px;
-            background-color: var(--accent-color);
-            margin: 8px 0;
-        }
-        h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-top: 0;
-            margin-bottom: 30px;
-            color: var(--secondary-color);
             border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-        p {
-            margin-bottom: 20px;
-            color: var(--light-text-color);
-        }
-        .section {
-            margin-bottom: 60px;
-            padding: 15px;
-            background-color: var(--light-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .publication, .working-paper, .course {
-            background-color: var(--background-color);
-            padding: 15px;
-            margin-bottom: 25px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 4px solid var(--accent-color);
-        }
-        .publication:hover, .working-paper:hover, .course:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-        .publication h3, .working-paper h3, .course h3 {
-            font-size: 1.3rem;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-        a {
-            color: var(--secondary-color);
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-        a:hover {
-            color: var(--accent-color);
-        }
-        .contact-links {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
             display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 2rem;
         }
-        .contact-links a {
-            display: inline-flex;
-            align-items: center;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            border-radius: 4px;
-            font-size: 0.9rem;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .contact-links a:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
-        }
-        .contact-links a i {
-            margin-right: 8px;
-        }
+
         .profile-photo {
             width: 150px;
             height: 150px;
-            border-radius: 50%;
+            border-radius: 5px;
             object-fit: cover;
-            border: 3px solid var(--accent-color);
+            border: 2px solid var(--accent-color);
         }
-        .nav-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--menu-background);
-            padding: 15px 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .header-content {
+            flex: 1;
         }
-        .nav-menu ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+
+        nav {
+            margin: 1rem 0;
         }
-        .nav-menu li {
-            margin: 0 15px;
-        }
-        .nav-menu a {
-            color: var(--background-color);
+
+        nav a {
+            margin-right: 1.5rem;
+            color: var(--main-color);
             text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            transition: color 0.3s ease;
-            padding: 5px 0;
-            position: relative;
+            font-weight: bold;
         }
-        .nav-menu a::after {
-            content: '';
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: var(--accent-color);
-            transition: width 0.3s ease;
-        }
-        .nav-menu a:hover::after {
-            width: 100%;
-        }
-        .nav-menu a:hover {
+
+        nav a:hover {
             color: var(--accent-color);
         }
-        .back-to-top {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: var(--primary-color);
-            color: var(--background-color);
-            width: 40px;
-            height: 40px;
+
+        h1, h2, h3 {
+            font-weight: normal;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin: 0;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .title {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+
+        .section {
+            margin: 2rem 0;
+            padding: 1rem;
+            background: var(--secondary-bg);
+        }
+
+        .publication {
+            margin: 1rem 0;
+            padding-left: 1rem;
+            border-left: 2px solid var(--accent-color);
+        }
+
+        .paper-title {
+            font-weight: bold;
+        }
+
+        .authors {
+            font-style: italic;
+        }
+
+        footer {
+            margin-top: 3rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--accent-color);
             text-align: center;
-            line-height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            transition: background-color 0.3s ease;
+            font-size: 0.9rem;
         }
-        .back-to-top:hover {
-            background-color: var(--secondary-color);
-        }
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-        @media (max-width: 768px) {
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
             header {
                 flex-direction: column;
+                align-items: center;
                 text-align: center;
             }
-            .nav-menu {
-                padding: 10px 0;
+
+            .profile-photo {
+                width: 120px;
+                height: 120px;
             }
-            .nav-menu ul {
+
+            nav {
+                display: flex;
                 flex-wrap: wrap;
+                justify-content: center;
+                gap: 1rem;
             }
-            .nav-menu li {
-                margin: 5px 10px;
+
+            nav a {
+                margin-right: 0;
             }
-            .container {
-                padding-top: 120px;
-            }
-        }
-        .working-paper {
-            cursor: pointer;
-        }
-
-        .working-paper-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out;
-        }
-
-        .working-paper.active .working-paper-content {
-            max-height: 2000px; /* Adjust this value as needed */
-            transition: max-height 0.5s ease-in;
-        }
-
-        .working-paper-toggle {
-            display: inline-block;
-            margin-left: 10px;
-            transition: transform 0.3s ease;
-        }
-
-        .working-paper.active .working-paper-toggle {
-            transform: rotate(180deg);
-        }
-        .working-paper-image {
-        width: 80%;
-        height: auto;
-        margin: 0 auto;
-        display: block;
         }
     </style>
 </head>
 <body>
-    <nav class="nav-menu">
-        <ul>
-            <li><a href="#publications">Publications</a></li>
-            <li><a href="#working-papers">Research</a></li>
-            <li><a href="#teaching">Teaching</a></li>
-        </ul>
-    </nav>
-
     <div class="container">
         <header>
             <img src="profile.jpg" alt="Mitchell Bosley" class="profile-photo">
-            <div>
+            <div class="header-content">
                 <h1>Mitchell Bosley</h1>
-                <p>Postdoctoral Researcher, Schwartz Reisman Institute, University of Toronto</p>
+                <div class="title">Postdoctoral Researcher</div>
+                <div class="title">Schwartz Reisman Institute</div>
+                <div class="title">University of Toronto</div>
+
+                <nav>
+                    <a href="#about">About</a>
+                    <a href="#research">Research</a>
+                    <a href="#publications">Publications</a>
+                    <a href="#teaching">Teaching</a>
+                    <a href="#contact">Contact</a>
+                </nav>
             </div>
         </header>
 
-        <section class="section" id="about">
-            <h2>About Me</h2>
+        <section id="about" class="section">
+            <h2>About</h2>
             <p>
-              I am a Postdoctoral Researcher at the Schwartz Reisman Institute for Technology and Society at the University of Toront. I recieved my Ph.D. from the Department of Political Science at the University of Michigan in Summer 2024. I am working at the intersection of computational social science, legislative studies, and applied machine learning. My current research focuses on applications of AI and machine learning to the study of political behavior and institutions, with a particular emphasis on the capacities of these models to <em>measure</em> political concepts from text data, <em>persuade</em> individuals to change their political attitudes, and  <em>simulate</em> political processes such as legislative bargaining and coalition formation. You can find my CV <a href="cv-bosley.pdf">here</a>.
-
-            <br><br>
+              I am a Postdoctoral Researcher at the Schwartz Reisman Institute for Technology and Society at the University of Toronto. I recieved my Ph.D. from the Department of Political Science at the University of Michigan in Summer 2024.
+              My research is driven by my conviction that Artificial Intelligence (AI) has the potential to revolutionize the way we study and understand politics while also serving as a tool for social empowerment and progress.
+              To this end, I am working on applications of AI and machine learning to the study of political behavior and institutions, with a particular emphasis on the capacities of these models to <em>measure</em> concepts from data, <em>empower</em> individuals to make better choices, and  <em>simulate</em> social and political processes. You can find my CV <a href="cv-bosley.pdf">here</a>.
             </p>
+        </section>
+
+        <section id="publications" class="section">
+            <h2>Publications</h2>
+
+            <div class="publication">
+                <div class="paper-title">Improving Probabilistic Models in Text Classification via Active Learning</div>
+                <div class="authors">Mitchell Bosley, Saki Kuzushima, Ted Enamorado, and Yuki Shiraito.</div>
+                <div>American Political Science Review (2024)</div>
+                <a href="https://www.cambridge.org/core/journals/american-political-science-review/article/improving-probabilistic-models-in-text-classification-via-active-learning/FF5F8B862A3543BE2BD20010A9FA9663">[Paper]</a> <a href="https://github.com/activetext/activeText">[Code]</a> <a href="https://scholar.googleusercontent.com/scholar.bib?q=info:iEB8ljnxx1EJ:scholar.google.com/&output=citation&scisdr=ClHYdZUxEJLIttJ9_-I:AFWwaeYAAAAAZ2F75-JWYVDIJHxDkM9ldkUfYXc&scisig=AFWwaeYAAAAAZ2F754jyMga1FjA-Yyv3-D1-tBg&scisf=4&ct=citation&cd=-1&hl=en#">[BibTeX]</a>
+            </div>
+
+            <div class="publication">
+                <div class="paper-title">Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Analysis of Deliberative Quality in Parliamentary Debates</div>
+                <div class="authors">Mitchell Bosley</div>
+                <div>Conditionally accepted at the Journal of Political Institutions and Political Economy</div>
+                <a href="papers/dqi-paper-bosley.pdf">[Paper]</a> <a href="https://github.com/mbosley/dqi-annotation-pipeline">[Code]</a>
+            </div>
+        </section>
+
+
+        <section id="research" class="section">
+            <h2>Working Papers</h2>
+            <div class="publication">
+                <div class="paper-title">Can AI Reduce Prejudice at Scale? Evaluating the Effectiveness of AI-Powered Personalized Persuasion on Support for Transgender Rights</div>
+                <div class="authors">Charles Crabtree, John Holbein, Mitchell Bosley, and Semra Sevi</div>
+                <!-- <div>Working paper</div> -->
+                <a href="papers/ai-prejudice-paper.pdf">[Paper]</a>
+            </div>
+            <div class="publication">
+                <div class="paper-title">Experimentally Assessing the Impact of AI Literacy on Development: A Research Proposal</div>
+                <div class="authors">Mitchell Bosley, Charles Crabtree, John Holbein, and Veronica Hurtado</div>
+                <!-- <div>Working paper</div> -->
+                <a href="papers/ai-literacy-peru.pdf">[Paper]</a>
+            </div>
+            <div class="publication">
+                <div class="paper-title">Do we still need BERT in the age of GPT? Comparing the benefits of domain-adaptation and in-context-learning approaches to using LLMs for Political Science Research</div>
+                <div class="authors">Mitchell Bosley, Musashi Hinck, Alexander Hoyle, and Hauke Licht</div>
+                <!-- <div>Working paper</div> -->
+                <a href="papers/bosley_harukawa_licht_hoyle_mpsa2023.pdf">[Paper]</a>
+            </div>
+        </section>
+
+        <section id="teaching" class="section">
+            <h2>Teaching</h2>
+            <h3>Past Courses</h3>
+            <div class="publication">
+                <div class="paper-title">Introduction to Political Analysis</div>
+                <!-- <div class="authors"></div> -->
+                <div>Taught at the University of British Columbia, Summer 2003</div>
+                <a href="https://github.com/mbosley/intro-scientific-analysis">[Syllabus]</a>
+            </div>
+            <h3>Prepared Courses</h3>
+            <div class="publication">
+                <div class="paper-title">Advanced Computational Methods for Social Science Research</div>
+                <!-- <div class="authors">University of British Columbia, Summer 2003</div> -->
+                <!-- <div>Working paper</div> -->
+                <a href="syllabus.pdf">[Syllabus]</a>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <h2>Contact</h2>
             <div class="contact-links">
                 <a href="mailto:mitchellbosley@gmail.com"><i class="fas fa-envelope"></i> Email</a>
                 <!-- <a href="https://www.linkedin.com/in/mitchell-bosley-298b00277/"><i class="fab fa-linkedin"></i> LinkedIn</a> -->
@@ -286,147 +238,12 @@
                 <a href="https://scholar.google.com/citations?user=lZbhO3EAAAAJ&hl=en"><i class="fas fa-graduation-cap"></i> Google Scholar</a>
                 <a href="https://twitter.com/mitchellbosley"><i class="fab fa-twitter"></i> Twitter</a>
             </div>
-            </p>
         </section>
 
-        <section class="section" id="publications">
-            <h2>Publications</h2>
-            <div class="publication">
-                <h3>Improving Probabilistic Models in Text Classification via Active Learning</h3>
-                <p>with Saki Kuzushima, Ted Enamorado, and Yuki Shiraito. <em>American Political Science Review (APSR)</em>, 2024.</p>
-                <p>
-                  We developed a new text classification algorithm that combines a probabilistic model with active learning to significantly reduce the need for human-labeled documents, thus cutting down on labeling costs. Our method performs as effectively as existing state-of-the-art techniques but with much lower computational demands, as demonstrated by our validation study and replication of two published studies using far fewer labeled data.
-                </p>
-                <a href="https://www.cambridge.org/core/journals/american-political-science-review/article/improving-probabilistic-models-in-text-classification-via-active-learning/FF5F8B862A3543BE2BD20010A9FA9663"><i class="fas fa-external-link-alt"></i> View publication</a>
-            </div>
-            <!-- <div class="publication"> -->
-            <!--     <h3>Title of Publication 2</h3> -->
-            <!--     <p>Authors, Journal Name, Year</p> -->
-            <!--     <p>Highlight key findings and the publication's contribution to the academic community.</p> -->
-            <!--     <a href="#"><i class="fas fa-external-link-alt"></i> View publication</a> -->
-            <!-- </div> -->
-        </section>
-
-        <section class="section" id="working-papers">
-            <h2>Current Research</h2>
-            <div class="working-paper">
-                <h3>Towards Qualitative Measurement at Scale: A Prompt-Engineering Framework for Large-Scale Analysis of Deliberative Quality in Parliamentary Debates <span class="working-paper-toggle">▼</span></h3>
-                <div class="working-paper-content">
-                    <a href="papers/dqi-paper-bosley.pdf"><i class="fas fa-external-link-alt"></i> Working paper</a>
-                    <a href="https://github.com/mbosley/dqi-annotation-pipeline"><i class="fab fa-github"></i> Github Repo</a>
-                    <p>
-                        This paper introduces a novel approach to automating complex qualitative coding tasks using large language models (LLMs). Focusing on the Discourse Quality Index (DQI), a widely used measure of deliberative quality in political communication, I demonstrate that carefully engineered prompts can enable LLMs to generate high-quality annotations at a level comparable to expert human coders.
-                    </p>
-                    <p>
-                        Key findings:
-                    </p>
-                    <ul>
-                        <li>LLMs can achieve human-level performance in coding parliamentary speeches using the DQI framework</li>
-                        <li>Many-shot in-context learning significantly improves annotation quality, with optimal performance around 25-50 examples</li>
-                        <li>Cost-effective models like DeepSeek Coder 2 can outperform more expensive models like GPT-4 when provided with sufficient examples</li>
-                        <li>LLM-based annotation is significantly faster and more cost-effective than traditional expert coding</li>
-                    </ul>
-                    <img src="performance_vs_icl_mse.png" alt="Figure 1: Model Performance vs Number of In-Context Learning Examples" class="working-paper-image" />
-
-                    <p>
-                        Figure 1: This graph shows how model performance improves with the number of in-context learning examples provided, demonstrating the effectiveness of the prompt-engineering approach.
-                    </p>
-                    &nbsp;
-                </div>
-            </div>
-            <div class="working-paper">
-                <h3>Does Moral Foundations-Based Personalized Persuasion with AI Reduce Anti-Trans Beliefs?<span class="working-paper-toggle">▼</span></h3>
-                <div class="working-paper-content">
-                <p>with Semra Sevi, Charles Crabtree, and John Holbein</p>
-                <a href="papers/toronto-montreal-poster-bosley-v2.pdf"><i class="fas fa-external-link-alt"></i> Pre-analysis plan</a>
-                <p>We seek to test whether AI chatbots equipped with information about survey respondents' self-placement on the dimensions of moral foundations theory can durably reduce anti trans beliefs. Our survey is currently in the field, and we expect to have results by the end of 2024.</p>
-                </div>
-            </div>
-            <div class="working-paper">
-                <h3>Do we still need BERT in the age of GPT? Comparing the benefits of domain-adaptation and in-context-learning approaches to using LLMs for Political Science Research<span class="working-paper-toggle">▼</span></h3>
-                <div class="working-paper-content">
-                <p>with Musashi Hinck, Alexander Hoyle, and Hauke Licht </p>
-                <a href="papers/bosley_harukawa_licht_hoyle_mpsa2023.pdf"><i class="fas fa-external-link-alt"></i> Working paper</a>
-                <p>With the rapid development of large language models (LLMs), we claim that researchers using LLMs must make three critical decisions: model selection, domain-adaptation strategies, and prompt design. To help provide guidance on these choices, we establish a set of benchmarks for a wide range of natural language processing (NLP) tasks pursued by political science tasks. We use this benchmark to compare two common approaches to the classification of political text: domain-adapting smaller LLMs such as BERT to one’s own data with varying levels of unsupervised pre-training and supervised fine-tuning, and querying larger LLMs such as GPT-3 without additional training. Preliminary results indicate that when labeled data is available, the fine-tuning focused approach remains the superior technique for text classification..</p>
-              </div>
-            </div>
-            <div class="working-paper">
-                <h3>Did Suffrage Expansion in British Colonial India Affect Legislative Support for Social Policy?<span class="working-paper-toggle">▼</span></h3>
-                <div class="working-paper-content">
-                <p>with Thiha Zaw and Ajit Phadnis</p>
-                <p>We provide a new dataset of textual records from the Indian Legislative Assembly and Council from 1919-1947 to study the effects of suffrage expansion on legislative support for social policy, including tabulated data on the number of votes for and against social policy bills. We find that suffrage expansion led to a significant increase in legislative support for social policy.</p>
-              </div>
-            </div>
-        </section>
-
-        <section class="section" id="teaching">
-            <h2>Teaching</h2>
-            <div class="course">
-                <h3>Introduction to Political Analysis</h3>
-                <p>University of British Columbia, Summer 2023</p>
-                <p>This course provides students with a foundational understanding of the principles and methods used in political science. Through interactive lectures and engaging discussions, students will learn how to:</p>
-
-                <ul>
-                <li>Develop answerable research questions and form hypotheses about political phenomena</li>
-                <li>Define and operationalize key political concepts</li>
-                <li>Measure and analyze complex data</li>
-                <li>Evaluate relationships of cause-and-effect</li>
-                <li>Communicate research findings effectively</li>
-                </ul>
-                </p>
-                <a href="https://github.com/mbosley/intro-scientific-analysis"><i class="fas fa-external-link-alt"></i> Course details</a>
-
-            </div>
-            <!-- <div class="course"> -->
-            <!--     <h3>Title of Course 2</h3> -->
-            <!--     <p>Institution, Semester</p> -->
-            <!--     <p>Overview of the course and your teaching responsibilities.</p> -->
-            <!--     <a href="#"><i class="fas fa-external-link-alt"></i> Course details</a> -->
-            <!-- </div> -->
-        </section>
-
+        <footer>
+            <p>Last updated: December 2024</p>
+            <p>Built with HTML & CSS</p>
+        </footer>
     </div>
-
-    <div class="back-to-top" id="back-to-top">
-        <i class="fas fa-arrow-up"></i>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const backToTop = document.getElementById('back-to-top');
-            window.addEventListener('scroll', function() {
-                if (window.pageYOffset > 300) {
-                    backToTop.style.display = 'block';
-                } else {
-                    backToTop.style.display = 'none';
-                }
-            });
-            backToTop.addEventListener('click', function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            const workingPapers = document.querySelectorAll('.working-paper');
-
-            workingPapers.forEach(paper => {
-                paper.addEventListener('click', function() {
-                    this.classList.toggle('active');
-                });
-            });
-        });
-        document.querySelectorAll('.nav-menu a').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const target = document.querySelector(targetId);
-                const offset = 100; // Adjust this value as needed
-
-                window.scrollTo({
-                    top: target.offsetTop - offset,
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
 </body>
 </html>
