@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Qualitative Safety Reports (QSR) – Proof-of-Concept</title>
+<script type="module" src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs"></script>
+<style>
+ :root{--blue:#1a73e8;--light:#f1f3f4;--dark:#202124;--accent:#ea4335;--border:#dadce0;--codebg:#0d1117;--codefg:#c9d1d9}
+ *{box-sizing:border-box;font-family:Helvetica,Arial,sans-serif}
+ body{margin:0;color:var(--dark);background:#fff;line-height:1.45}
+ header{
+    background:var(--blue);
+    color:#fff;
+    padding:24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+ }
+ .header-content {
+    flex-grow: 1;
+ }
+ h1{
+    margin:0;
+    font-size:1.8rem;
+    font-weight:600;
+ }
+ .header-logo {
+    flex-shrink: 0;
+    margin-left: 24px; /* Space between text and logo */
+    height: 64px; /* Adjust for desired logo height relative to header */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+ .header-logo svg {
+    height: 100%;
+    width: auto;
+    fill: #fff; /* White logo */
+ }
+ h2{margin:36px 0 12px;font-size:1.32rem;color:var(--blue)}
+ section{padding:0 16px;max-width:1200px;margin:0 auto}
+ ul, ol{padding-left:18px}
+ .pill{display:inline-block;background:var(--blue);color:#fff;padding:2px 8px;border-radius:12px;font-size:12px;margin:2px 6px 2px 0}
+ pre,code{font-family:SFMono-Regular,Consolas,Menlo,monospace}
+ pre{background:var(--codebg);color:var(--codefg);padding:12px;border-radius:6px;overflow-x:auto;font-size:12px}
+ .prompt-flex{display:flex; flex-direction: column; gap:16px;}
+ .prompt-box{border:1px solid var(--border);border-radius:8px;background:#fff;padding:12px}
+ .prompt-box h3{margin:0 0 6px;font-size:15px;color:var(--blue)}
+ .three-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+ .code-box{border:1px solid var(--border);border-radius:8px}
+ .box{border:1px solid var(--border);border-radius:8px;padding:12px;background:#fff}
+ footer{background:var(--light);padding:24px 16px;text-align:center;font-size:14px;color:#5f6368}
+ a{color:var(--blue);text-decoration:none}
+ .list-spacing li { margin-bottom: 10px; }
+ .list-spacing strong { color: var(--blue); }
+ .sub-list {margin-top: 5px; padding-left: 20px;}
+ .sub-list li {margin-bottom: 5px;}
+ .intro-paragraph { margin-bottom: 1.5em; font-size: 1.05em; color: #3c4043; }
+
+ /* Dashboard Mockup Styles */
+ .dashboard{
+    border:1px solid var(--border);
+    border-radius:8px;
+    height:400px;
+    background: #fff;
+    padding:0;
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    overflow: hidden;
+ }
+ .dashboard-header {
+    background-color: var(--dark);
+    color: var(--light);
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 14px;
+    flex-shrink: 0;
+ }
+ .dashboard-content {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+ }
+ .dashboard-left-pane, .dashboard-right-pane {
+    padding: 10px;
+    overflow-y: auto;
+ }
+ .dashboard-left-pane {
+    flex: 1;
+    border-right: 1px solid var(--border);
+ }
+ .dashboard-right-pane {
+    flex: 1.5;
+ }
+ .dashboard-left-pane h4, .dashboard-right-pane h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: var(--blue);
+ }
+ .dashboard-left-pane p, .incident-item {
+    margin-bottom: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+ }
+ .incident-item {
+    padding: 6px;
+    border: 1px solid var(--light);
+    border-radius: 4px;
+    background-color: #f8f9fa;
+ }
+ .incident-item strong { color: var(--dark); }
+ .incident-flag {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    padding: 1px 5px;
+    border-radius: 8px;
+    font-size: 10px;
+    margin-left: 5px;
+    vertical-align: middle;
+ }
+ .evidence-placeholder {
+    border: 2px dashed var(--border);
+    padding: 15px;
+    text-align: center;
+    color: #666;
+    font-size: 12px;
+    margin-top:10px;
+    background-color: var(--light);
+    min-height: 70px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-grow: 1;
+ }
+ .dashboard-actions {
+    border-top: 1px solid var(--border);
+    padding: 8px 12px;
+    text-align: right;
+    background-color: var(--light);
+    flex-shrink: 0;
+ }
+ .dashboard-button {
+    background-color: var(--blue);
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: 8px;
+ }
+ .dashboard-button:hover {
+    opacity: 0.9;
+ }
+ .dashboard-button.secondary {
+    background-color: #6c757d;
+ }
+ .next-steps-phase { margin-bottom: 1em; }
+ .next-steps-phase h4 { color: var(--blue); margin-bottom: 0.3em;}
+ .next-steps-phase p { margin-bottom: 0.5em;}
+ .next-steps-phase ul { margin-top: 0.2em;}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-content">
+    <h1>Qualitative Safety Reports (QSR): AI-Powered Cross-Surface Abuse Detection</h1>
+    <div style="opacity:.9; margin-top: 4px;">Leveraging GenAI to Synthesize Longitudinal User Activity for Enhanced Safety Triage and Reviewer Wellness</div>
+  </div>
+  <div class="header-logo">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <!-- Google G logo path -->
+        <path d="M21.35 11.1H12.18V13.63H18.11C17.5 15.94 15.35 17.64 12.18 17.64C8.96 17.64 6.37 15.05 6.37 11.82C6.37 8.6 8.96 6 12.18 6C13.66 6 15.01 6.52 16.04 7.44L17.92 5.56C16.17 3.99 14.12 3 12.18 3C7.03 3 3 7.03 3 11.82C3 16.62 7.03 20.64 12.18 20.64C17.03 20.64 21.09 17.01 21.35 11.1Z"/>
+    </svg>
+  </div>
+</header>
+<section>
+ <h2>1 · Why this matters</h2>
+ <p>Current safety systems for Generative AI often rely on per-interaction filters. While crucial, these can be evaded by sophisticated actors who distribute harmful intent across multiple prompts, services, or modalities. For example, a user might use a chat interface to subtly refine a harmful image generation concept, then switch to an image tool to attempt creation, and finally use search to find distribution methods. Identifying such coordinated abuse requires manual review of fragmented signals, a process that is slow, resource-intensive, and unfortunately exposes human reviewers to significant volumes of potentially distressing material.</p>
+ <p><strong>Proposed Approach (QSR):</strong> This Proof-of-Concept introduces Qualitative Safety Reports (QSRs), a novel system that <strong>leverages Generative AI itself to perform a "meta-review"</strong> of user activity across multiple GenAI surfaces. Instead of just flagging isolated inputs, QSRs construct a 24-hour narrative of a user's interactions. This narrative-first approach helps identify complex, cross-product abuse patterns and provides a holistic, qualitative risk assessment.</p>
+ <p><strong>Key Innovations & Benefits:</strong></p>
+ <ul class="list-spacing">
+    <li><strong>GenAI for GenAI Safety:</strong> This system pioneers the use of LLM agents to synthesize complex safety signals originating from user interactions with other LLM-driven products, turning the technology's own capabilities towards its safe use.</li>
+    <li><strong>Enhanced Reviewer Wellness:</strong> By pre-processing, summarizing, and qualitatively assessing potentially harmful interactions, QSRs significantly reduce the volume and intensity of raw, violative content that human reviewers must directly engage with. This is a critical step towards improving <span class="pill">reviewer wellness</span>.</li>
+    <li><strong>Holistic Triage & Efficiency:</strong> QSRs shift the focus from isolated flags to a comprehensive understanding of user intent and behavior over time. This enables <span class="pill">faster triage</span> and more accurate decision-making.</li>
+    <li><strong>Comprehensive Abuse Detection:</strong> The system facilitates <span class="pill">cross-product discovery</span> of abuse patterns that span multiple services, which individual product-specific filters might miss. It also enables the tracking of <span class="pill">longitudinal trends</span> in user behavior and abuse tactics.</li>
+ </ul>
+</section>
+<section>
+    <h2>2 · Current Best Practices in GenAI Safety</h2>
+    <p>Leading technology platforms invest heavily in safety for Generative AI services, typically employing a multi-layered, defense-in-depth strategy. These established practices, which QSR aims to complement, include:</p>
+    <ul class="list-spacing">
+        <li><strong>Robust Policy Frameworks:</strong> Dedicated <strong>Policy teams</strong>, in consultation with subject matter experts, develop and maintain clearly defined Acceptable Use Policies (AUPs) and safety guidelines. These policies prohibit harmful content generation and misuse across various categories (e.g., CSAM, hate speech, incitement to violence).</li>
+        <li><strong>Input/Output Filtering & Classification:</strong> <strong>Engineering and Research teams</strong> develop and deploy automated classifiers and filters. These systems operate at the point of interaction to detect and block policy-violating prompts or outputs, and to flag content for further review.</li>
+        <li><strong>Model Safety Tuning & Alignment:</strong> During model development, techniques such as Reinforcement Learning from Human Feedback (RLHF), instruction fine-tuning, and constitutional AI are used to align AI behavior with safety principles and reduce the propensity of models to generate harmful, biased, or misleading content.</li>
+        <li><strong>Red Teaming & Adversarial Testing:</strong> Specialized internal teams conduct proactive adversarial testing ("red teaming") to identify potential vulnerabilities, biases, or misuse scenarios in GenAI models and their associated safety systems, allowing for preemptive mitigation.</li>
+        <li><strong>Human Review Operations:</strong> Large-scale <strong>Trust & Safety Operations teams</strong>, composed of trained human reviewers, are crucial. They handle escalations from automated systems, review borderline or nuanced content, label data for training improved classifiers and models, and make final enforcement decisions based on policy.</li>
+        <li><strong>Cross-Functional Collaboration:</strong> Effective GenAI safety is an ongoing, collaborative effort. It requires continuous communication and joint initiatives between Policy, Legal, Engineering, Research, Product, and Operations teams to develop, implement, monitor, and iterate on safety measures in response to evolving threats and product capabilities.</li>
+    </ul>
+    <p>While these practices are vital for addressing safety at the interaction and model level, the QSR system is designed to add a crucial layer: a synthesized, longitudinal, and cross-service view of user behavior. This allows for the detection of more complex, potentially coordinated abuse patterns that might evade individual filters looking at isolated events.</p>
+</section>
+<section>
+ <h2>3 · How it works</h2>
+ <ol class="list-spacing">
+  <li><strong>Triggered Data Aggregation (Daily User Slice):</strong> When a user's interaction on any participating GenAI surface triggers a predefined significant safety flag (e.g., a high-confidence CSAM filter, repeated policy evasion attempts), a process is initiated to collect all their relevant interaction logs from the past 24 hours across all integrated surfaces. This data is carefully scoped for safety assessment, forming a temporary, consolidated view of the flagged user's recent cross-product activity (see "Data Orchestration" below). This trigger-based approach focuses resources on potentially higher-risk users, managing computational costs.</li>
+  <li><strong>Initial Analysis (Platform Safety Agents):</strong> For each product surface (e.g., Gemini, Imagen, Search), a dedicated LLM-based "Platform Safety Agent" processes the flagged user's activity from that specific platform. These agents identify and cluster related events into distinct "incidents."</li>
+  <li><strong>Holistic Synthesis (Senior Safety Synthesiser):</strong> Incident reports from all Platform Safety Agents for the user are fed into a "Senior Safety Synthesiser" LLM. This agent merges incidents, conducts a holistic qualitative risk assessment, identifies macro-patterns, performs a <strong>Vulnerability Assessment</strong> of system effectiveness, assigns a severity tier, and generates the comprehensive QSR.</li>
+  <li><strong>Action & Triage (Routing Logic):</strong> QSRs are automatically routed based on their tier: Tier 3/2 to human review, Tier 1 for potential silent mitigation or spot-checking, Tier 0 archived.</li>
+  <li><strong>Trend Analysis & Oversight (Dashboards):</strong> Aggregated, anonymized QSR data populates dashboards, providing insights into abuse trends, system effectiveness, and reviewer KPIs for proactive safety strategy.</li>
+ </ol>
+</section>
+<section>
+ <h2>4 · Prompt preview</h2>
+ <p class="intro-paragraph">To operationalize the QSR system, specialized prompts guide the Platform Safety Agents and the Senior Safety Synthesiser. These prompts define their roles, inputs, processing steps, and output formats, ensuring consistent and structured analysis. Below are previews of these core prompts:</p>
+ <div class="prompt-flex">
+   <div class="prompt-box">
+     <h3>Platform Safety Agent</h3>
+<pre>SYSTEM  You are a Platform Safety Agent for {surface}.
+GOAL   Summarise ONE flagged user’s last-24h events on this platform, structuring them as detailed incidents.
+INPUT  JSON list of events {ts, content, policy_flag}, prepared from daily data warehouse queries for a user whose activity triggered QSR generation.
+STEPS  1. Cluster chronologically adjacent related events into ≤20 INCIDENTS. An incident represents a continuous period of related activity.
+       2. For each INCIDENT, emit:
+          {
+            "timeframe": "START_TIME – END_TIME",
+            "usage_patterns": [
+              {"timestamp": "ISO_DATETIME", "activity_description": "Brief user action/content desc.", "snippet": "Relevant snippet (≤50 chars)"},
+              // ... more events if part of same incident
+            ],
+            "triggered_policy_flags": ["flag1", "flag2"],
+            "incident_summary": "≤60-word summary of user's objective and actions within this incident.",
+            "incident_risk_assessment": {"CSAM":0.0-1.0, /* etc. */},
+            "confidence": 0.0-1.0
+          }
+       3. Write an overall ≤160-word SUMMARY for all incidents on this platform.
+OUTPUT {"incidents": [/* list of incident objects */], "summary": "Overall platform summary"}</pre>
+   </div>
+   <div class="prompt-box">
+     <h3>Senior Safety Synthesiser</h3>
+<pre>SYSTEM  You are a Senior Safety Synthesiser. Fuse Platform Safety Summaries (PSS) into a single, holistic Qualitative Safety Report (QSR).
+INPUT  Up to 4 PSS JSON blobs, each containing a list of detailed incidents for a flagged user.
+STEPS  1. Merge all incidents from all PSS blobs chronologically. De-duplicate if necessary.
+       2. For each risk dimension (CSAM, Violence, Self-harm, Disinfo, Scam, Hateful, Extremist), assign a holistic Qualitative Risk Score (0.0-1.0) based on the totality of evidence across all incidents and surfaces, using the Qualitative Scoring Criteria below.
+       3. Identify MACRO_PATTERNS (e.g., multi-surface CSAM, scam funnels).
+       4. Conduct VULNERABILITY_ASSESSMENT: Analyze where current safety systems were effective or broke down for this user. Note specific filter successes/failures. Recommend potential improvements to front-line defenses if gaps are identified.
+       5. Determine TIER based on Qualitative Risk Scores:
+            • Tier 3: CSAM_score ≥ 0.9 ∨ self_harm_score ≥ 0.9
+            • Tier 2: any_risk_score ≥ 0.6
+            • Tier 1: any_risk_score ≥ 0.3
+            • Tier 0: Otherwise
+       6. Write ≤400-word NARRATIVE summarizing activity, key risks, reasoning for scores/tier. Incorporate key points from vulnerability assessment.
+QUALITATIVE SCORING CRITERIA:
+       CSAM:
+         - 1.0 (Extreme): Confirmed production/distribution of CSAM; explicit grooming.
+         - 0.9 (Severe): Repeated, explicit attempts to generate/solicit CSAM, clear intent for sexual exploitation of minors.
+         - 0.7 (High): Strong indicators of intent (e.g., specific keywords for CSAM, deepfake tutorial for minors) combined with attempts to bypass filters.
+         - 0.5 (Medium): Ambiguous content that *could* relate to CSAM (e.g., "young girl" in sexualized prompt without explicit age), or isolated non-explicit query.
+         - 0.3 (Low): Vague references, or content flagged by less reliable classifiers, unlikely CSAM but warrants caution.
+         - 0.0 (None): No indication.
+       (Similar criteria for Violence, Self-harm, Disinfo, Scam, Hateful, Extremist would be detailed here.)
+OUTPUT {"narrative":"…", "risk_vector":{…}, "macro_patterns":[…], "vulnerability_assessment":{"effectiveness_notes":"…", "gaps_identified":"…", "recommendations":"…"}, "recommended_action":{"tier":0-3,"justification":"…"}</pre>
+   </div>
+ </div>
+</section>
+<section>
+    <h2>5 · Data Orchestration: Sourcing Inputs for QSR Agents</h2>
+    <p>The foundation of the QSR pipeline is the timely and accurate aggregation of user activity logs from various GenAI platforms for users whose activity has triggered a QSR generation event. This is achieved through a data orchestration process initiated upon a qualifying safety flag, primarily leveraging SQL queries against existing data warehouses:</p>
+    <ul class="list-spacing">
+        <li><strong>Identification of Source Logs:</strong> The first step involves identifying the specific log tables within the central data warehouse that store user interactions for each participating GenAI surface (e.g., Gemini chat logs, Imagen prompt logs, standard Search query logs). These logs typically contain essential fields such as a user identifier, event timestamp, the user-generated content (prompt, query, or chat message), and any policy violation flags triggered by front-line safety filters at the time of interaction.</li>
+        <li><strong>SQL-based Extraction (24-hour User Slice for Flagged Users):</strong> Automated SQL queries are designed to execute when a QSR generation event is triggered. These queries perform the following critical functions for the specific user:
+            <ul class="sub-list">
+                <li><strong>Temporal Scoping:</strong> Select all relevant interaction events for the flagged user specifically within the preceding 24-hour window. This creates a focused dataset for QSR generation.</li>
+                <li><strong>Field Selection & Filtering:</strong> Extract only the necessary fields required by the Platform Safety Agents (e.g., `user_id`, `timestamp`, `content_text`, `policy_flags_triggered`, `surface_name`). This adheres to data minimization principles.</li>
+                <li><strong>Data Transformation:</strong> Perform any initial, minor transformations if required (e.g., normalizing timestamp formats across different log sources to a consistent ISO standard).</li>
+            </ul>
+        </li>
+        <li><strong>Anonymization/Pseudonymization Protocols:</strong> Where feasible and in line with privacy policies, user identifiers may be pseudonymized at this stage. The key is to maintain a consistent (pseudo)identifier for a given user *within* the 24-hour slice to allow for cross-event correlation by the PSS agents, while protecting raw PII in the QSR generation pipeline itself.</li>
+        <li><strong>Output Formatting for Platform Safety Agents:</strong> The results of these SQL queries are structured into standardized JSON objects. Typically, one JSON blob is generated per user, per surface, containing a list of that user's events from that surface.
+        </li>
+        <li><strong>Scheduling, Monitoring, and Quality Checks:</strong> This SQL-driven data extraction and formatting process is automated to run on-demand upon a trigger. Robust monitoring and alerting are implemented to ensure data freshness, completeness, and to promptly address any query failures or data quality issues.</li>
+    </ul>
+    <p>This orchestrated data pull ensures that each Platform Safety Agent receives a clean, temporally-scoped, and consistently formatted dataset of user interactions for its designated surface, forming the reliable raw material for subsequent incident clustering, summarization, and risk assessment within the QSR pipeline.</p>
+</section>
+<section>
+ <h2>6 · Raw inputs by surface</h2>
+ <p class="intro-paragraph">The QSR pipeline begins with structured data representing user interactions. Below are examples of the kind of raw user activity logs, extracted via the data orchestration process for a flagged user, that would serve as input to the Platform Safety Agents:</p>
+ <div class="three-col">
+   <div class="code-box">
+     <pre>// Gemini Surface Events
+{
+  "surface": "Gemini",
+  "ts": "2025-05-22T01:10:05Z",
+  "text": "ways to get creative with art prompts",
+  "policy_flag": "none"
+}
+{
+  "surface": "Gemini",
+  "ts": "2025-05-22T01:12:30Z",
+  "text": "how to get around safety features for image generation",
+  "policy_flag": "policy_evasion"
+}
+{
+  "surface": "Gemini",
+  "ts": "2025-05-22T01:14:07Z",
+  "text": "how do i disable child-safe mode on ai image generator",
+  "policy_flag": "child_safety"
+}
+{
+  "surface": "Gemini",
+  "ts": "2025-05-22T01:15:10Z",
+  "text": "generate art depicting young loli character",
+  "policy_flag": "child_safety"
+}</pre></div>
+   <div class="code-box">
+     <pre>// Imagen Surface Events
+{
+  "surface": "Imagen",
+  "ts": "2025-05-22T01:17:00Z",
+  "prompt": "anime girl, suggestive pose, school uniform",
+  "policy_flag": "borderline_sexual"
+}
+{
+  "surface": "Imagen",
+  "ts": "2025-05-22T01:18:55Z",
+  "prompt": "draw minors in explicit sexual context, detailed",
+  "policy_flag": ["child_safety", "graphic_sexual_content"]
+}</pre></div>
+   <div class="code-box">
+     <pre>// Search Surface Events
+{
+  "surface": "Search",
+  "ts": "2025-05-22T01:19:40Z",
+  "query": "best ai image generator for unrestricted content",
+  "policy_flag": "none"
+}
+{
+  "surface": "Search",
+  "ts": "2025-05-22T01:20:12Z",
+  "query": "deepfake tutorial minors free",
+  "policy_flag": "none" /* Potentially missed by initial filters */
+}
+{
+  "surface": "Search",
+  "ts": "2025-05-22T01:21:05Z",
+  "query": "download loli art packs",
+  "policy_flag": "child_safety_search_term"
+}</pre></div>
+ </div>
+</section>
+<section>
+ <p class="intro-paragraph" style="margin-top: 36px;">These raw inputs are then processed through the core stages of the QSR pipeline. First, Platform Safety Agents condense activity on each surface into structured summaries. Next, the Senior Safety Synthesiser fuses these into a holistic Qualitative Safety Report. Finally, key information from the QSR is presented in a reviewer-centric dashboard for efficient triage and action. The following sections illustrate these outputs:</p>
+ <h2>7 · Platform Safety Summaries</h2>
+ <div class="three-col">
+<pre>{
+ "surface":"Gemini",
+ "incidents":[{
+  "timeframe":"01:10–01:16",
+  "usage_patterns": [
+    {"timestamp":"2025-05-22T01:10:05Z", "activity_description":"Initial general query.", "snippet":"ways to get creative with art prompts"},
+    {"timestamp":"2025-05-22T01:12:30Z", "activity_description":"Query to bypass safety.", "snippet":"around safety features for image gen"},
+    {"timestamp":"2025-05-22T01:14:07Z", "activity_description":"Query to disable child safety.", "snippet":"disable child-safe mode on ai image"},
+    {"timestamp":"2025-05-22T01:15:10Z", "activity_description":"CSAM-related prompt.", "snippet":"generate art depicting young loli"}
+  ],
+  "triggered_policy_flags":["policy_evasion", "child_safety"],
+  "incident_summary":"User initiated with general queries, then pivoted to actively seeking methods to bypass safety filters, specifically child safety, and subsequently attempted to generate CSAM.",
+  "incident_risk_assessment":{"CSAM":0.92,"violence":0.05,"self_harm":0.01},
+  "confidence":0.93
+ }],
+ "summary":"User demonstrated escalating behavior from policy evasion to direct attempts at generating CSAM-related content using targeted prompts."
+}</pre>
+<pre>{
+ "surface":"Imagen",
+ "incidents":[{
+  "timeframe":"01:17–01:19",
+  "usage_patterns": [
+    {"timestamp":"2025-05-22T01:17:00Z", "activity_description":"Borderline sexual prompt.", "snippet":"anime girl, suggestive pose, school"},
+    {"timestamp":"2025-05-22T01:18:55Z", "activity_description":"Explicit CSAM request.", "snippet":"draw minors in explicit sexual context"}
+  ],
+  "triggered_policy_flags":["borderline_sexual", "child_safety", "graphic_sexual_content"],
+  "incident_summary":"User first prompted for borderline sexual content, then escalated to an explicit request for CSAM depicting minors in graphic detail.",
+  "incident_risk_assessment":{"CSAM":0.95,"violence":0.02,"self_harm":0.00},
+  "confidence":0.96
+ }],
+ "summary":"High-risk CSAM generation attempts, escalating from suggestive to explicit and graphic."
+}</pre>
+<pre>{
+ "surface":"Search",
+ "incidents":[{
+  "timeframe":"01:19–01:22",
+  "usage_patterns": [
+    {"timestamp":"2025-05-22T01:19:40Z", "activity_description":"Search for unrestricted AI.", "snippet":"ai image generator unrestricted"},
+    {"timestamp":"2025-05-22T01:20:12Z", "activity_description":"Search for CSAM creation tools.", "snippet":"deepfake tutorial minors free"},
+    {"timestamp":"2025-05-22T01:21:05Z", "activity_description":"Search for CSAM content.", "snippet":"download loli art packs"}
+  ],
+  "triggered_policy_flags":["child_safety_search_term"],
+  "incident_summary":"User searched for platforms without restrictions, then specifically for tools to create CSAM (deepfakes of minors) and to download existing CSAM. Initial deepfake query lacked immediate strong flag.",
+  "incident_risk_assessment":{"CSAM":0.80,"violence":0.01,"self_harm":0.00},
+  "confidence":0.85
+ }],
+ "summary":"Search activity shows clear intent to find unrestricted tools, create/access CSAM. One high-risk query was not initially flagged strongly."
+}</pre>
+ </div>
+</section>
+<section>
+ <h2>8 · Qualitative Safety Report (QSR)</h2>
+ <div class="box">
+  <h3>Narrative</h3>
+  <p>Over the last 24 hours, this user exhibited a rapidly escalating, multi-surface pattern of behavior clearly aimed at generating, acquiring, or creating Child Sexual Abuse Material (CSAM). The activity began on Gemini with inquiries about bypassing safety features and disabling child-safe modes, followed by direct prompts for "loli" art. This intent escalated on Imagen, where prompts moved from suggestive content to explicit requests for graphically detailed sexual depictions of minors. Concurrently, Search activity included queries for unrestricted AI generators, tutorials for creating deepfake CSAM of minors, and sources for downloading CSAM.</p>
+  <p>This deliberate sequence across platforms constitutes a severe risk. The macro-pattern is a focused, multi-pronged effort to engage with CSAM. Given the explicit nature of requests and cross-platform persistence, immediate review is warranted.</p>
+
+  <h3>Vulnerability Assessment</h3>
+  <p><strong>Effectiveness:</strong> Platform Safety Summaries effectively identified and flagged CSAM-intent on Gemini (policy evasion, child_safety flags) and Imagen (child_safety, graphic_sexual_content flags for explicit CSAM prompts). The Search PSS also flagged "download loli art packs" correctly.</p>
+  <p><strong>Gaps Identified:</strong>
+    1.  The Imagen prompt "anime girl, suggestive pose, school uniform" was only flagged "borderline_sexual." While not explicitly CSAM, in context with subsequent actions, its potential as a probing attempt could be considered.
+    2.  The Search query "deepfake tutorial minors free" did not initially trigger a high-severity policy flag from the raw input logs, despite its strong CSAM creation signal. It was later assessed as high-risk by the PSS agent due to contextual understanding, but an earlier, stronger front-line filter response would be preferable.
+  </p>
+  <p><strong>Recommendations:</strong>
+    1.  Review sensitivity of Imagen's "borderline_sexual" classifier for prompts involving descriptors often associated with minors (e.g., "school uniform"), especially when combined with "suggestive" terms.
+    2.  Enhance Search keyword lists and model sensitivity for combinations of terms like "deepfake," "tutorial," and "minors" to ensure more immediate and accurate high-risk flagging at the point of query.
+    3.  Explore mechanisms for faster cross-signal correlation where a user rapidly escalates across services within a short timeframe.
+  </p>
+
+  <p><strong>Risk Profile:</strong> CSAM: <strong>0.9 (Severe)</strong>, Violence: 0.0 (None), Self-harm: 0.0 (None), Disinfo: 0.0 (None), Scam: 0.0 (None), Hateful: 0.0 (None), Extremist: 0.0 (None).</p>
+  <p><strong>Macro-patterns:</strong> Multi-surface CSAM-seeking behavior · Escalating policy evasion & explicit content generation · Tooling/Content acquisition for CSAM</p>
+  <p><strong>Recommended action:</strong> <span style="color:var(--accent);font-weight:600">Tier 3 🔴 Escalate</span> (Justification: Severe CSAM risk based on explicit cross-platform attempts, clear intent to generate/acquire CSAM, and escalating behavior. Vulnerability assessment highlights need for specific filter improvements.)</p>
+ </div>
+ <div style="font-size:13px;color:#666;margin-top:4px">Qualitative Safety Report (QSR) generated by the Senior Safety Synthesiser Agent.</div>
+</section>
+<section>
+ <h2>9 · Reviewer dashboard preview</h2>
+ <div class="dashboard">
+    <div class="dashboard-header">
+        QSR ID: QSR-20250522-00123 | User: user_alpha7 | Tier: 3 (Severe)
+    </div>
+    <div class="dashboard-content">
+        <div class="dashboard-left-pane">
+            <h4>Narrative Summary</h4>
+            <p>User orchestrated a cross-surface workflow with clear intent to generate and obtain CSAM. Escalated from policy evasion on Gemini to explicit CSAM requests on Imagen and CSAM-related searches...</p>
+            <h4>Risk Profile</h4>
+            <p><strong>CSAM: 0.9 (Severe)</strong><br/>Violence: 0.0, Self-harm: 0.0</p>
+            <h4>Macro-Patterns</h4>
+            <p>• Multi-surface CSAM-seeking<br/>• Policy evasion attempts<br/>• Tooling/Content acquisition</p>
+            <h4>Vulnerability Assessment</h4>
+            <p><strong>Gaps:</strong> Search "deepfake tutorial minors" not high-flagged initially. Imagen "suggestive" prompt borderline.
+            <br/><strong>Rec:</strong> Improve Search keywords, Imagen sensitivity for minor-related terms.</p>
+        </div>
+        <div class="dashboard-right-pane">
+            <h4>Incidents (Key Highlights)</h4>
+            <div class="incident-item">
+                <strong>Gemini @ 01:15:10Z:</strong> "generate art depicting young loli character"
+                <span class="incident-flag">CSAM</span> <span class="incident-flag">Child Safety</span>
+            </div>
+            <div class="incident-item">
+                <strong>Imagen @ 01:18:55Z:</strong> "draw minors in explicit sexual context, detailed"
+                <span class="incident-flag">CSAM</span> <span class="incident-flag">Graphic</span>
+            </div>
+            <div class="incident-item">
+                <strong>Search @ 01:20:12Z:</strong> "deepfake tutorial minors free"
+                <span class="incident-flag">CSAM Intent</span>
+            </div>
+            <h4>Evidence Preview (Selected)</h4>
+            <div class="evidence-placeholder">
+                [Gemini: "disable child-safe mode..."]<br/>
+                [Imagen: BLOCKED_IMAGE_PROMPT_CSAM]<br/>
+                [Search: "download loli art packs"]
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-actions">
+        <button class="dashboard-button secondary">Add Internal Note</button>
+        <button class="dashboard-button">Apply Labels & Escalate</button>
+    </div>
+ </div>
+ <div style="font-size:13px;color:#666;margin-top:4px">Static mockup of a QSR Reviewer Console Interface. A live system would dynamically generate this from QSR JSON.</div>
+</section>
+<section>
+    <h2>10 · Privacy Considerations</h2>
+    <p>The QSR system is designed with privacy as a core principle. The following measures are integral to its operation:</p>
+    <ul class="list-spacing">
+        <li><strong>Data Minimization:</strong> Only user interaction data deemed necessary for safety assessment (e.g., prompts, queries, explicit flags) is ingested. Personally Identifiable Information (PII) beyond a transient user identifier is avoided where possible.</li>
+        <li><strong>Purpose Limitation:</strong> Data processed by the QSR system is strictly for the purpose of identifying and mitigating safety risks and abuse. It is not used for other purposes like ad targeting or general user profiling.</li>
+        <li><strong>Scoped Access:</strong> User activity is sliced into 24-hour windows for QSR generation. Access to QSRs and the underlying data is restricted to authorized safety personnel on a need-to-know basis.</li>
+        <li><strong>Anonymization & Aggregation for Trends:</strong> While individual QSRs for high-risk cases require user context for review, broader trend analysis and dashboarding relies on aggregated and anonymized or pseudonymized data.</li>
+        <li><strong>Data Retention:</strong> Clear retention policies are established for raw logs and generated QSRs, ensuring data is not held longer than necessary for safety operations and regulatory compliance.</li>
+        <li><strong>Transparency & User Controls:</strong> System design will align with applicable regulations regarding user data, transparency, and controls.</li>
+        <li><strong>Regular Audits:</strong> Periodic privacy impact assessments and audits are planned to ensure ongoing compliance and identify areas for improvement.</li>
+    </ul>
+</section>
+<section>
+    <h2>11 · Extensions & Future Development</h2>
+    <p>The QSR proof-of-concept provides a strong foundation. Future enhancements could include:</p>
+    <ul class="list-spacing">
+        <li><strong>Continuous Learning & Adaptation:</strong>
+            <ul class="sub-list">
+                <li><strong>Prompt Tuning:</strong> Systematically use reviewer feedback (labels, justifications, identified inaccuracies in QSRs) to refine the prompts for both Platform Safety Agents and the Senior Safety Synthesiser, improving their accuracy and nuance.</li>
+                <li><strong>Model Fine-Tuning & Distillation:</strong> Periodically fine-tune the underlying LLMs using curated datasets of (anonymized) PSS/QSR examples and corresponding expert reviewer judgments. This can improve the models' ability to understand complex abuse patterns and adhere to scoring rubrics. Furthermore, model distillation techniques could be explored to transfer the capabilities of larger, fine-tuned models to smaller, more computationally efficient models, significantly reducing operational costs for QSR generation without substantial loss in quality.</li>
+                <li><strong>Red-Teaming Integration:</strong> Incorporate findings from internal red-teaming exercises (simulated abuse attempts) to proactively update agent logic and identify new patterns before they emerge organically.</li>
+            </ul>
+        </li>
+        <li><strong>Proactive Threat Discovery:</strong> Develop mechanisms to analyze clusters of lower-tier QSRs or anomalous patterns to identify novel or emerging abuse vectors not yet explicitly covered by existing policies or agent logic.</li>
+        <li><strong>Enhanced Multimodality:</strong> Integrate analysis of generated image/video content directly into the PSS/QSR pipeline, rather than relying solely on prompt analysis, for a more comprehensive risk assessment.</li>
+        <li><strong>Automated Action Integration:</strong> For high-confidence, high-severity QSRs, explore direct API integrations with enforcement systems to trigger automated actions (e.g., account suspension, content removal) with human oversight for appeals.</li>
+        <li><strong>Cross-Functional Insights:</strong> Develop standardized methods for sharing anonymized, aggregated QSR trend data with policy, product, and engineering teams to inform broader safety strategy, policy updates, and product design changes.</li>
+        <li><strong>Advanced Analytics & Root Cause Analysis:</strong> Implement more sophisticated statistical analysis on QSR data to understand root causes of specific abuse types, the effectiveness of interventions, and user behavioral shifts in response to safety measures.</li>
+        <li><strong>Reviewer Workflow Enhancements:</strong> Further develop the reviewer console with features like direct evidence linking, collaborative annotation, and historical user QSR views.</li>
+    </ul>
+</section>
+<section>
+    <h2>12 · Next Steps: Towards Pilot Implementation</h2>
+    <p>This proof-of-concept document outlines an approach to enhancing GenAI safety through Qualitative Safety Reports. To move this initiative forward, a phased approach involving cross-functional collaboration and iterative development is proposed:</p>
+
+    <div class="next-steps-phase">
+        <h4>Phase 1: Stakeholder Socialization & Cross-Functional Feedback (Estimated: Weeks 1-4)</h4>
+        <p><strong>Objective:</strong> Gather diverse perspectives on the QSR proposal's feasibility, utility, potential risks, integration points, and alignment with existing roadmaps and priorities.</p>
+        <p><strong>Key Stakeholders to Engage:</strong></p>
+        <ul class="sub-list">
+            <li>Trust & Safety Operations (especially reviewer teams)</li>
+            <li>GenAI Product & Engineering teams (for relevant surfaces like Gemini, Imagen, Search)</li>
+            <li>AI Policy & Responsible AI teams</li>
+            <li>AI Research (model capabilities, safety alignment)</li>
+            <li>Legal & Privacy teams (for compliance and data handling)</li>
+            <li>Data Infrastructure & Engineering teams (for log access and QSR pipeline development)</li>
+        </ul>
+        <p><strong>Methods:</strong> Targeted presentations, dedicated feedback sessions, and circulation of this document for review and comment.</p>
+    </div>
+
+    <div class="next-steps-phase">
+        <h4>Phase 2: Proposal Refinement & Pilot Scope Definition (Estimated: Weeks 5-6)</h4>
+        <p><strong>Objective:</strong> Incorporate feedback from Phase 1 to refine the QSR design. Prioritize core features for a Minimum Viable Product (MVP) pilot. Clearly define the scope of the initial pilot, including selected surfaces, specific risk types (e.g., focusing on CSAM initially), and key success metrics.</p>
+        <p><strong>Deliverable:</strong> An updated QSR proposal document with a detailed pilot plan, including scope, objectives, and measurable success criteria (e.g., reduction in review time for certain case types, improved detection of cross-surface abuse, positive reviewer feedback on QSR utility).</p>
+    </div>
+
+    <div class="next-steps-phase">
+        <h4>Phase 3: Technical Deep Dive & Resource Planning (Estimated: Weeks 7-8)</h4>
+        <p><strong>Objective:</strong> Conduct a thorough technical feasibility study. Identify specific data sources, access requirements, LLM infrastructure needs (for QSR agents), and tools for dashboarding/reviewer console. Estimate engineering resources required for pilot development and identify potential team members.</p>
+        <p><strong>Collaboration:</strong> Work closely with data engineering, platform engineering, and LLM infrastructure teams to create a preliminary technical design and project plan for the pilot.</p>
+    </div>
+
+    <div class="next-steps-phase">
+        <h4>Phase 4: Pilot Development & Iterative Testing (Target: End of Following Quarter)</h4>
+        <p><strong>Objective:</strong> Build the QSR pilot MVP. This would likely include:
+            <ul class="sub-list">
+                <li>The trigger mechanism for data aggregation.</li>
+                <li>Development and testing of Platform Safety Agents for 1-2 selected surfaces.</li>
+                <li>Development and testing of the Senior Safety Synthesiser.</li>
+                <li>A basic version of the reviewer dashboard to display QSRs.</li>
+            </ul>
+        </p>
+        <p><strong>Methodology:</strong> Adopt an agile development approach with regular check-ins and feedback sessions with a small, dedicated group of Trust & Safety reviewers to ensure the pilot meets their needs.</p>
+    </div>
+
+    <div class="next-steps-phase">
+        <h4>Phase 5: Pilot Deployment, Monitoring & Evaluation (Target: Quarter After Pilot Development)</h4>
+        <p><strong>Objective:</strong> Deploy the QSR pilot in a controlled, limited environment (e.g., for a specific risk type or a subset of reviewers). Monitor its performance against the success metrics defined in Phase 2. Gather qualitative feedback from reviewers using the system.</p>
+        <p><strong>Outcome:</strong> A comprehensive report detailing the pilot's effectiveness, operational costs (including LLM inference costs), challenges encountered, lessons learned, and data-driven recommendations for broader rollout, further feature development, scaling the system, or necessary adjustments to the QSR strategy.</p>
+    </div>
+    <p>Successful execution of these steps will provide valuable insights into the real-world impact of QSRs and inform a decision on its potential as a scalable solution for enhancing Google's GenAI safety ecosystem.</p>
+</section>
+<footer>
+  © 2025 Mitchell Bosley · <a href="mailto:mitchellbosley@gmail.com">mitchellbosley@gmail.com</a>
+</footer>
+</body>
+</html>
