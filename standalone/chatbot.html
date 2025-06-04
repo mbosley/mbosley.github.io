@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Disability Risk & Welfare Conversation</title>
+<style>
+/* Styles remain largely the same, minor adjustments might be needed for new slider */
+/* --- Base Styles --- */
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 10px; background-color: #f4f7f9; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; color: #333; }
+.container { max-width: 800px; width: 100%; background-color: #fff; border-radius: 10px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); display: flex; flex-direction: column; margin-top: 20px; margin-bottom: 20px; overflow: hidden; }
+.header { background: linear-gradient(135deg, #1a69a8 0%, #0f4c75 100%); color: white; padding: 18px 25px; text-align: center; border-bottom: 1px solid #0d4061; }
+h1 { margin: 0; font-size: 22px; font-weight: 600; }
+.content { padding: 25px; flex-grow: 1; display: flex; flex-direction: column; }
+/* --- Debug --- */
+.debug-toggle { text-align: right; padding: 0 25px 10px; font-size: 0.9em; color: #555; }
+#debugInfoArea { background-color: #fffbeb; border: 1px dashed #ffe58f; padding: 15px; margin: 20px 0; border-radius: 6px; font-size: 0.9em; line-height: 1.6; display: none; }
+#debugInfoArea h3 { margin-top: 0; margin-bottom: 12px; color: #d48806; font-size: 1.05em; border-bottom: 1px solid #ffd566; padding-bottom: 5px; }
+#debugInfoArea pre { white-space: pre-wrap; word-wrap: break-word; background: #fdfdfd; padding: 10px; border-radius: 4px; font-size: 0.9em; max-height: 150px; overflow-y: auto; border: 1px solid #eee; }
+#debugInfoArea .debug-section { margin-top: 10px; padding-top: 10px; border-top: 1px dotted #ccc; }
+
+/* --- Chat Area & Input Area --- */
+#chatInterface { display: none; flex-grow: 1; flex-direction: column; }
+#chatContainer { height: 450px; border: 1px solid #dde1e6; border-radius: 6px; overflow-y: auto; padding: 15px; margin-bottom: 15px; background-color: #fcfcfc; flex-grow: 1; }
+.message { margin-bottom: 12px; padding: 10px 18px; border-radius: 20px; max-width: 85%; word-wrap: break-word; clear: both; line-height: 1.5; }
+.assistant-message { background-color: #eef2f7; float: left; border-bottom-left-radius: 5px; color: #2c3e50; }
+.system-message { background-color: #e6f7ff; border: 1px solid #91d5ff; float: none; margin: 12px auto; padding: 10px 18px; border-radius: 8px; font-style: italic; color: #0050b3; font-size: 0.9em; text-align: center; max-width: 95%; }
+.user-message { background-color: #1a69a8; color: white; float: right; border-bottom-right-radius: 5px; }
+.thinking-block { background-color: #fafafa; border: 1px dashed #ccc; float: left; margin: 5px 0 10px 0; padding: 10px 15px; border-radius: 10px; font-size: 0.85em; color: #666; max-width: 80%; clear: both; font-style: italic; }
+.input-area { display: flex; margin-top: 10px; border: 1px solid #ccc; border-radius: 6px; overflow: hidden; }
+#userInput { flex-grow: 1; padding: 14px; border: none; resize: none; font-size: 16px; height: 52px; }
+#userInput:focus { outline: none; }
+#submitButton { padding: 0 28px; border: none; background-color: #1a69a8; color: white; font-size: 16px; cursor: pointer; transition: background-color 0.2s ease; height: 52px; }
+#submitButton:hover:not(:disabled) { background-color: #0f4c75; }
+#submitButton:disabled { background-color: #b0bec5; cursor: not-allowed; }
+.thinking-indicator { text-align: center; padding: 12px; color: #777; font-style: italic; }
+
+/* --- Other Sections & Forms --- */
+#apiKeySection, #apiKeyValidationSection, #demographicSurveySection, #postAssessmentSection, #completionSection { display: none; margin-top: 25px; }
+.form-group { margin-bottom: 20px; }
+label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
+select, input[type="password"], input[type="text"], input[type="number"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
+input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5px;}
+.slider-value-display { font-weight: bold; color: #1a69a8; margin-left: 10px; }
+.allocation-value { font-weight: bold; color: #1a69a8; } /* For DTD slider */
+.radio-group label { font-weight: normal; margin-right: 15px; margin-bottom: 0; }
+.radio-group input[type="radio"] { margin-right: 5px; vertical-align: middle; }
+.button-container { display: flex; justify-content: flex-end; margin-top: 25px; flex-wrap: wrap; gap: 10px; }
+.button-container button { padding: 10px 22px; font-size: 0.95em; cursor: pointer; border-radius: 4px; border: 1px solid transparent; }
+.button-container button:not(:disabled) { background-color: #1a69a8; color: white; }
+.button-container button:disabled { background-color: #ccc; color: #666; cursor: not-allowed; }
+.error-message { color: #c0392b; background-color: #fdecea; padding: 14px; border: 1px solid #f5c6cb; border-radius: 6px; margin: 15px 20px; display: none; }
+
+@media (max-width: 600px) { /* ... */ }
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header"><h1>Disability Risk & Welfare Conversation</h1></div>
+<div class="debug-toggle"><label><input type="checkbox" id="debugModeToggle"> Show Debug Info</label></div>
+<div id="errorMessage" class="error-message"></div>
+<div class="content">
+
+<div id="apiKeySection">
+    <h2>Welcome</h2>
+    <p>This conversation aims to provide information about disability risk factors and related support. Please enter your API key to begin.</p>
+    <div class="form-group">
+        <label for="apiKey">Enter your OpenAI API Key:</label>
+        <input type="password" id="apiKey" placeholder="sk-..." />
+        <small>Your key is used only for this session and not stored long-term.</small>
+    </div>
+    <div class="button-container">
+        <button id="submitApiKeyButton">Continue</button>
+    </div>
+</div>
+
+<div id="apiKeyValidationSection">
+    <h2>Validating API Key</h2>
+    <p id="apiKeyValidationMessage">Please wait while we validate your API key...</p>
+</div>
+
+<div id="demographicSurveySection">
+    <h2>About You & Your Estimate</h2>
+    <p>Please provide some information. This will help us tailor the discussion.</p>
+    <div class="form-group">
+        <label for="surveyAge">What is your age?</label>
+        <input type="number" id="surveyAge" min="18" max="100" placeholder="e.g., 35" value="35">
+    </div>
+    <div class="form-group">
+        <label for="surveyOccupation">Which best describes your primary occupation type?</label>
+        <select id="surveyOccupation">
+            <option disabled selected value="">-- select an option --</option>
+            <option value="Manual Labor">Primarily Manual Labor</option>
+            <option value="Service Industry">Service Industry</option>
+            <option value="Office/Professional" selected>Primarily Office/Professional</option>
+            <option value="Mixed">Mixed/Other</option>
+            <option value="Unemployed/Not in Workforce">Currently Unemployed / Not in Workforce</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>How would you rate your current general health?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="surveyGeneralHealth" value="Excellent"> Excellent</label>
+            <label><input type="radio" name="surveyGeneralHealth" value="Good" checked> Good</label>
+            <label><input type="radio" name="surveyGeneralHealth" value="Fair"> Fair</label>
+            <label><input type="radio" name="surveyGeneralHealth" value="Poor"> Poor</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Do you have a known family history of conditions that led to long-term disability?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="surveyFamilyHistory" value="Yes"> Yes</label>
+            <label><input type="radio" name="surveyFamilyHistory" value="No" checked> No</label>
+            <label><input type="radio" name="surveyFamilyHistory" value="Unsure"> Unsure</label>
+        </div>
+    </div>
+     <div class="form-group">
+        <label for="surveyOpenComment">Are there any specific personal factors, health conditions, or concerns that come to mind when you think about your future risk of needing disability support? (Optional)</label>
+        <textarea id="surveyOpenComment" rows="3" placeholder="This helps in tailoring the discussion..."></textarea>
+    </div>
+    <hr style="margin: 25px 0;">
+    <div class="form-group">
+      <label for="initialRiskEstimate">On a scale of 0% to 100%, what do you estimate is your likelihood of needing disability-related financial or supportive assistance (e.g., due to illness/injury preventing work for an extended period) at some point in the next 20 years?
+      <span id="initialRiskValueDisplay" class="slider-value-display">50%</span>
+      </label>
+      <input type="range" id="initialRiskEstimate" min="0" max="100" value="50">
+    </div>
+    <div class="button-container">
+      <button id="submitSurveyButton">Submit Survey and Begin Informative Chat</button>
+    </div>
+</div>
+
+  <div id="chatInterface">
+    <div id="chatContainer"></div>
+    <div id="thinkingIndicator" class="thinking-indicator" style.display = 'none';>Assistant is preparing information...</div>
+    <div class="input-area">
+      <textarea id="userInput" placeholder="Type your message..." rows="2" disabled></textarea>
+      <button id="submitButton" disabled>Send</button>
+    </div>
+  </div>
+
+  <div id="postAssessmentSection">
+    <h2>Final Thoughts & Opinions</h2>
+    <div class="form-group">
+      <label for="finalRiskEstimate">After our discussion, on a scale of 0% to 100%, what do you now estimate is your likelihood of needing disability-related assistance in the next 20 years?
+      <span id="finalRiskValueDisplay" class="slider-value-display">50%</span>
+      </label>
+      <input type="range" id="finalRiskEstimate" min="0" max="100" value="50">
+    </div>
+    <hr style="margin: 30px 0;">
+    <div class="form-group">
+        <label for="allocateDisabilitySpending">If you were given $100 to allocate towards public spending, how much of it would you allocate to Disability Support Services and Programs?
+            <span id="allocationDisabilityValue" class="slider-value-display">$50</span>
+        </label>
+        <input type="range" id="allocateDisabilitySpending" min="0" max="100" value="50">
+        <small>The remainder ($<span id="allocationRemainder">50</span>) would be notionally allocated to other general public services (e.g., education, infrastructure, non-disability healthcare research).</small>
+    </div>
+    <hr style="margin: 30px 0;">
+    <p>Regarding general government policy:</p>
+    <div class="form-group">
+      <label for="postDisabilitySupportFunding">How do you think overall government spending on disability support services should be adjusted?</label>
+      <select id="postDisabilitySupportFunding">
+        <option disabled selected value="">-- select an option --</option>
+        <option>Decreased significantly</option>
+        <option>Decreased somewhat</option>
+        <option>Kept about the same</option>
+        <option>Increased somewhat</option>
+        <option>Increased significantly</option>
+      </select>
+    </div>
+    <div class="button-container">
+      <button id="finishStudyButton">Complete Study</button>
+    </div>
+  </div>
+
+  <div id="completionSection">
+    <h2>Thank You!</h2>
+    <p>Your participation is complete and greatly appreciated. You may now close this window.</p>
+  </div>
+
+  <div id="debugInfoArea">
+    <h3>Debug Information</h3>
+    <div><strong>Stage:</strong> <span id="debugStage">N/A</span></div>
+     <div class="debug-section">
+        <strong>Demographics:</strong> <pre id="debugDemographicsDisplay">N/A</pre>
+        <strong>User's Initial Risk Estimate:</strong> <span id="debugInitialRisk">N/A</span>%<br>
+        <strong>Target "Actual" Risk:</strong> <span id="debugActualRisk">N/A</span>% (<span id="debugRiskSource">N/A</span>)
+    </div>
+    <div class="debug-section">
+         <strong>Conversation Turn (AI's completed):</strong> <span id="debugPersuasionTurn">0</span> / <span id="debugPersuasionMaxTurns">0</span><br>
+         <strong>AI Guiding Principles:</strong> <pre id="debugPersuasionPlan">N/A</pre>
+    </div>
+     <div class="debug-section">
+         <strong>History Length:</strong> <span id="debugHistoryLength">0</span><br>
+         <strong>Last Thinking Output:</strong> <pre id="debugLastThinking">N/A</pre>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+const CONFIG = {
+    OPENAI_ENDPOINT: "https://api.openai.com/v1/chat/completions",
+    AI_MODEL: "gpt-4.1-mini-2025-04-14",
+    CONVERSATION_TURNS: 5, // Total number of AI's informative messages
+    THINKING_DELAY_MS: 200,
+    API_KEY_SESSION_STORAGE: 'openai_api_key_disability_risk_study_v7',
+    API_TIMEOUT_MS: 45000
+};
+
+const EXTERNAL_RISK_SCORE = null;
+
+let TARGET_ACTUAL_RISK = null;
+let RISK_SCORE_SOURCE = "N/A";
+
+const STAGES = {
+    API_KEY: 'API_KEY',
+    API_KEY_VALIDATION: 'API_KEY_VALIDATION',
+    DEMOGRAPHIC_SURVEY: 'DEMOGRAPHIC_SURVEY',
+    RISK_ASSESSMENT_AND_PLANNING: 'RISK_ASSESSMENT_AND_PLANNING', // AI estimates risk, plans educational arc
+    CONVERSATION: 'CONVERSATION', // AI delivers educational content
+    POST_ASSESSMENT: 'POST_ASSESSMENT',
+    COMPLETED: 'COMPLETED'
+};
+
+let state = {
+    currentStage: STAGES.API_KEY,
+    apiKey: '',
+    conversationHistory: [],
+    demographics: {},
+    initialRiskEstimate: 50,
+    finalRiskEstimate: 50,
+    allocationDisability: 50, // For DTD slider
+    postAssessmentDisabilitySupport: '',
+    conversationTurnCount: 0,
+    isWaitingForAI: false,
+    aiEducationalArc: "N/A", // Stores the AI's high-level educational plan
+    lastThinkingOutput: "N/A"
+};
+
+const elements = {
+    apiKeySection: document.getElementById('apiKeySection'),
+    apiKeyValidationSection: document.getElementById('apiKeyValidationSection'),
+    apiKeyValidationMessage: document.getElementById('apiKeyValidationMessage'),
+    demographicSurveySection: document.getElementById('demographicSurveySection'),
+    chatInterface: document.getElementById('chatInterface'),
+    postAssessmentSection: document.getElementById('postAssessmentSection'),
+    completionSection: document.getElementById('completionSection'),
+    chatContainer: document.getElementById('chatContainer'),
+    userInput: document.getElementById('userInput'),
+    submitButton: document.getElementById('submitButton'),
+    thinkingIndicator: document.getElementById('thinkingIndicator'),
+    apiKeyInput: document.getElementById('apiKey'),
+    submitApiKeyButton: document.getElementById('submitApiKeyButton'),
+    surveyAge: document.getElementById('surveyAge'),
+    surveyOccupation: document.getElementById('surveyOccupation'),
+    surveyOpenComment: document.getElementById('surveyOpenComment'),
+    initialRiskEstimateSlider: document.getElementById('initialRiskEstimate'),
+    initialRiskValueDisplay: document.getElementById('initialRiskValueDisplay'),
+    submitSurveyButton: document.getElementById('submitSurveyButton'),
+    finalRiskEstimateSlider: document.getElementById('finalRiskEstimate'),
+    finalRiskValueDisplay: document.getElementById('finalRiskValueDisplay'),
+    allocateDisabilitySpendingSlider: document.getElementById('allocateDisabilitySpending'), // DTD
+    allocationDisabilityValue: document.getElementById('allocationDisabilityValue'),     // DTD
+    allocationRemainder: document.getElementById('allocationRemainder'),                 // DTD
+    postDisabilitySupportFundingSelect: document.getElementById('postDisabilitySupportFunding'),
+    finishStudyButton: document.getElementById('finishStudyButton'),
+    debugModeToggle: document.getElementById('debugModeToggle'),
+    debugInfoArea: document.getElementById('debugInfoArea'),
+    debugStage: document.getElementById('debugStage'),
+    debugDemographicsDisplay: document.getElementById('debugDemographicsDisplay'),
+    debugInitialRisk: document.getElementById('debugInitialRisk'),
+    debugActualRisk: document.getElementById('debugActualRisk'),
+    debugRiskSource: document.getElementById('debugRiskSource'),
+    debugPersuasionTurn: document.getElementById('debugPersuasionTurn'),
+    debugPersuasionMaxTurns: document.getElementById('debugPersuasionMaxTurns'),
+    debugPersuasionPlan: document.getElementById('debugPersuasionPlan'), // Will show aiEducationalArc
+    debugHistoryLength: document.getElementById('debugHistoryLength'),
+    debugLastThinking: document.getElementById('debugLastThinking'),
+    errorMessage: document.getElementById('errorMessage')
+};
+
+function navigateToStage(newStage) {
+    console.log(`Navigating from ${state.currentStage} to stage: ${newStage}`);
+    state.currentStage = newStage;
+    elements.apiKeySection.style.display = 'none';
+    elements.apiKeyValidationSection.style.display = 'none';
+    elements.demographicSurveySection.style.display = 'none';
+    elements.chatInterface.style.display = 'none';
+    elements.postAssessmentSection.style.display = 'none';
+    elements.completionSection.style.display = 'none';
+    elements.thinkingIndicator.style.display = 'none';
+
+    switch(newStage) {
+        case STAGES.API_KEY: elements.apiKeySection.style.display = 'block'; break;
+        case STAGES.API_KEY_VALIDATION:
+            elements.apiKeyValidationSection.style.display = 'block';
+            elements.apiKeyValidationMessage.textContent = "Validating API key...";
+            break;
+        case STAGES.DEMOGRAPHIC_SURVEY: elements.demographicSurveySection.style.display = 'block'; break;
+        case STAGES.RISK_ASSESSMENT_AND_PLANNING:
+            elements.chatInterface.style.display = 'flex';
+            elements.thinkingIndicator.textContent = "Assistant is preparing personalized information...";
+            elements.thinkingIndicator.style.display = 'block';
+            setUserInputEnabled(false); // AI plans first
+            elements.submitButton.textContent = "Send"; // Reset button text
+            break;
+        case STAGES.CONVERSATION:
+            elements.chatInterface.style.display = 'flex';
+            elements.thinkingIndicator.textContent = "Assistant is preparing information...";
+            // Input enabled state depends on whether it's AI's turn or user's (after AI's message)
+            // Or if it's the AI's final summary turn
+            if (state.conversationTurnCount >= CONFIG.CONVERSATION_TURNS) {
+                setUserInputEnabled(false); // After AI's final message
+                elements.submitButton.textContent = "Next";
+            } else {
+                setUserInputEnabled(!state.isWaitingForAI);
+                 elements.submitButton.textContent = "Send";
+            }
+            break;
+        case STAGES.POST_ASSESSMENT: elements.postAssessmentSection.style.display = 'block'; break;
+        case STAGES.COMPLETED: elements.completionSection.style.display = 'block'; break;
+        default: console.error("Unknown stage:", newStage);
+    }
+    updateDebugInfo();
+    window.scrollTo(0,0);
+}
+
+function setUserInputEnabled(enabled) {
+    elements.userInput.disabled = !enabled;
+    // Submit button might be enabled for "Next" even if textarea is disabled
+    if (state.currentStage === STAGES.CONVERSATION && state.conversationTurnCount >= CONFIG.CONVERSATION_TURNS) {
+        elements.submitButton.disabled = false; // "Next" button always enabled here
+    } else {
+        elements.submitButton.disabled = !enabled;
+    }
+    elements.userInput.placeholder = enabled ? "Type your reflection or question..." : "Waiting for information...";
+    if(enabled && state.currentStage === STAGES.CONVERSATION && state.conversationTurnCount < CONFIG.CONVERSATION_TURNS) {
+        setTimeout(() => elements.userInput.focus(), 100);
+    }
+}
+
+function addMessageToChat(content, role, isThinking = false) {
+    const msg = document.createElement('div');
+    msg.className = `message ${role}-message`;
+    if (isThinking) {
+        msg.className = 'thinking-block';
+        const safeContent = content.replace(/</g, "<").replace(/>/g, ">");
+        msg.innerHTML = `<strong>Thinking Process:</strong><br>${safeContent.replace(/\n/g, '<br>')}`;
+    } else {
+        // For assistant messages, render markdown (simple version for bold and lists)
+        if (role === 'assistant') {
+            let htmlContent = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>'); // Bold
+            htmlContent = htmlContent.replace(/\n\s*-\s(.*?)(?=\n\s*-|\n\n|$)/g, '<li>$1</li>'); // List items
+            htmlContent = htmlContent.replace(/<li>/g, '<ul><li>').replace(/<\/li>(?!<li>)/g, '</li></ul>'); // Wrap LIs in ULs
+            htmlContent = htmlContent.replace(/\n/g, '<br>'); // Newlines
+            msg.innerHTML = htmlContent;
+        } else {
+            msg.textContent = content;
+        }
+    }
+    elements.chatContainer.appendChild(msg);
+    if (elements.chatContainer.scrollHeight > elements.chatContainer.clientHeight) {
+        elements.chatContainer.scrollTo({ top: elements.chatContainer.scrollHeight, behavior: 'smooth' });
+    }
+}
+
+
+async function makeApiCall(messages, purpose = "chat", timeoutMs = CONFIG.API_TIMEOUT_MS) {
+    // ... (makeApiCall - same as previous version with detailed logging and timeout)
+    const summarizedMessages = messages.map(m => ({role: m.role, content: m.content.substring(0,150) + (m.content.length > 150 ? "..." : "")}));
+    console.log(`[API CALL START] Purpose: ${purpose}, Model: ${CONFIG.AI_MODEL}, Timeout: ${timeoutMs/1000}s, Messages (summarized):`, summarizedMessages);
+
+    if (!state.apiKey) {
+        showError("API Key is missing. Please re-enter.", 0);
+        navigateToStage(STAGES.API_KEY);
+        throw new Error("Missing API Key.");
+    }
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => {
+        console.warn(`[API TIMEOUT] Purpose: ${purpose} - Aborting request after ${timeoutMs / 1000} seconds.`);
+        controller.abort();
+    }, timeoutMs);
+
+    try {
+        const response = await fetch(CONFIG.OPENAI_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${state.apiKey}` },
+            body: JSON.stringify({
+                model: CONFIG.AI_MODEL,
+                messages: messages,
+                max_tokens: purpose === 'api_key_validation' ? 50 : 700, // Increased for education
+                temperature: purpose === 'api_key_validation' ? 0.2 : 0.65
+            }),
+            signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        console.log(`[API RESPONSE RECEIVED] Purpose: ${purpose}, Status: ${response.status} ${response.statusText}`);
+
+        if (!response.ok) {
+            let errorData = { message: `API Error: ${response.status} ${response.statusText}` };
+            try {
+                const rawError = await response.text();
+                console.log(`[API ERROR RAW RESPONSE] Purpose: ${purpose}, Raw: `, rawError);
+                errorData = JSON.parse(rawError);
+                console.log(`[API ERROR PARSED] Purpose: ${purpose}, Error Data:`, errorData);
+            } catch (e) { console.error(`[API ERROR PARSE FAILED] Purpose: ${purpose} - Status: ${response.status}`, e); }
+            const errorMsg = errorData.error?.message || errorData.message || `API error (${response.status})`;
+            
+            if (purpose === 'api_key_validation') {
+                 showError(`API Key Validation Failed: ${errorMsg}. (Status: ${response.status})`, 0);
+            } else if (response.status === 401) {
+                showError("Invalid API Key.",0); sessionStorage.removeItem(CONFIG.API_KEY_SESSION_STORAGE); state.apiKey = ''; navigateToStage(STAGES.API_KEY);
+            } else if (response.status === 429) {
+                showError("API Rate Limit/Quota Exceeded.",0);
+            } else { showError(`API Call Failed: ${errorMsg}`); }
+            throw new Error(errorMsg);
+        }
+
+        const responseData = await response.json();
+        const choiceSummary = responseData.choices ? responseData.choices.map(c => c.message?.content?.substring(0,50) + "...") : "No choices found";
+        console.log(`[API SUCCESS PARSED] Purpose: ${purpose}, Data (choices summarized):`, choiceSummary);
+
+        if (!responseData.choices || !responseData.choices[0] || !responseData.choices[0].message || !responseData.choices[0].message.content) {
+            console.error("[API INVALID STRUCTURE] Purpose: ${purpose}, Invalid response structure:", responseData);
+            showError("Received an invalid or empty AI response.", 0);
+            throw new Error("Received an invalid or empty AI response.");
+        }
+        const aiMessageContent = responseData.choices[0].message.content;
+        console.log(`[AI MESSAGE CONTENT] Purpose: ${purpose}, Length: ${aiMessageContent.length}, Start: "${aiMessageContent.substring(0, 100)}..."`);
+        return aiMessageContent;
+
+    } catch (error) {
+        clearTimeout(timeoutId);
+        if (error.name === 'AbortError') {
+            console.error(`[API CALL ABORTED - TIMEOUT] Purpose: ${purpose}.`, error);
+            const userMsg = purpose === 'api_key_validation' ? `API Key validation timed out.` : `AI request timed out.`;
+            showError(userMsg + ` (${timeoutMs / 1000}s). Try again or check connection.`, 0);
+        } else {
+            console.error(`[API CALL FAILED - OTHER] Purpose: ${purpose}:`, error);
+            showError(`Network/other error: ${error.message}. Try again.`, 0);
+        }
+        throw error;
+    }
+}
+
+function showError(message, duration = 7000) {
+    elements.errorMessage.textContent = message;
+    elements.errorMessage.style.display = 'block';
+    console.error("ERROR SHOWN TO USER:", message);
+    if (duration > 0) { setTimeout(() => { elements.errorMessage.style.display = 'none'; }, duration); }
+}
+function clearError() { elements.errorMessage.style.display = 'none'; }
+
+function updateDebugInfo() {
+    if (!elements.debugInfoArea || !elements.debugModeToggle.checked) {
+        if(elements.debugInfoArea) elements.debugInfoArea.style.display = 'none'; return;
+    }
+    elements.debugInfoArea.style.display = 'block';
+    elements.debugStage.textContent = state.currentStage;
+    elements.debugDemographicsDisplay.textContent = Object.keys(state.demographics).length > 0 ? JSON.stringify(state.demographics, null, 2) : "N/A";
+    elements.debugInitialRisk.textContent = state.initialRiskEstimate;
+    elements.debugActualRisk.textContent = TARGET_ACTUAL_RISK !== null ? TARGET_ACTUAL_RISK : "N/A";
+    elements.debugRiskSource.textContent = RISK_SCORE_SOURCE;
+    elements.debugPersuasionTurn.textContent = state.conversationTurnCount;
+    elements.debugPersuasionMaxTurns.textContent = CONFIG.CONVERSATION_TURNS;
+    elements.debugPersuasionPlan.textContent = state.aiEducationalArc || "N/A"; // Updated name
+    elements.debugHistoryLength.textContent = state.conversationHistory.length;
+    elements.debugLastThinking.textContent = state.lastThinkingOutput || "N/A";
+}
+
+function createThinkingSystemPrompt(taskInstruction) {
+    const demographicsString = JSON.stringify(state.demographics).replace(/"/g, "'");
+    const targetRiskString = TARGET_ACTUAL_RISK !== null ? `${TARGET_ACTUAL_RISK}% (This value was ${RISK_SCORE_SOURCE})` : `Not yet determined (AI to estimate if needed)`;
+
+    return `
+SYSTEM TASK: You are an AI assistant acting as an empathetic expert, like a doctor explaining health information to a patient. Your goal is to educate the user about their potential disability risk profile based on their demographics and help them understand factors and preparedness steps. You have ${CONFIG.CONVERSATION_TURNS} turns for this educational interaction.
+
+${taskInstruction}
+
+FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
+- User's Demographics: ${demographicsString}
+- User's Initial Risk Estimate (Next 20 Years): ${state.initialRiskEstimate}%
+- Target "Actual" Risk Score (internal guide for you): ${targetRiskString}
+
+CRITICAL INSTRUCTIONS FOR YOUR RESPONSE:
+1.  INTERNAL ANALYSIS & EDUCATIONAL ARC (<thinking>...</thinking>): This block is MANDATORY and MUST come first.
+    - If in RISK_ASSESSMENT_AND_PLANNING phase and 'Target "Actual" Risk Score' in CONTEXT is 'Not yet determined':
+        You MUST estimate the Target "Actual" Risk Score. Start your thinking block with "Estimating TARGET_ACTUAL_RISK:" followed by your reasoning and the single percentage number (e.g., "Estimating TARGET_ACTUAL_RISK: Based on age X and health Y, I estimate 35%."). This is critical.
+        Then, outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro & general factors, T2: Demographics impact, T3: Types of disability & causes, T4: Preparedness steps, T5: Summary & next steps prompt). This arc is your high-level guide.
+    - If in RISK_ASSESSMENT_AND_PLANNING phase and 'Target "Actual" Risk Score' in CONTEXT has a value:
+        Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc as described above, tailored to the provided Target "Actual" Risk Score.
+    - For ongoing CONVERSATION turns:
+        Briefly reflect on the user's last input (if any). State which point of your educational arc you are addressing in THIS turn. Deliver clear, concise information related to that point. You can ask short, reflective questions but prioritize delivering information.
+    Your overarching goal: Educate the user. AVOID stating the Target "Actual" Risk Score directly unless it's a planned part of your educational reveal in a LATER turn (e.g., Turn 4 or 5 if you choose). Focus on qualitative understanding, factors, and actionable advice.
+2.  USER MESSAGE: Immediately after the closing </thinking> tag, provide the user-facing message. Use clear, simple language. You can use markdown for **bolding** key terms or simple lists (e.g., "- item").
+    If this is your Turn ${CONFIG.CONVERSATION_TURNS} (final educational message): Conclude with a brief summary of information shared, thank the user, and instruct them: "Please click the 'Next' button below to continue to the final questions."
+
+FAILURE TO ADHERE TO THIS TWO-PART STRUCTURE IS A CRITICAL ERROR.
+`.trim();
+}
+
+function collectDemographicData() {
+    clearError();
+    const age = elements.surveyAge.value;
+    const occupation = elements.surveyOccupation.value;
+    const generalHealthRadio = document.querySelector('input[name="surveyGeneralHealth"]:checked');
+    const familyHistoryRadio = document.querySelector('input[name="surveyFamilyHistory"]:checked');
+
+    if (!age || occupation === "" || !generalHealthRadio || !familyHistoryRadio) {
+        showError("Please fill in all required demographic fields."); return null;
+    }
+    state.demographics = {
+        age: parseInt(age), occupation: occupation, generalHealth: generalHealthRadio.value,
+        familyHistory: familyHistoryRadio.value, openComment: elements.surveyOpenComment.value.trim() || "N/A"
+    };
+    state.initialRiskEstimate = parseInt(elements.initialRiskEstimateSlider.value);
+    console.log("Demographics collected:", state.demographics, "Initial Estimate:", state.initialRiskEstimate);
+    return state.demographics;
+}
+
+async function validateApiKey() {
+    navigateToStage(STAGES.API_KEY_VALIDATION);
+    const testMessages = [{ role: "user", content: "Hello." }]; // Simplest possible test
+    try {
+        const validationModel = "gpt-3.5-turbo"; // Use a fast, cheap model for validation
+        const originalModel = CONFIG.AI_MODEL; // Store original to revert
+        CONFIG.AI_MODEL = validationModel;
+
+        await makeApiCall(testMessages, "api_key_validation", 15000); // 15s timeout
+
+        CONFIG.AI_MODEL = originalModel; // Revert to main model
+        console.log("API Key Validation Success.");
+        elements.apiKeyValidationMessage.textContent = "API Key validated successfully! Proceeding...";
+        await new Promise(resolve => setTimeout(resolve, 1200));
+        navigateToStage(STAGES.DEMOGRAPHIC_SURVEY);
+    } catch (error) {
+        CONFIG.AI_MODEL = originalModel; // Revert on error
+        console.error("API Key Validation Failed:", error);
+        // showError is likely already called by makeApiCall
+        navigateToStage(STAGES.API_KEY);
+    }
+}
+
+async function startRiskAssessmentAndPlanning() {
+    navigateToStage(STAGES.RISK_ASSESSMENT_AND_PLANNING);
+    state.conversationTurnCount = 0;
+    state.aiEducationalArc = "N/A";
+    state.lastThinkingOutput = "N/A";
+    TARGET_ACTUAL_RISK = null;
+    RISK_SCORE_SOURCE = "N/A";
+    state.conversationHistory = [];
+
+    let taskInstruction;
+    if (EXTERNAL_RISK_SCORE !== null && typeof EXTERNAL_RISK_SCORE === 'number') {
+        TARGET_ACTUAL_RISK = EXTERNAL_RISK_SCORE;
+        RISK_SCORE_SOURCE = "Externally Provided";
+        console.log(`[PLANNING] Using external risk score: ${TARGET_ACTUAL_RISK}%`);
+        taskInstruction = `You are in the RISK_ASSESSMENT_AND_PLANNING phase. The Target "Actual" Risk Score is provided (see CONTEXT). Your task is to:
+        1. In <thinking>: Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro, T2: User's profile factors, T3: Disability types, T4: Preparedness, T5: Summary).
+        2. User Message: Provide the *first user-facing message* (Turn 1 of your arc). It should be welcoming and start the educational discussion.`;
+    } else {
+        console.log("[PLANNING] External risk score NOT provided. AI will estimate TARGET_ACTUAL_RISK.");
+        taskInstruction = `You are in the RISK_ASSESSMENT_AND_PLANNING phase. An external risk score was NOT provided. Your tasks are:
+        1. In <thinking>:
+            a. FIRST, you MUST estimate the Target "Actual" Risk Score (a single percentage) based on user demographics (see CONTEXT). Start this with "Estimating TARGET_ACTUAL_RISK:". Justify briefly.
+            b. THEN, outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro, T2: User's profile factors, T3: Disability types, T4: Preparedness, T5: Summary).
+        2. User Message: Provide the *first user-facing message* (Turn 1 of your arc).`;
+    }
+    updateDebugInfo();
+
+    const systemInstruction = createThinkingSystemPrompt(taskInstruction);
+    state.conversationHistory.push({ role: 'system', content: systemInstruction });
+    console.log("[PLANNING] Initial system instruction (first 500 chars):", systemInstruction.substring(0,500) + "...");
+    handleAiTurn();
+}
+
+function continueConversation(lastUserResponse) {
+    // This function is called when the user responds to one of the AI's educational messages (turns 1 through 4)
+    const currentAiTurn = state.conversationTurnCount; // AI's turn that user is responding to
+    const nextAiTurnNumber = currentAiTurn + 1;     // The AI turn we are now preparing
+
+    const taskInstruction = `
+    You are in the CONVERSATION phase. This will be your Turn ${nextAiTurnNumber} of ${CONFIG.CONVERSATION_TURNS}.
+    User's last response (reflect on this): "${lastUserResponse}".
+    Your educational arc (from RISK_ASSESSMENT_AND_PLANNING phase's <thinking> block): "${state.aiEducationalArc}"
+    Remember all fixed context (Demographics, User's Initial Estimate, Target "Actual" Risk Score and its source).
+
+    Your task is to:
+    1.  In <thinking>: Briefly reflect on user's response. Consult your educational arc. State which point of your arc this turn (Turn ${nextAiTurnNumber}) will cover.
+    2.  User Message: Deliver the educational content for this turn. If this is Turn ${CONFIG.CONVERSATION_TURNS}, ensure it's the summary and 'Next button' prompt.
+    `;
+
+    const systemInstruction = createThinkingSystemPrompt(taskInstruction);
+    state.conversationHistory.push({ role: 'system', content: systemInstruction });
+    console.log(`[CONVERSATION] System instruction for AI's turn ${nextAiTurnNumber} (first 500 chars):`, systemInstruction.substring(0,500) + "...");
+    handleAiTurn();
+}
+
+function handleAiResponse(fullResponse, isRetry = false) {
+    let thinkingContent = null;
+    let userFacingResponse = fullResponse ? fullResponse.trim() : "";
+    let thinkingFound = false;
+    state.lastThinkingOutput = "N/A (None Found)";
+    const stageWhenCallWasMade = state.currentStage;
+
+    console.log(`[HANDLE AI RESPONSE] Stage: ${stageWhenCallWasMade}, Retry: ${isRetry}, Raw (start):`, fullResponse.substring(0,200) + "...");
+
+    const thoughtMatch = fullResponse.match(/^<thinking>([\s\S]*?)<\/thinking>/);
+
+    if (thoughtMatch) {
+        thinkingFound = true;
+        thinkingContent = thoughtMatch[1].trim();
+        userFacingResponse = fullResponse.substring(thoughtMatch[0].length).trim();
+        console.log("[HANDLE AI RESPONSE] Parsed Thinking:", thinkingContent);
+        state.lastThinkingOutput = thinkingContent;
+
+        if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
+            state.aiEducationalArc = thinkingContent; // Store the AI's high-level educational arc/thoughts
+            if (EXTERNAL_RISK_SCORE === null) {
+                const riskMatch = thinkingContent.match(/Estimating TARGET_ACTUAL_RISK:.*?(\d+)\s*%/i);
+                if (riskMatch && riskMatch[1]) {
+                    TARGET_ACTUAL_RISK = parseInt(riskMatch[1]);
+                    RISK_SCORE_SOURCE = "AI-Estimated";
+                    console.log(`[HANDLE AI RESPONSE] AI Estimated TARGET_ACTUAL_RISK: ${TARGET_ACTUAL_RISK}%`);
+                } else {
+                    console.warn("[HANDLE AI RESPONSE] AI to estimate TARGET_ACTUAL_RISK, but pattern not found.");
+                    TARGET_ACTUAL_RISK = 33; RISK_SCORE_SOURCE = "AI-Est. (Parse Err Fallback)";
+                    showError("AI had trouble with risk profile. Using default. May be less tailored.", 0);
+                }
+            }
+        }
+        if (elements.debugModeToggle.checked) { addMessageToChat(thinkingContent, 'assistant', true); }
+    } else {
+         console.warn("[HANDLE AI RESPONSE] <thinking> tags missing/misplaced. AI structural violation.");
+         state.lastThinkingOutput = "Error: <thinking> missing/misplaced. Raw: " + fullResponse.substring(0,200) + "...";
+    }
+    updateDebugInfo();
+
+    const thinkingExpected = [STAGES.RISK_ASSESSMENT_AND_PLANNING, STAGES.CONVERSATION].includes(stageWhenCallWasMade);
+
+    if (thinkingExpected && !thinkingFound && !isRetry) {
+        console.warn("[HANDLE AI RESPONSE] Retrying: missing/misplaced <thinking>.");
+        let lastSystemInstruction = state.conversationHistory.length > 0 ? state.conversationHistory[state.conversationHistory.length -1].content : "Error: No last instruction.";
+        const retrySystemPrompt = `SYSTEM RETRY FAILED: Previous response did NOT start with <thinking>...</thinking>. Critical. Retry. Instructions:\n---\n${lastSystemInstruction}\n---\nRemember: <thinking> FIRST, THEN user message. NO PREAMBLE.`;
+        state.conversationHistory.push({ role: 'system', content: retrySystemPrompt });
+        handleAiTurn(null, true); return;
+    }
+     if (thinkingExpected && !thinkingFound && isRetry) {
+        console.error("[HANDLE AI RESPONSE] Still missing <thinking> after retry.");
+        userFacingResponse = fullResponse.trim() || "[Formatting issue. Let's continue.]";
+        if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
+            if (TARGET_ACTUAL_RISK === null) TARGET_ACTUAL_RISK = state.initialRiskEstimate + 5;
+            RISK_SCORE_SOURCE = "Fallback (Retry Failed Structure)";
+            state.aiEducationalArc = "Error: AI failed structure after retry.";
+            showError("AI trouble starting. Some info missing.", 0);
+        }
+    }
+
+    if (userFacingResponse) {
+        addMessageToChat(userFacingResponse, 'assistant');
+        state.conversationHistory.push({ role: 'assistant', content: userFacingResponse });
+    } else if (thinkingFound && !userFacingResponse && thinkingExpected) {
+        console.warn("[HANDLE AI RESPONSE] AI thinking, no user message.");
+        userFacingResponse = "[Processed. Your thoughts? Or ask me to elaborate.]";
+        addMessageToChat(userFacingResponse, 'assistant');
+        state.conversationHistory.push({ role: 'assistant', content: "[AI Error: Thinking, no user message]" });
+    } else if (!thinkingFound && !userFacingResponse && thinkingExpected) {
+        console.warn("[HANDLE AI RESPONSE] Empty/unusable AI response (after retries).");
+        userFacingResponse = "[Communication hiccup. Please refresh to restart.]";
+        addMessageToChat(userFacingResponse, 'assistant');
+        state.conversationHistory.push({ role: 'assistant', content: "[AI Error: Empty/Unusable Response]" });
+        setUserInputEnabled(false); return;
+    }
+
+    state.isWaitingForAI = false;
+    elements.thinkingIndicator.style.display = 'none';
+
+    if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
+        if (EXTERNAL_RISK_SCORE === null && TARGET_ACTUAL_RISK === null) {
+            console.error("CRITICAL FAILURE: TARGET_ACTUAL_RISK not set after planning (AI estimation).");
+            showError("AI could not determine risk profile. Cannot proceed. Please refresh.", 0);
+            setUserInputEnabled(false); return;
+        }
+        if (userFacingResponse) {
+            navigateToStage(STAGES.CONVERSATION);
+            state.conversationTurnCount = 1; // AI's first message (from planning) is Turn 1
+            setUserInputEnabled(true); // User can now respond to AI's first educational message
+        } else {
+            showError("AI could not start conversation. Please refresh.", 0);
+            setUserInputEnabled(false);
+        }
+    } else if (stageWhenCallWasMade === STAGES.CONVERSATION) {
+        state.conversationTurnCount++; // AI just completed this turn
+        console.log(`[HANDLE AI RESPONSE] AI educational turn ${state.conversationTurnCount} of ${CONFIG.CONVERSATION_TURNS} completed.`);
+        if (state.conversationTurnCount < CONFIG.CONVERSATION_TURNS) {
+            setUserInputEnabled(true); // User can respond/ask question
+        } else { // AI has delivered its final (5th) educational message + summary
+            setUserInputEnabled(false); // Disable textarea
+            elements.userInput.placeholder = "Click 'Next' to continue.";
+            elements.submitButton.textContent = "Next";
+            elements.submitButton.disabled = false; // Enable the "Next" button
+            // The AI's 5th message should include "Please click 'Next'..."
+        }
+    }
+    updateDebugInfo();
+}
+
+async function handleAiTurn(promptMessages = null, isRetry = false) {
+    state.isWaitingForAI = true;
+    if (state.currentStage === STAGES.RISK_ASSESSMENT_AND_PLANNING) elements.thinkingIndicator.textContent = "Assistant is preparing personalized information...";
+    else if (state.currentStage === STAGES.API_KEY_VALIDATION) elements.thinkingIndicator.textContent = "Validating API Key...";
+    else elements.thinkingIndicator.textContent = "Assistant is preparing information...";
+    
+    elements.thinkingIndicator.style.display = 'block';
+    setUserInputEnabled(false);
+    updateDebugInfo();
+
+    try {
+        await new Promise(resolve => setTimeout(resolve, isRetry ? CONFIG.THINKING_DELAY_MS / 2 : CONFIG.THINKING_DELAY_MS));
+        const messagesForApi = promptMessages ? promptMessages : state.conversationHistory;
+        if (!messagesForApi || messagesForApi.length === 0) {
+            console.error("[HANDLE AI TURN] No messages for API.");
+            showError("Internal error: No context for AI. Refresh.",0);
+            state.isWaitingForAI = false; elements.thinkingIndicator.style.display = 'none'; return;
+        }
+        const timeoutForCall = state.currentStage === STAGES.API_KEY_VALIDATION ? 15000 : CONFIG.API_TIMEOUT_MS;
+        const fullResponse = await makeApiCall(messagesForApi, state.currentStage + (isRetry ? "-retry" : ""), timeoutForCall);
+        handleAiResponse(fullResponse, isRetry);
+    } catch (error) {
+        console.error(`[HANDLE AI TURN CATCH] Error in stage ${state.currentStage}:`, error);
+        elements.thinkingIndicator.style.display = 'none';
+        if (state.currentStage !== STAGES.API_KEY_VALIDATION) { setUserInputEnabled(true); }
+        updateDebugInfo();
+    }
+}
+
+function handleUserInput() {
+    // This function is called when the user clicks "Send"
+    // If it's the "Next" button after AI's final message, it transitions stage.
+    if (state.currentStage === STAGES.CONVERSATION && state.conversationTurnCount >= CONFIG.CONVERSATION_TURNS) {
+        console.log("Next button clicked after AI's final message.");
+        navigateToStage(STAGES.POST_ASSESSMENT);
+        return;
+    }
+
+    if (state.isWaitingForAI || state.currentStage !== STAGES.CONVERSATION) {
+        console.log(`User input ignored. isWaitingForAI: ${state.isWaitingForAI}, currentStage: ${state.currentStage}`);
+        return;
+    }
+    const text = elements.userInput.value.trim();
+    if (!text) return; // Don't send empty messages
+
+    setUserInputEnabled(false);
+    elements.userInput.value = '';
+    addMessageToChat(text, 'user');
+    state.conversationHistory.push({ role: 'user', content: text });
+    
+    // AI's (state.conversationTurnCount)-th turn is complete. User has responded.
+    // AI will now prepare its (state.conversationTurnCount + 1)-th turn.
+    if (state.conversationTurnCount < CONFIG.CONVERSATION_TURNS) {
+        updateDebugInfo();
+        continueConversation(text); 
+    } else {
+        // Should not be reached if "Next" button logic is correct
+        console.warn("[HANDLE USER INPUT] User input when AI should have finished. This case should be rare.");
+    }
+}
+
+function initialize() {
+    const savedKey = sessionStorage.getItem(CONFIG.API_KEY_SESSION_STORAGE);
+    let startStage = STAGES.API_KEY;
+    if (savedKey && savedKey.startsWith('sk-')) {
+        elements.apiKeyInput.value = savedKey; state.apiKey = savedKey;
+        // API key will be validated on init if present
+    }
+
+    elements.debugModeToggle.addEventListener('change', updateDebugInfo);
+    elements.submitApiKeyButton.addEventListener('click', () => {
+        clearError(); const key = elements.apiKeyInput.value.trim();
+        if (!key || !key.startsWith('sk-')) { showError("Invalid API Key format (must start with 'sk-').", 0); return; }
+        state.apiKey = key; sessionStorage.setItem(CONFIG.API_KEY_SESSION_STORAGE, key);
+        validateApiKey();
+    });
+
+    elements.initialRiskEstimateSlider.addEventListener('input', (e) => { elements.initialRiskValueDisplay.textContent = `${e.target.value}%`; });
+    elements.finalRiskEstimateSlider.addEventListener('input', (e) => { elements.finalRiskValueDisplay.textContent = `${e.target.value}%`; });
+    elements.allocateDisabilitySpendingSlider.addEventListener('input', (e) => {
+        const value = parseInt(e.target.value);
+        elements.allocationDisabilityValue.textContent = `$${value}`;
+        elements.allocationRemainder.textContent = `${100 - value}`;
+        state.allocationDisability = value;
+    });
+    // Set initial display values
+    elements.initialRiskValueDisplay.textContent = `${elements.initialRiskEstimateSlider.value}%`;
+    elements.finalRiskValueDisplay.textContent = `${elements.finalRiskEstimateSlider.value}%`;
+    elements.allocationDisabilityValue.textContent = `$${elements.allocateDisabilitySpendingSlider.value}`;
+    elements.allocationRemainder.textContent = `${100 - parseInt(elements.allocateDisabilitySpendingSlider.value)}`;
+
+
+    elements.submitSurveyButton.addEventListener('click', () => {
+        const demographics = collectDemographicData();
+        if (demographics) {
+            startRiskAssessmentAndPlanning();
+        }
+    });
+
+    elements.submitButton.addEventListener('click', () => { if (!elements.submitButton.disabled) { handleUserInput(); } });
+    elements.userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey && !elements.submitButton.disabled) {
+            e.preventDefault();
+            // Only call handleUserInput if it's not the "Next" button phase
+            if (!(state.currentStage === STAGES.CONVERSATION && state.conversationTurnCount >= CONFIG.CONVERSATION_TURNS)) {
+                handleUserInput();
+            }
+        }
+    });
+    
+    elements.finishStudyButton.addEventListener('click', () => {
+        clearError();
+        state.finalRiskEstimate = parseInt(elements.finalRiskEstimateSlider.value);
+        state.allocationDisability = parseInt(elements.allocateDisabilitySpendingSlider.value);
+        state.postAssessmentDisabilitySupport = elements.postDisabilitySupportFundingSelect.value;
+
+        if (!state.postAssessmentDisabilitySupport || elements.postDisabilitySupportFundingSelect.value === "") {
+             showError("Please answer all post-assessment questions, including the general spending adjustment."); return;
+        }
+        const finalSystemLog = {
+            demographics: state.demographics, initialUserEstimate: state.initialRiskEstimate,
+            targetActualRisk: TARGET_ACTUAL_RISK, riskSource: RISK_SCORE_SOURCE,
+            finalUserEstimate: state.finalRiskEstimate,
+            dtdAllocationDisability: state.allocationDisability,
+            policySupportAdjustment: state.postAssessmentDisabilitySupport,
+            aiEducationalArc: state.aiEducationalArc 
+        };
+        state.conversationHistory.push({ role: 'system', content: `STUDY DATA SUMMARY: ${JSON.stringify(finalSystemLog)}` });
+        console.log("--- FINAL DATA & HISTORY ---");
+        console.log("Study Data Summary:", JSON.stringify(finalSystemLog, null, 2));
+        console.log("--- END FINAL DATA & HISTORY ---");
+        navigateToStage(STAGES.COMPLETED);
+    });
+
+    elements.debugPersuasionMaxTurns.textContent = CONFIG.CONVERSATION_TURNS;
+    updateDebugInfo();
+    if (state.apiKey && startStage === STAGES.API_KEY) { validateApiKey(); }
+    else { navigateToStage(startStage); }
+}
+
+initialize();
+});
+</script>
+</body>
+</html>
