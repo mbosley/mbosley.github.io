@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using LLMs to evaluate the evidence support for Grand Theories of Politics at scale</title>
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet" />
+
+    <style>
+        :root {
+            --clr-primary: #1b4d68;      
+            --clr-primary-700: #14394d;
+            --clr-secondary: #299e66;    
+            --clr-accent:   #d9821b;     
+            --clr-info:     #3498db;     
+            --clr-violet:   #8e44ad;
+            --clr-bg:       #f5f7fa;
+            --clr-white:    #ffffff;
+            --clr-border:   #e5eaf2;
+            --clr-text:     #243447;
+            --clr-muted:    #64758b;
+
+            --shadow-sm: 0 2px 4px hsl(210deg 15% 35% / 0.08);
+            --shadow-md: 0 6px 16px hsl(210deg 15% 35% / 0.12);
+
+            font-family: "Inter", sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+        body{background:var(--clr-bg);color:var(--clr-text);line-height:1.75;}
+
+        main.container{max-width:72rem;margin-inline:auto;padding:3rem 1.5rem;background:var(--clr-white);border-radius:1rem;box-shadow:var(--shadow-md)}
+
+        header{text-align:center;margin-bottom:3rem;padding-bottom:2rem;border-bottom:4px solid var(--clr-primary)}
+        header h1{font-size:clamp(1.8rem,3vw+1rem,2.8rem);font-weight:700;color:var(--clr-primary); margin-bottom: 0.75rem;}
+        header .subtitle{max-width:45rem;margin-inline:auto;font-size:1.125rem;color:var(--clr-muted)}
+
+        section.phase{margin-bottom:3.5rem; padding: 2rem 1.5rem;}
+        .phase-title{display:flex;align-items:center;gap:.75rem;font-size:1.75rem;font-weight:600;color:var(--clr-primary);margin-bottom:1.75rem; padding-bottom: 0.75rem; border-bottom: 2px solid var(--clr-border);}
+        .phase-title i{font-size:1.25em}
+
+        .flowchart{display:flex;flex-direction:column;align-items:center; gap: 0.25rem;}
+        .flowchart-item{background:var(--clr-white);border:2px solid var(--clr-primary);border-radius:3rem;padding:.85rem 1.6rem;font-weight:500;min-width:20rem;text-align:center;margin:.4rem 0;box-shadow:var(--shadow-sm);transition:.2s}
+        .flowchart-item i{margin-right:.5rem}
+        .flowchart-item:hover{background:var(--clr-primary);color:var(--clr-white);transform:translateY(-2px)}
+
+        .flowchart-arrow-horizontal {
+            font-size: 2rem;
+            color: var(--clr-primary);
+            margin: .1rem 0;
+            text-align: center;
+            width: 100%;
+        }
+        .flowchart-arrow-vertical {
+            font-size: 2rem;
+            color: var(--clr-primary);
+            margin: .1rem 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .iterative-process-box{border:2px dashed var(--clr-accent);padding:1.5rem;border-radius:.75rem;width:100%;max-width:34rem;margin:.4rem 0;position:relative;display:flex;flex-direction:column;align-items:center; gap: 0.25rem;}
+        .iterative-process-box .flowchart-item{border-color:var(--clr-accent);color:var(--clr-accent); min-width: 18rem;}
+        .iterative-process-box .flowchart-item:hover{background:var(--clr-accent);color:var(--clr-white)}
+        .iterative-process-box .flowchart-arrow-vertical {color:var(--clr-accent)} /* Arrows inside loop box are accent color */
+        .iterative-process-box .loop-icon{position:absolute;bottom:.3rem;left:.3rem;font-size:2rem;color:var(--clr-accent)}
+
+        .step{margin-bottom:2.5rem}
+        .step-heading{font-size:1.35rem;font-weight:600;margin-bottom:1.25rem; color: var(--clr-primary-700);}
+
+        .box{border:1px solid var(--clr-border);border-radius:.625rem;padding:1.5rem 1.75rem;background:var(--clr-white);box-shadow:var(--shadow-sm);margin-top:1.25rem;font-size:.98rem}
+        .box-title{display:flex;align-items:center;gap:.6rem;font-weight:600;margin-bottom:1rem; font-size: 1.1rem;}
+        .box pre {
+            font-family:"Roboto Mono",monospace;
+            background:hsl(210deg 20% 96%);
+            border:1px solid hsl(210deg 15% 88%);
+            border-radius:.5rem;
+            padding:.85rem 1.1rem;
+            display:block;
+            overflow-x:auto;
+            line-height:1.65;
+            font-size:.92rem;
+            margin-top:1.25rem;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .prompt-box{border-left:5px solid var(--clr-accent)}
+        .ai-output-box{border-left:5px solid var(--clr-secondary)}
+        .example-box{border-left:5px solid var(--clr-info)}
+        .bayesian-update{border-left:5px solid var(--clr-violet)}
+        .prompt-box .box-title{color:var(--clr-accent)}
+        .ai-output-box .box-title{color:var(--clr-secondary)}
+        .example-box .box-title{color:var(--clr-info)}
+        .bayesian-update .box-title{color:var(--clr-violet)}
+
+        .math-description{background:var(--clr-bg);border:1px solid var(--clr-border);padding:1.1rem;border-radius:.5rem;color:var(--clr-muted);font-size:.98rem; margin: 1.25rem 0;}
+        .math-description strong { color: var(--clr-primary); font-weight: 600;}
+        .math-formula{
+            font-family:"Roboto Mono",monospace;
+            background-color: transparent;
+            border: none;
+            padding: 0 .1em;
+            margin: 0;
+            display: inline;
+            font-size: 0.98em;
+            color: var(--clr-text);
+        }
+
+        footer{text-align:center;font-size:.9rem;color:var(--clr-muted);margin-top:4rem;padding-top:2rem;border-top:1px solid var(--clr-border)}
+    </style>
+</head>
+<body>
+    <main class="container">
+        <header>
+            <h1>Using LLMs to Evaluate the Evidence Support for Grand Theories of Politics at Scale</h1>
+            <p class="subtitle">Tore Wig and Mitchell Bosley</p>
+        </header>
+
+        <!-- OVERVIEW / FLOWCHART SECTION -->
+        <section class="phase">
+            <h2 class="phase-title"><i class="fas fa-project-diagram"></i> Methodological Overview: The Iterative Synthesis Cycle</h2>
+            <div class="flowchart">
+                <div class="flowchart-item"><i class="fas fa-cogs"></i> 1. Theory Deconstruction & Implication Generation</div>
+                <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+                <div class="flowchart-item"><i class="fas fa-book-open"></i> 2. Running Literature Review (RLR) Initialization</div>
+                <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+
+                <div class="iterative-process-box">
+                  <span style="font-weight:600;color:var(--clr-accent);margin-bottom:.5rem">Iterate for each paper in corpus:</span>
+                  <div class="flowchart-item"><i class="fas fa-file-alt"></i> 3a. LLM: Analyze Paper & Update RLR</div>
+                  <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+                  <div class="flowchart-item"><i class="fas fa-brain"></i> 3b. LLM: Elicit Likelihoods</div>
+                  <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+                  <div class="flowchart-item"><i class="fas fa-calculator"></i> 3c. Calculate Implication Posterior</div>
+                  <i class="fas fa-sync loop-icon" title="Loop to next paper"></i>
+                </div>
+
+                <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+                <div class="flowchart-item"><i class="fas fa-clipboard-check"></i> 4. Aggregate Outputs: Final RLR, Belief Trajectories</div>
+                <div class="flowchart-arrow-vertical"><i class="fas fa-arrow-down"></i></div>
+                <div class="flowchart-item"><i class="fas fa-balance-scale"></i> 5. Update Confidence in Grand Theory</div>
+            </div>
+        </section>
+
+        <!-- PHASE 1 -->
+        <section class="phase">
+            <h2 class="phase-title"><i class="fas fa-drafting-compass"></i> Phase 1: Foundation & Framework Setup</h2>
+            <div class="step">
+                <h3 class="step-heading">1. Deconstructing Theory: LLM-Assisted Implication Generation</h3>
+                <p>The LLM analyzes seminal texts of a grand theory to extract its core, empirically falsifiable implications (<span class="math-formula">I<sub>1</sub>, I<sub>2</sub>, …, I<sub>n</sub></span>).</p>
+                <div class="prompt-box box">
+                    <h4 class="box-title"><i class="fas fa-terminal"></i> LLM Prompt: Implication Generation</h4>
+                    <pre>
+Given Fearon's (1995) "Rationalist Explanations for War" [Core Excerpts Provided]:
+
+Identify 3-5 central, distinct, and empirically testable implications stemming from the theory's mechanisms (private information, commitment problems, issue indivisibility).
+
+For each implication, provide:
+  a. A clear statement.
+  b. Its theoretical linkage.
+  c. Examples of relevant empirical evidence.
+                    </pre>
+                </div>
+                <div class="ai-output-box box">
+                    <h4 class="box-title"><i class="fas fa-lightbulb"></i> LLM Output: Example Implication (<span class="math-formula">I<sub>1</sub></span>)</h4>
+                    <pre>
+Implication 1: Impact of Private Information on Conflict Risk
+  a. Statement: Conflict likelihood increases with significant private information on capabilities/resolve, especially with incentives to misrepresent.
+  b. Linkage: Directly from Fearon's argument on informational asymmetries obscuring the bargaining range.
+  c. Evidence Examples: Studies on crisis escalation and informational opacity; signaling effectiveness; experimental bargaining under uncertainty.
+                    </pre>
+                </div>
+            </div>
+
+            <div class="step">
+                <h3 class="step-heading">2. Initializing the Analytical Structure</h3>
+                <p>A Running Literature Review (RLR) document is created with sections for each implication <span class="math-formula">I<sub>j</sub></span>. Each <span class="math-formula">I<sub>j</sub></span> is assigned an initial numerical prior probability, <span class="math-formula">P(I<sub>j</sub>)<sub>initial</sub></span>, typically <span class="math-formula">0.5</span> (maximal uncertainty).</p>
+                <div class="example-box box">
+                    <h4 class="box-title"><i class="fas fa-book"></i> Example: Setup for Implication <span class="math-formula">I<sub>1</sub></span></h4>
+                    <p>Initial RLR Section for <span class="math-formula">I<sub>1</sub></span>:</p>
+                    <pre>
+SECTION: Implication 1 - Impact of Private Information on Conflict Risk
+
+DEFINITION:
+Conflict likelihood increases with significant private information held by at least one party regarding their military capabilities or resolve, coupled with incentives to misrepresent that information during bargaining. This directly stems from Fearon's argument that informational asymmetries prevent states from identifying mutually preferable negotiated settlements that lie within the bargaining range.
+
+THEORETICAL CONTEXT:
+This implication is a cornerstone of rationalist explanations for war. It posits that what actors don't know (and cannot credibly learn) about each other's private information can be a direct cause of costly conflict, even when a peaceful settlement would be mutually preferable ex-post.
+
+INITIAL ASSESSMENT (PRE-LITERATURE REVIEW):
+The mechanism has strong theoretical coherence and face validity. The degree of empirical support across various contexts and its relative importance compared to other causal factors (e.g., commitment problems) is to be determined through the subsequent literature review. No specific evidence has been processed yet for this implication.
+
+CURRENT NUMERICAL BELIEF: P(I<sub>1</sub>)<sub>initial</sub> = 0.5
+                    </pre>
+                    <p style="margin-top:1rem;">Initial Numerical Prior for <span class="math-formula">I<sub>1</sub></span>: <span class="math-formula">P(I<sub>1</sub>)<sub>initial</sub> = 0.5</span></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHASE 2 -->
+        <section class="phase">
+            <h2 class="phase-title"><i class="fas fa-magnifying-glass-chart"></i> Phase 2: Iterative Evidence Synthesis (Processing Schultz 1999 for <span class="math-formula">I<sub>1</sub></span>)</h2>
+            <div class="step">
+                <h3 class="step-heading">A. LLM Evidence Extraction & Qualitative RLR Update (The Reasoning Trace)</h3>
+                <p>The LLM reads Schultz (1999), identifies relevant evidence for <span class="math-formula">I<sub>1</sub></span>, and integrates it into the RLR.</p>
+                <div class="prompt-box box">
+                    <h4 class="box-title"><i class="fas fa-terminal"></i> LLM Prompt: RLR Update & Evidence Assessment</h4>
+                    <pre>
+Current RLR for Implication I<sub>1</sub>:
+[Insert full current RLR text for I<sub>1</sub> from previous step]
+
+Paper for Analysis: Schultz (1999) "Do Democratic Institutions Constrain or Inform?"
+[Detailed Abstract Provided: Schultz (1999) examines whether democratic institutions primarily constrain leaders from using force or provide information that clarifies their intentions and capabilities. Using statistical analysis of militarized interstate disputes, he finds that democracies are not necessarily more peaceful overall but are more selective in their engagements. The transparency of democratic processes, including public debate and opposition scrutiny, makes it more costly for democratic leaders to bluff. Consequently, threats made by democracies are perceived as more credible, leading to opponents being more likely to concede when a democracy issues a serious challenge. This suggests democracies are better at signaling their true resolve due to reduced informational asymmetries.]
+
+Instructions:
+1. Is Schultz (1999) relevant to Implication I<sub>1</sub>? Justify.
+2. Synthesize Schultz's core argument and findings related to Implication I<sub>1</sub>.
+3. Evaluate how this evidence impacts Implication I<sub>1</sub> (support, refute, refine). Consider evidence strength (methodology, scope, clarity).
+4. Compose an updated RLR section for Implication I<sub>1</sub>, integrating Schultz's contribution into the existing narrative. This text must serve as a comprehensive qualitative justification for belief changes. Ensure clear attribution to Schultz (1999).
+                    </pre>
+                </div>
+                <div class="ai-output-box box">
+                    <h4 class="box-title"><i class="fas fa-lightbulb"></i> LLM Output: Updated RLR Section for <span class="math-formula">I<sub>1</sub></span></h4>
+                    <pre>
+SECTION: Implication 1 - Impact of Private Information on Conflict Risk
+
+... [Previous RLR Text for I<sub>1</sub>, including Definition, Theoretical Context, Initial Assessment] ...
+
+EVIDENCE UPDATE (Schultz 1999):
+The initial theoretical plausibility of private information acting as a significant cause of war finds empirical grounding when considering how different institutional structures affect information transmission during crises.
+
+Kenneth Schultz's (1999) study, "Do Democratic Institutions Constrain or Inform?", offers compelling evidence for this. Schultz argues that democratic systems, characterized by public deliberation and opposition oversight, inherently increase the transparency of a state's intentions and resolve. This transparency makes it more costly and difficult for democratic leaders to bluff or misrepresent their private information about their willingness to use force.
+
+His empirical analysis of militarized interstate disputes indicates that threats from democracies are generally perceived as more credible by adversaries. Consequently, opponents are more likely to concede when faced with a serious challenge from a democracy, not because democracies are inherently more pacific, but because their signals regarding resolve are clearer and less prone to misinterpretation due to reduced informational asymmetry.
+
+This research directly underpins Implication 1. If bargaining failures often stem from an inability to overcome private information problems (specifically, discerning true resolve amidst incentives to bluff), then institutional mechanisms like those in democracies that enhance signal credibility should lead to fewer conflicts triggered by miscalculation. Schultz's work effectively demonstrates such a pathway.
+
+The study's use of quantitative analysis across a broad set of interstate disputes provides robust, moderate-to-strong support for the idea that mitigating private information about resolve can indeed reduce the likelihood of bargaining breakdown. This evidence substantially strengthens our confidence in the empirical validity of Implication 1.
+
+ASSESSMENT OF SCHULTZ (1999) FOR I<sub>1</sub>: Supporting. Strength: Moderate to Strong.
+                    </pre>
+                </div>
+            </div>
+
+            <div class="step">
+                <h3 class="step-heading">B. LLM-Informed Likelihood Elicitation (Quantifying RLR Insights)</h3>
+                <p>The LLM translates its qualitative RLR assessment into numerical likelihoods.</p>
+                 <div class="prompt-box box">
+                    <h4 class="box-title"><i class="fas fa-terminal"></i> LLM Prompt: Likelihood Estimation</h4>
+                    <pre>
+Context: Your RLR update for I<sub>1</sub> based on Schultz (1999) states: "Schultz's work effectively demonstrates such a pathway... provides robust, moderate-to-strong support... strengthening confidence in Implication I<sub>1</sub>."
+
+Task: Based on your detailed RLR assessment of Schultz (1999) for Implication I<sub>1</sub>:
+1.  P(Schultz's Evidence | I<sub>1</sub> is True): Estimate the probability (0.0-1.0) of observing Schultz's specific findings IF Implication I<sub>1</sub> IS fundamentally TRUE.
+2.  P(Schultz's Evidence | I<sub>1</sub> is False): Estimate the probability (0.0-1.0) of observing Schultz's findings IF Implication I<sub>1</sub> IS fundamentally FALSE.
+3.  Justification: Provide a concise rationale for your probability estimates, explicitly linking them to the strengths and relevance of Schultz's evidence as documented in your RLR update.
+                    </pre>
+                </div>
+                <div class="ai-output-box box">
+                    <h4 class="box-title"><i class="fas fa-lightbulb"></i> LLM Output: Likelihood Estimates & Justification</h4>
+                    <pre>
+1. P(Schultz's Evidence | I<sub>1</sub> is True): 0.80
+2. P(Schultz's Evidence | I<sub>1</sub> is False): 0.25
+3. Justification:
+The RLR update emphasized that Schultz (1999) provides 'robust, moderate-to-strong support' by demonstrating a clear 'pathway' through which private information about resolve is mitigated by democratic institutions, aligning directly with Implication I<sub>1</sub>.
+If I<sub>1</sub> is TRUE, it is highly probable (thus 0.80) that we would find empirical studies like Schultz's that identify specific institutional factors mitigating these informational problems and demonstrating their impact on crisis bargaining outcomes.
+If I<sub>1</sub> is FALSE (i.e., private information is not a major driver of war), it would be considerably less probable (thus 0.25) to find such a specific and empirically supported link. While democratic behavior might be studied for other reasons, its direct tie-in as a solution to a non-existent private information problem would be less likely.
+                    </pre>
+                </div>
+            </div>
+
+            <div class="step">
+                <h3 class="step-heading">C. Formal Bayesian Update (Calculating Belief Revision for <span class="math-formula">I<sub>1</sub></span>)</h3>
+                <div class="bayesian-update box">
+                    <h4 class="box-title"><i class="fas fa-calculator"></i> Belief Update Calculation for <span class="math-formula">I<sub>1</sub></span></h4>
+                    <div class="math-description">
+                        <p>Using Bayes' Theorem: <span class="math-formula">P(H|E) = [P(E|H) * P(H)] / P(E)</span></p>
+                        <p>For Implication <span class="math-formula">I<sub>1</sub></span> and Schultz's Evidence (E<sub>S</sub>):<br>
+                        <span class="math-formula">P(I<sub>1</sub> True | E<sub>S</sub>) = [P(E<sub>S</sub> | I<sub>1</sub> True) * P(I<sub>1</sub> True)<sub>initial</sub>] / P(E<sub>S</sub>)</span><br>
+                        where <span class="math-formula">P(E<sub>S</sub>) = [P(E<sub>S</sub> | I<sub>1</sub> True) * P(I<sub>1</sub> True)<sub>initial</sub>] + [P(E<sub>S</sub> | I<sub>1</sub> False) * P(I<sub>1</sub> False)<sub>initial</sub>]</span></p>
+                    </div>
+                    <p><strong>Given:</strong> <span class="math-formula">P(I<sub>1</sub> True)<sub>initial</sub> = 0.5</span>; <span class="math-formula">P(E<sub>S</sub> | I<sub>1</sub> True) = 0.80</span>; <span class="math-formula">P(E<sub>S</sub> | I<sub>1</sub> False) = 0.25</span></p>
+                    <p><strong>Calculation:</strong> Numerator = <span class="math-formula">0.80 * 0.5 = 0.40</span>. Denominator = <span class="math-formula">(0.80 * 0.5) + (0.25 * 0.5) = 0.40 + 0.125 = 0.525</span>.</p>
+                    <p><strong>Posterior <span class="math-formula">P(I<sub>1</sub> True | E<sub>S</sub>)</span></strong> = <span class="math-formula">0.40 / 0.525 ≈ <strong>0.762</strong></span></p>
+                    <p>Confidence in <span class="math-formula">I<sub>1</sub></span> increased from <span class="math-formula">0.5</span> to approx. <span class="math-formula">0.762</span>.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PHASE 3 -->
+        <section class="phase">
+            <h2 class="phase-title"><i class="fas fa-clipboard-check"></i> Phase 3: Consolidated Outputs & Theory-Level Assessment</h2>
+             <div class="step">
+                <h3 class="step-heading">1. Aggregated Outputs: Final RLR & Belief Trajectories</h3>
+                <p>The complete RLR contains qualitative reasoning for all processed papers. Belief trajectories show the evolution of <span class="math-formula">P(I<sub>j</sub>)</span> for each implication.</p>
+                <div class="example-box box">
+                    <h4 class="box-title"><i class="fas fa-file-invoice"></i> RLR Excerpt (<span class="math-formula">I<sub>1</sub></span> after several papers) & Belief Trajectory</h4>
+                    <pre>
+SECTION: Implication 1 - Impact of Private Information on Conflict Risk
+
+... [Initial Definition, Theoretical Context, Initial Assessment: P(I<sub>1</sub>)<sub>initial</sub> = 0.5] ...
+
+EVIDENCE UPDATE (Schultz 1999):
+... [Detailed summary of Schultz's contribution as previously generated] ...
+ASSESSMENT OF SCHULTZ (1999) FOR I<sub>1</sub>: Supporting. Strength: Moderate to Strong.
+NUMERICAL BELIEF UPDATE: P(I<sub>1</sub>)<sub>after Schultz</sub> = 0.762
+
+EVIDENCE UPDATE (Hypothetical Paper Alpha 2005 - Focus on intelligence failures):
+Alpha (2005) provides case study evidence suggesting that intelligence failures (a form of acute private information for one side) preceding major wars led to significant miscalculations of opponent capabilities and intentions. For example, the study details how State X underestimated State Y's military readiness due to concealed preparations. This directly links lack of information to conflict escalation.
+ASSESSMENT OF ALPHA (2005) FOR I<sub>1</sub>: Supporting. Strength: Moderate (qualitative, small N).
+NUMERICAL BELIEF UPDATE: P(I<sub>1</sub>)<sub>after Alpha</sub> = 0.831 (Illustrative update from 0.762)
+
+EVIDENCE UPDATE (Hypothetical Paper Beta 2010 - Focus on open-source intelligence):
+Conversely, Beta (2010) argues that the rise of open-source intelligence (OSINT) has, in some recent crises, reduced the scope for private information regarding state capabilities, potentially leading to de-escalation where previously conflict might have occurred. The paper provides two mini-case studies where OSINT clarified ambiguous situations. This suggests a mechanism that *reduces* the impact of private information.
+ASSESSMENT OF BETA (2010) FOR I<sub>1</sub>: Nuancing/Partially Conflicting. Strength: Moderate (exploratory).
+NUMERICAL BELIEF UPDATE: P(I<sub>1</sub>)<sub>after Beta</sub> = 0.795 (Illustrative slight decrease from 0.831 due to nuancing evidence)
+
+CURRENT AGGREGATED ASSESSMENT FOR I<sub>1</sub>:
+The body of evidence reviewed provides substantial and consistent support for Implication 1. While early work like Schultz (1999) established the role of institutional factors in mitigating private information about resolve, subsequent studies like Alpha (2005) reinforced the core mechanism by linking intelligence failures directly to conflict. More recent work, such as Beta (2010), introduces nuances regarding the evolving information environment (e.g., OSINT), suggesting that the impact of private information might be contextually variable or diminishing in certain aspects. However, the fundamental premise that private information coupled with incentives to misrepresent increases conflict risk remains strongly supported.
+
+FINAL NUMERICAL BELIEF FOR I<sub>1</sub> (after all N papers): P(I<sub>1</sub>)<sub>final</sub> = 0.795 (Illustrative)
+                    </pre>
+                    <p style="margin-top:1rem;">Belief Trajectory for <span class="math-formula">I<sub>1</sub></span>: <span class="math-formula">[0.500 (Initial) → 0.762 (Schultz) → 0.831 (Alpha) → 0.795 (Beta) → …]</span></p>
+                </div>
+            </div>
+            <div class="step">
+                <h3 class="step-heading">2. Updating Confidence in the Grand Theory</h3>
+                <p>The overall confidence in the grand theory (GT) is updated based on the posterior probabilities of its constituent implications.</p>
+                <div class="bayesian-update box">
+                     <h4 class="box-title"><i class="fas fa-balance-scale-right"></i> Theory-Level Belief Update</h4>
+                    <p>Conceptual Approach: If a grand theory GT implies <span class="math-formula">I<sub>1</sub>, I<sub>2</sub>, …, I<sub>n</sub></span>, then the support for GT depends on the collective support for these implications.</p>
+                    <ol>
+                        <li><strong>Simple Aggregation (Illustrative):</strong> A weighted average of the final posterior probabilities of the implications.
+                        <br>Example: <span class="math-formula">P(GT) ≈ Σ [w<sub>j</sub> * P(I<sub>j</sub>)<sub>final</sub>]</span>, where <span class="math-formula">Σw<sub>j</sub> = 1</span>.</li>
+                        <li><strong>Logical Conjunction (Illustrative):</strong> If GT critically depends on ALL implications being true:
+                        <br><span class="math-formula">P(GT | E<sub>all</sub>) is proportional to Π P(I<sub>j</sub> | E<sub>j</sub>) * P(GT)<sub>initial</sub></span>.</li>
+                        <li><strong>Advanced Models (e.g., Item Response Theory - IRT):</strong> Model implications as "test items" measuring an underlying latent trait (the "truth" or "validity" of the grand theory). Each paper's finding for an implication acts as a "response." IRT can estimate the difficulty/informativeness of each implication and provide a more nuanced measure of the theory's overall standing. This approach can also help identify which implications are most central or discriminative for the theory.</li>
+                        <li><strong>Qualitative Synthesis by LLM (Recommended for Richness):</strong> The LLM reviews final RLRs and belief states for all implications, providing an overall qualitative assessment and a synthesized numerical confidence score for GT.</li>
+                    </ol>
+                    <p>Example (using Qualitative Synthesis by LLM):</p>
+                    <div class="ai-output-box box" style="border-left-color: var(--clr-primary);">
+                        <h4 class="box-title" style="color: var(--clr-primary);"><i class="fas fa-chess-king"></i> LLM Output: Overall Grand Theory Assessment</h4>
+                        <pre>
+Considering the final evidential support for Fearon's Bargaining Theory implications:
+- Implication I<sub>1</sub> (Private Info): Robust support (P approx. 0.85 final). The RLR shows consistent findings across different methodologies, though some recent work points to moderating factors in the modern information environment.
+- Implication I<sub>2</sub> (Commitment): Moderate support (P approx. 0.65 final). The RLR indicates strong support in interstate contexts but more mixed or contested evidence regarding civil war terminations.
+- Implication I<sub>3</sub> (Indivisibility): Weaker, more context-dependent support (P approx. 0.40 final). The RLR suggests this mechanism is invoked less frequently and often relies on specific case interpretations rather than broad empirical tests.
+
+Overall, Fearon's Bargaining Theory receives substantial, though not uniform, empirical backing. Its private information mechanism is well-corroborated as a significant driver of conflict. The commitment problem logic is generally supported but faces scope conditions and domain-specific challenges. Issue indivisibility remains a less empirically validated and potentially more niche component of the theory.
+
+Synthesized confidence in the overall theory, given this pattern of support and the centrality of the core mechanisms: Moderate to Strong (e.g., a synthesized score of 0.70, reflecting strong performance on its most central claims but weaknesses in others). Further research should focus on the conditional factors affecting commitment problems and developing more robust tests for issue indivisibility.
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            Comprehensive LLM × Bayesian Framework — EPSA LLM Workshop 2025
+        </footer>
+    </main>
+</body>
+</html>
