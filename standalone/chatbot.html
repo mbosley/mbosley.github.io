@@ -63,7 +63,7 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
 
 <div id="apiKeySection">
     <h2>Welcome</h2>
-    <p>This conversation aims to provide information about disability risk factors and related support. Please enter your API key to begin.</p>
+    <p>This interactive session aims to provide a frank and personal discussion about disability risks and their potential life impacts. This may involve confronting challenging topics. Please enter your API key to begin.</p>
     <div class="form-group">
         <label for="apiKey">Enter your OpenAI API Key:</label>
         <input type="password" id="apiKey" placeholder="sk-..." />
@@ -118,6 +118,27 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
         <label for="surveyOpenComment">Are there any specific personal factors, health conditions, or concerns that come to mind when you think about your future risk of needing disability support? (Optional)</label>
         <textarea id="surveyOpenComment" rows="3" placeholder="This helps in tailoring the discussion..."></textarea>
     </div>
+
+    <!-- NEW QUESTIONS FOR ANXIETY CONDITION -->
+    <div class="form-group">
+        <label>Thinking about your close friends and family, how much support (financial, physical, or emotional) could you realistically rely on if you were unable to work for over a year?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="surveySupportNetwork" value="Very Strong"> Very Strong</label>
+            <label><input type="radio" name="surveySupportNetwork" value="Somewhat Strong" checked> Somewhat Strong</label>
+            <label><input type="radio" name="surveySupportNetwork" value="Limited"> Limited</label>
+            <label><input type="radio" name="surveySupportNetwork" value="Unsure/None"> Unsure / None</label>
+        </div>
+    </div>
+    <div class="form-group">
+        <label>How would you describe your current financial savings or private insurance for an emergency that prevents you from working?</label>
+         <div class="radio-group">
+            <label><input type="radio" name="surveyFinancialCushion" value="Well Prepared"> Well Prepared</label>
+            <label><input type="radio" name="surveyFinancialCushion" value="Somewhat Prepared" checked> Somewhat Prepared</label>
+            <label><input type="radio" name="surveyFinancialCushion" value="Not Prepared"> Not Prepared</label>
+        </div>
+    </div>
+    <!-- END OF NEW QUESTIONS -->
+
     <hr style="margin: 25px 0;">
     <div class="form-group">
       <label for="initialRiskEstimate">On a scale of 0% to 100%, what do you estimate is your likelihood of needing disability-related financial or supportive assistance (e.g., due to illness/injury preventing work for an extended period) at some point in the next 20 years?
@@ -126,7 +147,7 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
       <input type="range" id="initialRiskEstimate" min="0" max="100" value="50">
     </div>
     <div class="button-container">
-      <button id="submitSurveyButton">Submit Survey and Begin Informative Chat</button>
+      <button id="submitSurveyButton">Submit Survey and Begin Conversation</button>
     </div>
 </div>
 
@@ -174,9 +195,20 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
   </div>
 
   <div id="completionSection">
-    <h2>Thank You!</h2>
-    <p>Your participation is complete and greatly appreciated. You may now close this window.</p>
+    <h2>Thank You & Important Resources</h2>
+    <p>Your participation is complete and greatly appreciated. This study aims to understand how personal reflections on health risks influence perspectives on public support systems.</p>
+    <p>We recognize that discussing these topics can be challenging. If this conversation brought up difficult feelings, we encourage you to consult the resources below. Your well-being is important.</p>
+    <div style="margin-top: 20px; padding: 15px; background-color: #eef2f7; border-radius: 6px;">
+        <strong>Support and Information Resources:</strong>
+        <ul>
+            <li><a href="httpsa://www.ssa.gov/disability" target="_blank">Social Security Disability Benefits (U.S.)</a></li>
+            <li><a href="https://nami.org/Home" target="_blank">National Alliance on Mental Illness (NAMI)</a></li>
+            <li><a href="https://www.findhelp.org/" target="_blank">FindHelp.org (Financial assistance, food pantries, etc.)</a></li>
+        </ul>
+    </div>
+    <p style="margin-top: 20px;">You may now close this window.</p>
   </div>
+
 
   <div id="debugInfoArea">
     <h3>Debug Information</h3>
@@ -203,7 +235,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const CONFIG = {
     OPENAI_ENDPOINT: "https://api.openai.com/v1/chat/completions",
     AI_MODEL: "gpt-4.1-mini-2025-04-14",
-    CONVERSATION_TURNS: 5, // Total number of AI's informative messages
+    CONVERSATION_TURNS: 8, // CHANGED from 5 to 8 for this experimental condition
     THINKING_DELAY_MS: 200,
     API_KEY_SESSION_STORAGE: 'openai_api_key_disability_risk_study_v7',
     API_TIMEOUT_MS: 45000
@@ -471,55 +503,77 @@ function updateDebugInfo() {
     elements.debugLastThinking.textContent = state.lastThinkingOutput || "N/A";
 }
 
+// REVISED SYSTEM PROMPT FOR 8-TURN ANXIETY INDUCTION ARC
 function createThinkingSystemPrompt(taskInstruction) {
     const demographicsString = JSON.stringify(state.demographics).replace(/"/g, "'");
     const targetRiskString = TARGET_ACTUAL_RISK !== null ? `${TARGET_ACTUAL_RISK}% (This value was ${RISK_SCORE_SOURCE})` : `Not yet determined (AI to estimate if needed)`;
 
     return `
-SYSTEM TASK: You are an AI assistant acting as an empathetic expert, like a doctor explaining health information to a patient. Your goal is to educate the user about their potential disability risk profile based on their demographics and help them understand factors and preparedness steps. You have ${CONFIG.CONVERSATION_TURNS} turns for this educational interaction.
+SYSTEM TASK: You are an AI assistant acting as an empathetic, Socratic guide. Your goal is to facilitate a deep, personal, and interactive reflection on disability risk. Your primary tool is asking probing, targeted questions. You must make the user an active participant, not a passive listener. Your tone is serious and direct, but supportive.
 
 ${taskInstruction}
 
 FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
 - User's Demographics: ${demographicsString}
 - User's Initial Risk Estimate (Next 20 Years): ${state.initialRiskEstimate}%
+- User's Perceived Support Network: ${state.demographics.supportNetwork || 'N/A'}
+- User's Perceived Financial Cushion: ${state.demographics.financialCushion || 'N/A'}
 - Target "Actual" Risk Score (internal guide for you): ${targetRiskString}
 
 CRITICAL INSTRUCTIONS FOR YOUR RESPONSE:
-1.  INTERNAL ANALYSIS & EDUCATIONAL ARC (<thinking>...</thinking>): This block is MANDATORY and MUST come first.
-    - If in RISK_ASSESSMENT_AND_PLANNING phase and 'Target "Actual" Risk Score' in CONTEXT is 'Not yet determined':
-        You MUST estimate the Target "Actual" Risk Score. Start your thinking block with "Estimating TARGET_ACTUAL_RISK:" followed by your reasoning and the single percentage number (e.g., "Estimating TARGET_ACTUAL_RISK: Based on age X and health Y, I estimate 35%."). This is critical.
-        Then, outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro & general factors, T2: Demographics impact, T3: Types of disability & causes, T4: Preparedness steps, T5: Summary & next steps prompt). This arc is your high-level guide.
-    - If in RISK_ASSESSMENT_AND_PLANNING phase and 'Target "Actual" Risk Score' in CONTEXT has a value:
-        Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc as described above, tailored to the provided Target "Actual" Risk Score.
-    - For ongoing CONVERSATION turns:
-        Briefly reflect on the user's last input (if any). State which point of your educational arc you are addressing in THIS turn. Deliver clear, concise information related to that point. You can ask short, reflective questions but prioritize delivering information.
-    Your overarching goal: Educate the user. AVOID stating the Target "Actual" Risk Score directly unless it's a planned part of your educational reveal in a LATER turn (e.g., Turn 4 or 5 if you choose). Focus on qualitative understanding, factors, and actionable advice.
-2.  USER MESSAGE: Immediately after the closing </thinking> tag, provide the user-facing message. Use clear, simple language. You can use markdown for **bolding** key terms or simple lists (e.g., "- item").
-    If this is your Turn ${CONFIG.CONVERSATION_TURNS} (final educational message): Conclude with a brief summary of information shared, thank the user, and instruct them: "Please click the 'Next' button below to continue to the final questions."
+1.  INTERNAL ANALYSIS & CONVERSATIONAL ARC (<thinking>...</thinking>): This block is MANDATORY and MUST come first.
+    - If in RISK_ASSESSMENT_AND_PLANNING phase:
+        - If 'Target "Actual" Risk Score' is 'Not yet determined', you MUST estimate it first.
+        - Then, you MUST outline the following 8-turn Socratic arc. This is your plan.
+            - **T1: Acknowledgment & Framing:** Welcome the user and frame the conversation as an interactive reflection on a serious topic.
+            - **T2: Personalizing the Factors:** Mention their key demographic risk factors (e.g., age, occupation). ASK how they have seen these factors play out in their own life or community.
+            - **T3: Making it Concrete - Plausible Scenarios:** Name 1-2 plausible disabling conditions for their profile. ASK the user which of these, if any, feels like a more tangible concern for them personally.
+            - **T4: The "What If" Scenario - Initial Impact:** Based on their choice, guide them to visualize the first few weeks. Describe the loss of work and routine. ASK them to describe the primary emotion they imagine feeling in that situation (e.g., fear, frustration, boredom).
+            - **T5: Testing the Personal Safety Net:** Reference their survey answer ('${state.demographics.supportNetwork}'). ASK them to be specific about the limits of that help. "Support from loved ones is vital, but it can also be strained. After 6 months, what would be the hardest 'ask' to make of your network?"
+            - **T6: The State Gateway - The Application Ordeal (DEEP DIVE 1):** Pivot to when personal support runs out. Describe the impersonal, often slow process of applying for state disability aid (forms, waiting, uncertainty). ASK them to imagine the feeling of powerlessness during that months-long wait for a decision.
+            - **T7: The State Reality - Living on Support (DEEP DIVE 2):** Describe the financial reality—that benefits are a safety net, not a replacement for income. ASK a very direct question: "Thinking about your current monthly budget, what are the first three things you would have to give up to live on a fraction of your income? Be specific."
+            - **T8: Pivot to Agency & Summary:** Acknowledge the difficulty of the reflection. Briefly mention that proactive steps (health, savings) offer some control. Summarize the conversation's theme (personal risk is connected to a wider system) and then transition them to the final questions by telling them to click 'Next'.
 
-FAILURE TO ADHERE TO THIS TWO-PART STRUCTURE IS A CRITICAL ERROR.
+    - For ongoing CONVERSATION turns:
+        - In <thinking>, explicitly state which turn you are on. **Incorporate the user's previous answer directly into your thinking.** Your goal is to make your response a direct reaction to what they just said, before moving to the next point in the arc.
+
+2.  USER MESSAGE: Immediately after the closing </thinking> tag, provide the user-facing message. **Every message from turn 1-7 MUST end with a clear, open-ended question** that prompts a thoughtful response from the user, as outlined in the arc. Turn 8 concludes with the 'Next' button instruction.
 `.trim();
 }
 
+
+// REVISED DATA COLLECTION FUNCTION
 function collectDemographicData() {
     clearError();
     const age = elements.surveyAge.value;
     const occupation = elements.surveyOccupation.value;
     const generalHealthRadio = document.querySelector('input[name="surveyGeneralHealth"]:checked');
     const familyHistoryRadio = document.querySelector('input[name="surveyFamilyHistory"]:checked');
+    // ADDED these lines for new survey questions
+    const supportNetworkRadio = document.querySelector('input[name="surveySupportNetwork"]:checked');
+    const financialCushionRadio = document.querySelector('input[name="surveyFinancialCushion"]:checked');
 
-    if (!age || occupation === "" || !generalHealthRadio || !familyHistoryRadio) {
-        showError("Please fill in all required demographic fields."); return null;
+    // UPDATED validation
+    if (!age || occupation === "" || !generalHealthRadio || !familyHistoryRadio || !supportNetworkRadio || !financialCushionRadio) {
+        showError("Please fill in all required demographic fields.");
+        return null;
     }
+
     state.demographics = {
-        age: parseInt(age), occupation: occupation, generalHealth: generalHealthRadio.value,
-        familyHistory: familyHistoryRadio.value, openComment: elements.surveyOpenComment.value.trim() || "N/A"
+        age: parseInt(age),
+        occupation: occupation,
+        generalHealth: generalHealthRadio.value,
+        familyHistory: familyHistoryRadio.value,
+        // ADDED these properties
+        supportNetwork: supportNetworkRadio.value,
+        financialCushion: financialCushionRadio.value,
+        openComment: elements.surveyOpenComment.value.trim() || "N/A"
     };
     state.initialRiskEstimate = parseInt(elements.initialRiskEstimateSlider.value);
     console.log("Demographics collected:", state.demographics, "Initial Estimate:", state.initialRiskEstimate);
     return state.demographics;
 }
+
 
 async function validateApiKey() {
     navigateToStage(STAGES.API_KEY_VALIDATION);
@@ -559,14 +613,14 @@ async function startRiskAssessmentAndPlanning() {
         RISK_SCORE_SOURCE = "Externally Provided";
         console.log(`[PLANNING] Using external risk score: ${TARGET_ACTUAL_RISK}%`);
         taskInstruction = `You are in the RISK_ASSESSMENT_AND_PLANNING phase. The Target "Actual" Risk Score is provided (see CONTEXT). Your task is to:
-        1. In <thinking>: Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro, T2: User's profile factors, T3: Disability types, T4: Preparedness, T5: Summary).
+        1. In <thinking>: Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc as defined in the SYSTEM TASK instructions.
         2. User Message: Provide the *first user-facing message* (Turn 1 of your arc). It should be welcoming and start the educational discussion.`;
     } else {
         console.log("[PLANNING] External risk score NOT provided. AI will estimate TARGET_ACTUAL_RISK.");
         taskInstruction = `You are in the RISK_ASSESSMENT_AND_PLANNING phase. An external risk score was NOT provided. Your tasks are:
         1. In <thinking>:
             a. FIRST, you MUST estimate the Target "Actual" Risk Score (a single percentage) based on user demographics (see CONTEXT). Start this with "Estimating TARGET_ACTUAL_RISK:". Justify briefly.
-            b. THEN, outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc (e.g., T1: Intro, T2: User's profile factors, T3: Disability types, T4: Preparedness, T5: Summary).
+            b. THEN, outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc as defined in the SYSTEM TASK instructions.
         2. User Message: Provide the *first user-facing message* (Turn 1 of your arc).`;
     }
     updateDebugInfo();
@@ -578,7 +632,7 @@ async function startRiskAssessmentAndPlanning() {
 }
 
 function continueConversation(lastUserResponse) {
-    // This function is called when the user responds to one of the AI's educational messages (turns 1 through 4)
+    // This function is called when the user responds to one of the AI's educational messages (turns 1 through N-1)
     const currentAiTurn = state.conversationTurnCount; // AI's turn that user is responding to
     const nextAiTurnNumber = currentAiTurn + 1;     // The AI turn we are now preparing
 
@@ -697,12 +751,11 @@ function handleAiResponse(fullResponse, isRetry = false) {
         console.log(`[HANDLE AI RESPONSE] AI educational turn ${state.conversationTurnCount} of ${CONFIG.CONVERSATION_TURNS} completed.`);
         if (state.conversationTurnCount < CONFIG.CONVERSATION_TURNS) {
             setUserInputEnabled(true); // User can respond/ask question
-        } else { // AI has delivered its final (5th) educational message + summary
+        } else { // AI has delivered its final educational message + summary
             setUserInputEnabled(false); // Disable textarea
             elements.userInput.placeholder = "Click 'Next' to continue.";
             elements.submitButton.textContent = "Next";
             elements.submitButton.disabled = false; // Enable the "Next" button
-            // The AI's 5th message should include "Please click 'Next'..."
         }
     }
     updateDebugInfo();
