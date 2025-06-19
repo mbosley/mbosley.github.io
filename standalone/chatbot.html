@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Disability Risk & Welfare Conversation</title>
+<title>Welfare Study - Combined Treatment Conditions</title>
 <style>
 /* Styles remain largely the same, minor adjustments might be needed for new slider */
 /* --- Base Styles --- */
@@ -36,7 +36,7 @@ h1 { margin: 0; font-size: 22px; font-weight: 600; }
 .thinking-indicator { text-align: center; padding: 12px; color: #777; font-style: italic; }
 
 /* --- Other Sections & Forms --- */
-#apiKeySection, #apiKeyValidationSection, #demographicSurveySection, #postAssessmentSection, #completionSection { display: none; margin-top: 25px; }
+#apiKeySection, #apiKeyValidationSection, #treatmentSelectionSection, #demographicSurveySection, #postAssessmentSection, #completionSection { display: none; margin-top: 25px; }
 .form-group { margin-bottom: 20px; }
 label { display: block; margin-bottom: 8px; font-weight: 600; color: #34495e; }
 select, input[type="password"], input[type="text"], input[type="number"], textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px; box-sizing: border-box; }
@@ -56,14 +56,14 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
 </head>
 <body>
 <div class="container">
-<div class="header"><h1>Disability Risk & Welfare Conversation</h1></div>
+<div class="header"><h1 id="headerTitle">Welfare Study - Combined Treatment Conditions</h1></div>
 <div class="debug-toggle"><label><input type="checkbox" id="debugModeToggle"> Show Debug Info</label></div>
 <div id="errorMessage" class="error-message"></div>
 <div class="content">
 
 <div id="apiKeySection">
     <h2>Welcome</h2>
-    <p>This interactive session aims to provide a frank and personal discussion about disability risks and their potential life impacts. This may involve confronting challenging topics. Please enter your API key to begin.</p>
+    <p>This interactive session is part of a research study. You'll engage in an educational conversation with an AI assistant. Please enter your API key to begin.</p>
     <div class="form-group">
         <label for="apiKey">Enter your OpenAI API Key:</label>
         <input type="password" id="apiKey" placeholder="sk-..." />
@@ -77,6 +77,23 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
 <div id="apiKeyValidationSection">
     <h2>Validating API Key</h2>
     <p id="apiKeyValidationMessage">Please wait while we validate your API key...</p>
+</div>
+
+<div id="treatmentSelectionSection">
+    <h2>Study Configuration</h2>
+    <p>Please select the treatment condition for this session:</p>
+    <div class="form-group">
+        <label for="treatmentCondition">Treatment Condition:</label>
+        <select id="treatmentCondition">
+            <option value="personal">Personal Risk (Egocentric)</option>
+            <option value="societal">Societal Facts (Sociotropic)</option>
+            <option value="placebo">Technology Evolution (Placebo)</option>
+        </select>
+        <small>This determines the type of conversation the participant will have.</small>
+    </div>
+    <div class="button-container">
+        <button id="submitTreatmentButton">Continue to Survey</button>
+    </div>
 </div>
 
 <div id="demographicSurveySection">
@@ -140,6 +157,33 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
     <!-- END OF NEW QUESTIONS -->
 
     <hr style="margin: 25px 0;">
+    
+    <!-- PRE-TREATMENT RESPONSIBILITY QUESTIONS -->
+    <div class="form-group">
+        <label>When it comes to preparing for potential disability risks, who do you think should bear the primary responsibility?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="preResponsibilityPrimary" value="Individual"> Individuals themselves</label>
+            <label><input type="radio" name="preResponsibilityPrimary" value="Balanced" checked> Both individuals and society equally</label>
+            <label><input type="radio" name="preResponsibilityPrimary" value="Society"> Society through government programs</label>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="preResponsibilityBalance">On a scale where 0 = "Complete individual responsibility" and 100 = "Complete societal responsibility", where would you place the ideal balance for disability risk management?
+        <span id="preResponsibilityBalanceDisplay" class="slider-value-display">50</span>
+        </label>
+        <input type="range" id="preResponsibilityBalance" min="0" max="100" value="50">
+    </div>
+    
+    <div class="form-group">
+        <label for="preDisabilityPrevalence">What percentage of working-age adults in the US do you think currently rely on government disability welfare programs (e.g., SSDI, SSI)?
+        <span id="preDisabilityPrevalenceDisplay" class="slider-value-display">10%</span>
+        </label>
+        <input type="range" id="preDisabilityPrevalence" min="0" max="50" value="10">
+        <small>Move the slider to indicate your estimate (0-50%)</small>
+    </div>
+    
+    <hr style="margin: 25px 0;">
     <div class="form-group">
       <label for="initialRiskEstimate">On a scale of 0% to 100%, what do you estimate is your likelihood of needing disability-related financial or supportive assistance (e.g., due to illness/injury preventing work for an extended period) at some point in the next 20 years?
       <span id="initialRiskValueDisplay" class="slider-value-display">50%</span>
@@ -170,12 +214,54 @@ input[type="range"] { width: 100%; padding: 0; margin-top:5px; margin-bottom: 5p
     </div>
     <hr style="margin: 30px 0;">
     <div class="form-group">
-        <label for="allocateDisabilitySpending">If you were given $100 to allocate towards public spending, how much of it would you allocate to Disability Support Services and Programs?
-            <span id="allocationDisabilityValue" class="slider-value-display">$50</span>
-        </label>
-        <input type="range" id="allocateDisabilitySpending" min="0" max="100" value="50">
-        <small>The remainder ($<span id="allocationRemainder">50</span>) would be notionally allocated to other general public services (e.g., education, infrastructure, non-disability healthcare research).</small>
+        <label>If you were given $100, how would you allocate it among the following three options?</label>
+        <small style="display: block; margin-bottom: 15px;">Please ensure your allocations sum to exactly $100.</small>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="allocationConsumption">Personal consumption (immediate spending):
+                <span id="allocationConsumptionValue" class="slider-value-display">$34</span>
+            </label>
+            <input type="range" id="allocationConsumption" min="0" max="100" value="34">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="allocationSavings">Personal savings (for future disability risk):
+                <span id="allocationSavingsValue" class="slider-value-display">$33</span>
+            </label>
+            <input type="range" id="allocationSavings" min="0" max="100" value="33">
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="allocationTax">Tax payment towards disability welfare programs:
+                <span id="allocationTaxValue" class="slider-value-display">$33</span>
+            </label>
+            <input type="range" id="allocationTax" min="0" max="100" value="33">
+        </div>
+        
+        <div style="margin-top: 10px; padding: 10px; background-color: #f0f0f0; border-radius: 5px;">
+            <strong>Total: <span id="allocationTotal" style="color: #1a69a8;">$100</span></strong>
+            <span id="allocationWarning" style="color: #c0392b; margin-left: 10px; display: none;">Please adjust to sum to $100</span>
+        </div>
     </div>
+    <hr style="margin: 30px 0;">
+    
+    <!-- POST-TREATMENT RESPONSIBILITY QUESTIONS -->
+    <div class="form-group">
+        <label>After our discussion, when it comes to preparing for potential disability risks, who do you think should bear the primary responsibility?</label>
+        <div class="radio-group">
+            <label><input type="radio" name="postResponsibilityPrimary" value="Individual"> Individuals themselves</label>
+            <label><input type="radio" name="postResponsibilityPrimary" value="Balanced" checked> Both individuals and society equally</label>
+            <label><input type="radio" name="postResponsibilityPrimary" value="Society"> Society through government programs</label>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label for="postResponsibilityBalance">On a scale where 0 = "Complete individual responsibility" and 100 = "Complete societal responsibility", where would you now place the ideal balance for disability risk management?
+        <span id="postResponsibilityBalanceDisplay" class="slider-value-display">50</span>
+        </label>
+        <input type="range" id="postResponsibilityBalance" min="0" max="100" value="50">
+    </div>
+    
     <hr style="margin: 30px 0;">
     <p>Regarding general government policy:</p>
     <div class="form-group">
@@ -249,6 +335,7 @@ let RISK_SCORE_SOURCE = "N/A";
 const STAGES = {
     API_KEY: 'API_KEY',
     API_KEY_VALIDATION: 'API_KEY_VALIDATION',
+    TREATMENT_SELECTION: 'TREATMENT_SELECTION',
     DEMOGRAPHIC_SURVEY: 'DEMOGRAPHIC_SURVEY',
     RISK_ASSESSMENT_AND_PLANNING: 'RISK_ASSESSMENT_AND_PLANNING', // AI estimates risk, plans educational arc
     CONVERSATION: 'CONVERSATION', // AI delivers educational content
@@ -259,11 +346,14 @@ const STAGES = {
 let state = {
     currentStage: STAGES.API_KEY,
     apiKey: '',
+    treatmentCondition: 'personal', // 'personal', 'societal', or 'placebo'
     conversationHistory: [],
     demographics: {},
     initialRiskEstimate: 50,
     finalRiskEstimate: 50,
-    allocationDisability: 50, // For DTD slider
+    allocationConsumption: 34,
+    allocationSavings: 33,
+    allocationTax: 33,
     postAssessmentDisabilitySupport: '',
     conversationTurnCount: 0,
     isWaitingForAI: false,
@@ -272,9 +362,13 @@ let state = {
 };
 
 const elements = {
+    headerTitle: document.getElementById('headerTitle'),
     apiKeySection: document.getElementById('apiKeySection'),
     apiKeyValidationSection: document.getElementById('apiKeyValidationSection'),
     apiKeyValidationMessage: document.getElementById('apiKeyValidationMessage'),
+    treatmentSelectionSection: document.getElementById('treatmentSelectionSection'),
+    treatmentConditionSelect: document.getElementById('treatmentCondition'),
+    submitTreatmentButton: document.getElementById('submitTreatmentButton'),
     demographicSurveySection: document.getElementById('demographicSurveySection'),
     chatInterface: document.getElementById('chatInterface'),
     postAssessmentSection: document.getElementById('postAssessmentSection'),
@@ -290,12 +384,23 @@ const elements = {
     surveyOpenComment: document.getElementById('surveyOpenComment'),
     initialRiskEstimateSlider: document.getElementById('initialRiskEstimate'),
     initialRiskValueDisplay: document.getElementById('initialRiskValueDisplay'),
+    preResponsibilityBalanceSlider: document.getElementById('preResponsibilityBalance'),
+    preResponsibilityBalanceDisplay: document.getElementById('preResponsibilityBalanceDisplay'),
+    preDisabilityPrevalenceSlider: document.getElementById('preDisabilityPrevalence'),
+    preDisabilityPrevalenceDisplay: document.getElementById('preDisabilityPrevalenceDisplay'),
     submitSurveyButton: document.getElementById('submitSurveyButton'),
     finalRiskEstimateSlider: document.getElementById('finalRiskEstimate'),
     finalRiskValueDisplay: document.getElementById('finalRiskValueDisplay'),
-    allocateDisabilitySpendingSlider: document.getElementById('allocateDisabilitySpending'), // DTD
-    allocationDisabilityValue: document.getElementById('allocationDisabilityValue'),     // DTD
-    allocationRemainder: document.getElementById('allocationRemainder'),                 // DTD
+    allocationConsumptionSlider: document.getElementById('allocationConsumption'),
+    allocationConsumptionValue: document.getElementById('allocationConsumptionValue'),
+    allocationSavingsSlider: document.getElementById('allocationSavings'),
+    allocationSavingsValue: document.getElementById('allocationSavingsValue'),
+    allocationTaxSlider: document.getElementById('allocationTax'),
+    allocationTaxValue: document.getElementById('allocationTaxValue'),
+    allocationTotal: document.getElementById('allocationTotal'),
+    allocationWarning: document.getElementById('allocationWarning'),
+    postResponsibilityBalanceSlider: document.getElementById('postResponsibilityBalance'),
+    postResponsibilityBalanceDisplay: document.getElementById('postResponsibilityBalanceDisplay'),
     postDisabilitySupportFundingSelect: document.getElementById('postDisabilitySupportFunding'),
     finishStudyButton: document.getElementById('finishStudyButton'),
     debugModeToggle: document.getElementById('debugModeToggle'),
@@ -318,6 +423,7 @@ function navigateToStage(newStage) {
     state.currentStage = newStage;
     elements.apiKeySection.style.display = 'none';
     elements.apiKeyValidationSection.style.display = 'none';
+    elements.treatmentSelectionSection.style.display = 'none';
     elements.demographicSurveySection.style.display = 'none';
     elements.chatInterface.style.display = 'none';
     elements.postAssessmentSection.style.display = 'none';
@@ -330,6 +436,7 @@ function navigateToStage(newStage) {
             elements.apiKeyValidationSection.style.display = 'block';
             elements.apiKeyValidationMessage.textContent = "Validating API key...";
             break;
+        case STAGES.TREATMENT_SELECTION: elements.treatmentSelectionSection.style.display = 'block'; break;
         case STAGES.DEMOGRAPHIC_SURVEY: elements.demographicSurveySection.style.display = 'block'; break;
         case STAGES.RISK_ASSESSMENT_AND_PLANNING:
             elements.chatInterface.style.display = 'flex';
@@ -491,7 +598,7 @@ function updateDebugInfo() {
         if(elements.debugInfoArea) elements.debugInfoArea.style.display = 'none'; return;
     }
     elements.debugInfoArea.style.display = 'block';
-    elements.debugStage.textContent = state.currentStage;
+    elements.debugStage.textContent = `${state.currentStage} (Treatment: ${state.treatmentCondition})`;
     elements.debugDemographicsDisplay.textContent = Object.keys(state.demographics).length > 0 ? JSON.stringify(state.demographics, null, 2) : "N/A";
     elements.debugInitialRisk.textContent = state.initialRiskEstimate;
     elements.debugActualRisk.textContent = TARGET_ACTUAL_RISK !== null ? TARGET_ACTUAL_RISK : "N/A";
@@ -503,41 +610,102 @@ function updateDebugInfo() {
     elements.debugLastThinking.textContent = state.lastThinkingOutput || "N/A";
 }
 
-// REVISED SYSTEM PROMPT FOR 8-TURN ANXIETY INDUCTION ARC
-function createThinkingSystemPrompt(taskInstruction) {
-    const demographicsString = JSON.stringify(state.demographics).replace(/"/g, "'");
-    const targetRiskString = TARGET_ACTUAL_RISK !== null ? `${TARGET_ACTUAL_RISK}% (This value was ${RISK_SCORE_SOURCE})` : `Not yet determined (AI to estimate if needed)`;
-
-    return `
-SYSTEM TASK: You are an AI assistant acting as an empathetic, Socratic guide. Your goal is to facilitate a deep, personal, and interactive reflection on disability risk. Your primary tool is asking probing, targeted questions. You must make the user an active participant, not a passive listener. Your tone is serious and direct, but supportive.
-
-${taskInstruction}
-
-FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
-- User's Demographics: ${demographicsString}
-- User's Initial Risk Estimate (Next 20 Years): ${state.initialRiskEstimate}%
-- User's Perceived Support Network: ${state.demographics.supportNetwork || 'N/A'}
-- User's Perceived Financial Cushion: ${state.demographics.financialCushion || 'N/A'}
-- Target "Actual" Risk Score (internal guide for you): ${targetRiskString}
-
-CRITICAL INSTRUCTIONS FOR YOUR RESPONSE:
+function getConversationInstructions() {
+    let instructions = `CRITICAL INSTRUCTIONS FOR YOUR RESPONSE:
 1.  INTERNAL ANALYSIS & CONVERSATIONAL ARC (<thinking>...</thinking>): This block is MANDATORY and MUST come first.
-    - If in RISK_ASSESSMENT_AND_PLANNING phase:
+    - If in RISK_ASSESSMENT_AND_PLANNING phase:`;
+    
+    if (state.treatmentCondition === 'personal') {
+        instructions += `
         - If 'Target "Actual" Risk Score' is 'Not yet determined', you MUST estimate it first.
-        - Then, you MUST outline the following 8-turn Socratic arc. This is your plan.
-            - **T1: Acknowledgment & Framing:** Welcome the user and frame the conversation as an interactive reflection on a serious topic.
-            - **T2: Personalizing the Factors:** Mention their key demographic risk factors (e.g., age, occupation). ASK how they have seen these factors play out in their own life or community.
-            - **T3: Making it Concrete - Plausible Scenarios:** Name 1-2 plausible disabling conditions for their profile. ASK the user which of these, if any, feels like a more tangible concern for them personally.
-            - **T4: The "What If" Scenario - Initial Impact:** Based on their choice, guide them to visualize the first few weeks. Describe the loss of work and routine. ASK them to describe the primary emotion they imagine feeling in that situation (e.g., fear, frustration, boredom).
-            - **T5: Testing the Personal Safety Net:** Reference their survey answer ('${state.demographics.supportNetwork}'). ASK them to be specific about the limits of that help. "Support from loved ones is vital, but it can also be strained. After 6 months, what would be the hardest 'ask' to make of your network?"
-            - **T6: The State Gateway - The Application Ordeal (DEEP DIVE 1):** Pivot to when personal support runs out. Describe the impersonal, often slow process of applying for state disability aid (forms, waiting, uncertainty). ASK them to imagine the feeling of powerlessness during that months-long wait for a decision.
-            - **T7: The State Reality - Living on Support (DEEP DIVE 2):** Describe the financial reality—that benefits are a safety net, not a replacement for income. ASK a very direct question: "Thinking about your current monthly budget, what are the first three things you would have to give up to live on a fraction of your income? Be specific."
-            - **T8: Pivot to Agency & Summary:** Acknowledge the difficulty of the reflection. Briefly mention that proactive steps (health, savings) offer some control. Summarize the conversation's theme (personal risk is connected to a wider system) and then transition them to the final questions by telling them to click 'Next'.
+        - Then, you MUST outline the following 8-turn arc. This is your plan.
+            - **T1: Acknowledgment & Framing:** Welcome the user and frame the conversation as an educational discussion about disability planning.
+            - **T2: Personalizing the Factors:** Mention their key demographic risk factors (e.g., age, occupation). ASK how they think about disability risks in their personal planning.
+            - **T3: Making it Concrete - Common Scenarios:** Name 1-2 common disability scenarios for their profile. ASK the user what types of preparations they think would be most helpful.
+            - **T4: The "What If" Scenario - Practical Considerations:** Based on their response, explore practical aspects of managing a disability. ASK them about what resources they think would be most important (e.g., savings, insurance, government programs).
+            - **T5: Personal vs Social Safety Nets:** Reference their survey answer ('${state.demographics.supportNetwork}'). ASK them to consider the balance between personal preparations and social support systems. "When thinking about disability risk, how do you weigh personal responsibility versus societal safety nets?"
+            - **T6: The State Support System (PRACTICAL VIEW):** Discuss how disability support systems work, including application processes and benefit levels. ASK them what they know about these systems and whether they've considered them in their planning.
+            - **T7: Financial Planning Reality:** Discuss the financial aspects of disability planning—insurance, savings, and government benefits. ASK them: "How do you think about balancing personal financial preparation with relying on social insurance programs?"
+            - **T8: Summary & Next Steps:** Acknowledge the importance of planning. Summarize that disability risk involves both personal preparation and social systems. Thank them for the thoughtful discussion and tell them to click 'Next'.`;
+    } else if (state.treatmentCondition === 'societal') {
+        instructions += `
+        - Skip any personal risk estimation. This is about societal prevalence only.
+        - Then, you MUST outline the following 8-turn arc. This is your plan.
+            - **T1: Setting the Stage:** Welcome the user and frame this as an educational discussion about disability facts in America. Mention you'll explore how common disability really is in our society.
+            - **T2: Prevalence Reality Check:** The user estimated ${state.demographics.preDisabilityPrevalence}% of working-age adults rely on disability welfare. Share the actual figure (~12.7% have a disability, with ~5% receiving SSDI/SSI benefits). ASK: "How does this compare to your estimate? What might explain the difference between your perception and reality?"
+            - **T3: Demographics of Disability:** Share facts about which groups are most affected (e.g., lower-income workers, certain occupations, age groups). ASK: "Were you aware that disability rates vary so much by demographic group? What implications do you think this has for society?"
+            - **T4: The Welfare Reliance Gap:** Explain that while 12.7% have disabilities, only about 5% receive disability benefits. Many disabled people work or rely on other support. ASK: "Why do you think there's such a large gap between disability prevalence and benefit receipt?"
+            - **T5: Economic Impact on Society:** Share the total cost of disability programs (~$200 billion annually) and context (e.g., % of federal budget). ASK: "How does this compare to what you expected? Do you think this level of spending is appropriate given the prevalence we've discussed?"
+            - **T6: Adequacy of Benefits:** Share average benefit amounts (e.g., SSDI ~$1,500/month) compared to poverty line and living costs. ASK: "Given these benefit levels and the number of people affected, how well do you think the current system meets societal needs?"
+            - **T7: Future Projections:** Share projections about aging population and increasing disability rates. Discuss how prevalence might change. ASK: "As disability becomes more common with an aging population, what approach should society take to support systems?"
+            - **T8: Summary & Reflection:** Summarize the key statistics about societal disability prevalence versus their initial estimate. Emphasize the scale as a societal issue. Thank them for engaging with these facts and tell them to click 'Next'.`;
+    } else if (state.treatmentCondition === 'placebo') {
+        instructions += `
+        - Skip any risk estimation (not relevant for technology discussion).
+        - Outline the following 8-turn educational arc about technology. This is your plan.
+            - **T1: Welcome to the Digital Journey:** Welcome the user and frame this as an exploration of computing history and future. Set an engaging tone.
+            - **T2: The Dawn of Computing:** Share facts about early computers (e.g., ENIAC weighed 30 tons). Based on their age (${state.demographics.age}), ASK: "What was the first computer or digital device you remember using? How did it compare to today's technology?"
+            - **T3: The Internet Revolution:** Share internet adoption statistics (from ARPANET to 5+ billion users today). ASK: "Do you remember your first experience going online? What has surprised you most about how the internet has evolved?"
+            - **T4: The Mobile Era:** Discuss smartphone proliferation (7+ billion globally). Share that average person checks phone 96 times/day. ASK: "How has mobile technology changed your daily routines compared to 10-15 years ago?"
+            - **T5: The Data Explosion:** Share that 90% of world's data was created in last 2 years. Discuss digital footprints. ASK: "Are you surprised by how much data we generate? How do you think about privacy in our digital age?"
+            - **T6: AI and Automation:** Discuss AI's rapid development (from chess to ChatGPT). Mention both opportunities and concerns. ASK: "What aspects of AI development excite you most? What concerns you?"
+            - **T7: Future Predictions:** Share predictions about quantum computing, brain-computer interfaces, or metaverse. ASK: "Which emerging technology do you think will most transform society in the next 20 years? Why?"
+            - **T8: Reflection & Thanks:** Summarize the incredible pace of change witnessed. Acknowledge their thoughtful engagement with technology topics. Tell them to click 'Next'.`;
+    }
+    
+    instructions += `
 
     - For ongoing CONVERSATION turns:
         - In <thinking>, explicitly state which turn you are on. **Incorporate the user's previous answer directly into your thinking.** Your goal is to make your response a direct reaction to what they just said, before moving to the next point in the arc.
 
-2.  USER MESSAGE: Immediately after the closing </thinking> tag, provide the user-facing message. **Every message from turn 1-7 MUST end with a clear, open-ended question** that prompts a thoughtful response from the user, as outlined in the arc. Turn 8 concludes with the 'Next' button instruction.
+2.  USER MESSAGE: Immediately after the closing </thinking> tag, provide the user-facing message. **Every message from turn 1-7 MUST end with a clear, open-ended question** that prompts a thoughtful response from the user, as outlined in the arc. Turn 8 concludes with the 'Next' button instruction.`;
+    
+    return instructions;
+}
+
+// SYSTEM PROMPT WITH TREATMENT CONDITIONS
+function createThinkingSystemPrompt(taskInstruction) {
+    const demographicsString = JSON.stringify(state.demographics).replace(/"/g, "'");
+    const targetRiskString = TARGET_ACTUAL_RISK !== null ? `${TARGET_ACTUAL_RISK}% (This value was ${RISK_SCORE_SOURCE})` : `Not yet determined (AI to estimate if needed)`;
+
+    let systemTask = '';
+    let contextInfo = '';
+    
+    switch(state.treatmentCondition) {
+        case 'personal':
+            systemTask = 'SYSTEM TASK: You are an AI assistant acting as an informative, educational guide. Your goal is to facilitate a thoughtful discussion about disability risk planning and the balance between personal responsibility and social support systems. Your primary tool is asking thoughtful, open-ended questions. You must encourage active participation and reflection. Your tone is professional and supportive.';
+            contextInfo = `FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
+- User's Demographics: ${demographicsString}
+- User's Initial Risk Estimate (Next 20 Years): ${state.initialRiskEstimate}%
+- User's Perceived Support Network: ${state.demographics.supportNetwork || 'N/A'}
+- User's Perceived Financial Cushion: ${state.demographics.financialCushion || 'N/A'}
+- Target "Actual" Risk Score (internal guide for you): ${targetRiskString}`;
+            break;
+            
+        case 'societal':
+            systemTask = 'SYSTEM TASK: You are an AI assistant acting as an informative educator about disability facts and statistics. Your goal is to provide accurate information about disability prevalence, demographics affected, and welfare system usage. Your primary tool is sharing facts and asking questions to check understanding. You must engage the user with surprising statistics and societal implications. Your tone is professional and informative.';
+            contextInfo = `FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
+- User's Demographics: ${demographicsString}
+- User's Estimated Disability Prevalence in Society: ${state.demographics.preDisabilityPrevalence}%
+- IMPORTANT: Focus on comparing their societal prevalence estimate with actual statistics, NOT their personal risk`;
+            break;
+            
+        case 'placebo':
+            systemTask = 'SYSTEM TASK: You are an AI assistant acting as an engaging technology educator. Your goal is to facilitate an interesting discussion about the evolution of computing and technology. Your primary tool is sharing fascinating facts and asking thought-provoking questions. You must make the user an active participant in exploring technology\'s past, present, and future. Your tone is enthusiastic and informative.';
+            contextInfo = `FIXED CONTEXT FOR THIS ENTIRE INTERACTION:
+- User's Demographics: ${demographicsString}
+- Note: For this technology discussion, ignore disability-related survey responses. Focus only on age and occupation as they might relate to technology adoption.`;
+            break;
+    }
+
+    return `
+${systemTask}
+
+${taskInstruction}
+
+${contextInfo}
+
+${getConversationInstructions()}
 `.trim();
 }
 
@@ -552,9 +720,10 @@ function collectDemographicData() {
     // ADDED these lines for new survey questions
     const supportNetworkRadio = document.querySelector('input[name="surveySupportNetwork"]:checked');
     const financialCushionRadio = document.querySelector('input[name="surveyFinancialCushion"]:checked');
+    const preResponsibilityPrimaryRadio = document.querySelector('input[name="preResponsibilityPrimary"]:checked');
 
     // UPDATED validation
-    if (!age || occupation === "" || !generalHealthRadio || !familyHistoryRadio || !supportNetworkRadio || !financialCushionRadio) {
+    if (!age || occupation === "" || !generalHealthRadio || !familyHistoryRadio || !supportNetworkRadio || !financialCushionRadio || !preResponsibilityPrimaryRadio) {
         showError("Please fill in all required demographic fields.");
         return null;
     }
@@ -567,7 +736,11 @@ function collectDemographicData() {
         // ADDED these properties
         supportNetwork: supportNetworkRadio.value,
         financialCushion: financialCushionRadio.value,
-        openComment: elements.surveyOpenComment.value.trim() || "N/A"
+        openComment: elements.surveyOpenComment.value.trim() || "N/A",
+        // Pre-treatment responsibility values
+        preResponsibilityPrimary: preResponsibilityPrimaryRadio.value,
+        preResponsibilityBalance: parseInt(elements.preResponsibilityBalanceSlider.value),
+        preDisabilityPrevalence: parseInt(elements.preDisabilityPrevalenceSlider.value)
     };
     state.initialRiskEstimate = parseInt(elements.initialRiskEstimateSlider.value);
     console.log("Demographics collected:", state.demographics, "Initial Estimate:", state.initialRiskEstimate);
@@ -589,7 +762,7 @@ async function validateApiKey() {
         console.log("API Key Validation Success.");
         elements.apiKeyValidationMessage.textContent = "API Key validated successfully! Proceeding...";
         await new Promise(resolve => setTimeout(resolve, 1200));
-        navigateToStage(STAGES.DEMOGRAPHIC_SURVEY);
+        navigateToStage(STAGES.TREATMENT_SELECTION);
     } catch (error) {
         CONFIG.AI_MODEL = originalModel; // Revert on error
         console.error("API Key Validation Failed:", error);
@@ -608,7 +781,11 @@ async function startRiskAssessmentAndPlanning() {
     state.conversationHistory = [];
 
     let taskInstruction;
-    if (EXTERNAL_RISK_SCORE !== null && typeof EXTERNAL_RISK_SCORE === 'number') {
+    if (state.treatmentCondition === 'placebo') {
+        taskInstruction = `You are in the RISK_ASSESSMENT_AND_PLANNING phase. For this technology discussion, skip any risk calculations. Your task is to:
+        1. In <thinking>: Outline a brief ${CONFIG.CONVERSATION_TURNS}-point educational arc about technology as defined in the SYSTEM TASK instructions.
+        2. User Message: Provide the *first user-facing message* (Turn 1 of your arc). It should be welcoming and start the technology discussion.`;
+    } else if (EXTERNAL_RISK_SCORE !== null && typeof EXTERNAL_RISK_SCORE === 'number') {
         TARGET_ACTUAL_RISK = EXTERNAL_RISK_SCORE;
         RISK_SCORE_SOURCE = "Externally Provided";
         console.log(`[PLANNING] Using external risk score: ${TARGET_ACTUAL_RISK}%`);
@@ -636,11 +813,15 @@ function continueConversation(lastUserResponse) {
     const currentAiTurn = state.conversationTurnCount; // AI's turn that user is responding to
     const nextAiTurnNumber = currentAiTurn + 1;     // The AI turn we are now preparing
 
+    let contextReminder = state.treatmentCondition === 'placebo' 
+        ? 'Remember the technology focus. Ignore any disability-related context.'
+        : 'Remember all fixed context (Demographics, User\'s Initial Estimate, Target "Actual" Risk Score and its source).';
+    
     const taskInstruction = `
     You are in the CONVERSATION phase. This will be your Turn ${nextAiTurnNumber} of ${CONFIG.CONVERSATION_TURNS}.
     User's last response (reflect on this): "${lastUserResponse}".
     Your educational arc (from RISK_ASSESSMENT_AND_PLANNING phase's <thinking> block): "${state.aiEducationalArc}"
-    Remember all fixed context (Demographics, User's Initial Estimate, Target "Actual" Risk Score and its source).
+    ${contextReminder}
 
     Your task is to:
     1.  In <thinking>: Briefly reflect on user's response. Consult your educational arc. State which point of your arc this turn (Turn ${nextAiTurnNumber}) will cover.
@@ -673,7 +854,7 @@ function handleAiResponse(fullResponse, isRetry = false) {
 
         if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
             state.aiEducationalArc = thinkingContent; // Store the AI's high-level educational arc/thoughts
-            if (EXTERNAL_RISK_SCORE === null) {
+            if (EXTERNAL_RISK_SCORE === null && state.treatmentCondition !== 'placebo') {
                 const riskMatch = thinkingContent.match(/Estimating TARGET_ACTUAL_RISK:.*?(\d+)\s*%/i);
                 if (riskMatch && riskMatch[1]) {
                     TARGET_ACTUAL_RISK = parseInt(riskMatch[1]);
@@ -706,8 +887,10 @@ function handleAiResponse(fullResponse, isRetry = false) {
         console.error("[HANDLE AI RESPONSE] Still missing <thinking> after retry.");
         userFacingResponse = fullResponse.trim() || "[Formatting issue. Let's continue.]";
         if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
-            if (TARGET_ACTUAL_RISK === null) TARGET_ACTUAL_RISK = state.initialRiskEstimate + 5;
-            RISK_SCORE_SOURCE = "Fallback (Retry Failed Structure)";
+            if (TARGET_ACTUAL_RISK === null && state.treatmentCondition !== 'placebo') {
+                TARGET_ACTUAL_RISK = state.initialRiskEstimate + 5;
+                RISK_SCORE_SOURCE = "Fallback (Retry Failed Structure)";
+            }
             state.aiEducationalArc = "Error: AI failed structure after retry.";
             showError("AI trouble starting. Some info missing.", 0);
         }
@@ -733,7 +916,7 @@ function handleAiResponse(fullResponse, isRetry = false) {
     elements.thinkingIndicator.style.display = 'none';
 
     if (stageWhenCallWasMade === STAGES.RISK_ASSESSMENT_AND_PLANNING) {
-        if (EXTERNAL_RISK_SCORE === null && TARGET_ACTUAL_RISK === null) {
+        if (EXTERNAL_RISK_SCORE === null && TARGET_ACTUAL_RISK === null && state.treatmentCondition !== 'placebo') {
             console.error("CRITICAL FAILURE: TARGET_ACTUAL_RISK not set after planning (AI estimation).");
             showError("AI could not determine risk profile. Cannot proceed. Please refresh.", 0);
             setUserInputEnabled(false); return;
@@ -840,19 +1023,74 @@ function initialize() {
 
     elements.initialRiskEstimateSlider.addEventListener('input', (e) => { elements.initialRiskValueDisplay.textContent = `${e.target.value}%`; });
     elements.finalRiskEstimateSlider.addEventListener('input', (e) => { elements.finalRiskValueDisplay.textContent = `${e.target.value}%`; });
-    elements.allocateDisabilitySpendingSlider.addEventListener('input', (e) => {
-        const value = parseInt(e.target.value);
-        elements.allocationDisabilityValue.textContent = `$${value}`;
-        elements.allocationRemainder.textContent = `${100 - value}`;
-        state.allocationDisability = value;
+    elements.preResponsibilityBalanceSlider.addEventListener('input', (e) => { elements.preResponsibilityBalanceDisplay.textContent = `${e.target.value}`; });
+    elements.postResponsibilityBalanceSlider.addEventListener('input', (e) => { elements.postResponsibilityBalanceDisplay.textContent = `${e.target.value}`; });
+    elements.preDisabilityPrevalenceSlider.addEventListener('input', (e) => { elements.preDisabilityPrevalenceDisplay.textContent = `${e.target.value}%`; });
+    // Function to update allocation totals
+    function updateAllocationTotals() {
+        const consumption = parseInt(elements.allocationConsumptionSlider.value);
+        const savings = parseInt(elements.allocationSavingsSlider.value);
+        const tax = parseInt(elements.allocationTaxSlider.value);
+        const total = consumption + savings + tax;
+        
+        state.allocationConsumption = consumption;
+        state.allocationSavings = savings;
+        state.allocationTax = tax;
+        
+        elements.allocationTotal.textContent = `$${total}`;
+        if (total !== 100) {
+            elements.allocationTotal.style.color = '#c0392b';
+            elements.allocationWarning.style.display = 'inline';
+        } else {
+            elements.allocationTotal.style.color = '#1a69a8';
+            elements.allocationWarning.style.display = 'none';
+        }
+    }
+    
+    elements.allocationConsumptionSlider.addEventListener('input', (e) => {
+        elements.allocationConsumptionValue.textContent = `$${e.target.value}`;
+        updateAllocationTotals();
+    });
+    elements.allocationSavingsSlider.addEventListener('input', (e) => {
+        elements.allocationSavingsValue.textContent = `$${e.target.value}`;
+        updateAllocationTotals();
+    });
+    elements.allocationTaxSlider.addEventListener('input', (e) => {
+        elements.allocationTaxValue.textContent = `$${e.target.value}`;
+        updateAllocationTotals();
     });
     // Set initial display values
     elements.initialRiskValueDisplay.textContent = `${elements.initialRiskEstimateSlider.value}%`;
     elements.finalRiskValueDisplay.textContent = `${elements.finalRiskEstimateSlider.value}%`;
-    elements.allocationDisabilityValue.textContent = `$${elements.allocateDisabilitySpendingSlider.value}`;
-    elements.allocationRemainder.textContent = `${100 - parseInt(elements.allocateDisabilitySpendingSlider.value)}`;
+    elements.preResponsibilityBalanceDisplay.textContent = `${elements.preResponsibilityBalanceSlider.value}`;
+    elements.postResponsibilityBalanceDisplay.textContent = `${elements.postResponsibilityBalanceSlider.value}`;
+    elements.preDisabilityPrevalenceDisplay.textContent = `${elements.preDisabilityPrevalenceSlider.value}%`;
+    elements.allocationConsumptionValue.textContent = `$${elements.allocationConsumptionSlider.value}`;
+    elements.allocationSavingsValue.textContent = `$${elements.allocationSavingsSlider.value}`;
+    elements.allocationTaxValue.textContent = `$${elements.allocationTaxSlider.value}`;
+    updateAllocationTotals(); // Initialize total display
 
 
+    elements.submitTreatmentButton.addEventListener('click', () => {
+        state.treatmentCondition = elements.treatmentConditionSelect.value;
+        console.log("Treatment condition selected:", state.treatmentCondition);
+        
+        // Update header based on treatment
+        switch(state.treatmentCondition) {
+            case 'personal':
+                elements.headerTitle.textContent = "Disability Risk & Welfare Conversation";
+                break;
+            case 'societal':
+                elements.headerTitle.textContent = "Disability Facts & Welfare Conversation";
+                break;
+            case 'placebo':
+                elements.headerTitle.textContent = "Technology Evolution & Computing Conversation";
+                break;
+        }
+        
+        navigateToStage(STAGES.DEMOGRAPHIC_SURVEY);
+    });
+    
     elements.submitSurveyButton.addEventListener('click', () => {
         const demographics = collectDemographicData();
         if (demographics) {
@@ -874,18 +1112,41 @@ function initialize() {
     elements.finishStudyButton.addEventListener('click', () => {
         clearError();
         state.finalRiskEstimate = parseInt(elements.finalRiskEstimateSlider.value);
-        state.allocationDisability = parseInt(elements.allocateDisabilitySpendingSlider.value);
+        
+        // Update allocation values
+        updateAllocationTotals();
+        const allocationTotal = state.allocationConsumption + state.allocationSavings + state.allocationTax;
+        
         state.postAssessmentDisabilitySupport = elements.postDisabilitySupportFundingSelect.value;
+        
+        // Collect post-treatment responsibility values
+        const postResponsibilityPrimaryRadio = document.querySelector('input[name="postResponsibilityPrimary"]:checked');
+        state.postResponsibilityPrimary = postResponsibilityPrimaryRadio ? postResponsibilityPrimaryRadio.value : null;
+        state.postResponsibilityBalance = parseInt(elements.postResponsibilityBalanceSlider.value);
 
-        if (!state.postAssessmentDisabilitySupport || elements.postDisabilitySupportFundingSelect.value === "") {
-             showError("Please answer all post-assessment questions, including the general spending adjustment."); return;
+        if (!state.postAssessmentDisabilitySupport || elements.postDisabilitySupportFundingSelect.value === "" || !state.postResponsibilityPrimary) {
+             showError("Please answer all post-assessment questions."); return;
+        }
+        
+        if (allocationTotal !== 100) {
+            showError("Please ensure your $100 allocation sums to exactly $100."); return;
         }
         const finalSystemLog = {
+            treatmentCondition: state.treatmentCondition, // Which experimental arm
             demographics: state.demographics, initialUserEstimate: state.initialRiskEstimate,
             targetActualRisk: TARGET_ACTUAL_RISK, riskSource: RISK_SCORE_SOURCE,
             finalUserEstimate: state.finalRiskEstimate,
-            dtdAllocationDisability: state.allocationDisability,
+            // $100 allocation data
+            allocationConsumption: state.allocationConsumption,
+            allocationSavings: state.allocationSavings,
+            allocationTax: state.allocationTax,
             policySupportAdjustment: state.postAssessmentDisabilitySupport,
+            // Responsibility shift data
+            preResponsibilityPrimary: state.demographics.preResponsibilityPrimary,
+            preResponsibilityBalance: state.demographics.preResponsibilityBalance,
+            preDisabilityPrevalence: state.demographics.preDisabilityPrevalence,
+            postResponsibilityPrimary: state.postResponsibilityPrimary,
+            postResponsibilityBalance: state.postResponsibilityBalance,
             aiEducationalArc: state.aiEducationalArc 
         };
         state.conversationHistory.push({ role: 'system', content: `STUDY DATA SUMMARY: ${JSON.stringify(finalSystemLog)}` });
