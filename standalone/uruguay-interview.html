@@ -1,0 +1,4090 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview 089 — Young, Río Negro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --background: #FAFAF8;
+            --surface: #FFFFFF;
+            --surface-secondary: #F8F6F3;
+            --text-primary: #1A1816;
+            --text-secondary: #4A453E;
+            --text-muted: #8A847A;
+            --interviewer: #1E5A8E;
+            --participant: #8B4513;
+            --accent: #DC2626;
+            --accent-light: #FEE2E2;
+            --function-color: #1E5A8E;
+            --content-color: #059669;
+            --emotion-color: #7C3AED;
+            --evidence-color: #DC2626;
+            --uncertainty-color: #F59E0B;
+            --border: #E5E2DC;
+            --shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        
+        body {
+            background: var(--background);
+            color: var(--text-primary);
+            font-family: 'Newsreader', Georgia, serif;
+            font-size: 17px;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+        }
+        
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .header h1 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+        
+        .header-meta {
+            display: flex;
+            gap: 1.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+        }
+        
+        /* Analysis Section */
+        .analysis-section {
+            background: var(--surface);
+            padding: 4rem 2rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .analysis-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .analysis-header {
+            margin-bottom: 3rem;
+        }
+        
+        .analysis-title {
+            font-size: 2.25rem;
+            font-weight: 500;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+            max-width: 800px;
+        }
+        
+        .analysis-subtitle {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: var(--text-secondary);
+            max-width: 800px;
+        }
+        
+        /* Analysis Grid */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .analysis-card {
+            background: var(--surface-secondary);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+        }
+        
+        .analysis-card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+        
+        /* Controls Section */
+        .controls-section {
+            padding: 1.5rem 2rem;
+            background: var(--surface-secondary);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .controls-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .progress-indicator {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 0.75rem;
+        }
+        
+        .control-button {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        
+        .control-button:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+        }
+        
+        /* Conversation Section */
+        .conversation-section {
+            padding: 3rem 2rem;
+        }
+        
+        .conversation-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        /* Turn Styles */
+        .turn {
+            border-bottom: 1px solid var(--border);
+            position: relative;
+            transition: background-color 0.15s ease;
+        }
+        
+        .turn:last-child {
+            border-bottom: none;
+        }
+        
+        .turn.collapsed {
+            background: var(--surface-secondary);
+        }
+        
+        .turn.key-moment {
+            border-left: 3px solid var(--accent);
+        }
+        
+        .turn-header {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .turn.collapsed .turn-header {
+            padding: 0.75rem 1.5rem;
+        }
+        
+        .turn-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            min-width: 3rem;
+            opacity: 0.6;
+        }
+        
+        .turn-preview {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+        
+        .speaker-badge {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.125rem 0.375rem;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+        
+        .speaker-badge.interviewer {
+            background: rgba(30, 90, 142, 0.08);
+            color: var(--interviewer);
+        }
+        
+        .speaker-badge.participant {
+            background: rgba(139, 69, 19, 0.08);
+            color: var(--participant);
+        }
+        
+        .turn-preview-text {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            opacity: 0.8;
+        }
+        
+        .turn-expand-icon {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            transition: transform 0.15s ease;
+            opacity: 0.4;
+        }
+        
+        .turn.expanded .turn-expand-icon {
+            transform: rotate(180deg);
+        }
+        
+        /* Turn Content */
+        .turn-content {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+        
+        .turn.expanded .turn-content {
+            max-height: 3000px;
+            opacity: 1;
+        }
+        
+        .turn-content-inner {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+        }
+        
+        .speech-block {
+            margin-bottom: 1.25rem;
+        }
+        
+        .speaker-name {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .speech {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text-primary);
+        }
+        
+        .speech.interviewer {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+        
+        .emphasis {
+            background: linear-gradient(180deg, transparent 60%, rgba(220, 38, 38, 0.15) 60%);
+            padding: 0 0.1rem;
+        }
+        
+        /* Complete Annotation Grid */
+        .annotation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 0.75rem;
+            margin-top: 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8125rem;
+        }
+        
+        .annotation-dimension {
+            background: var(--surface-secondary);
+            border-radius: 4px;
+            padding: 0.875rem;
+            border-left: 3px solid var(--border);
+        }
+        
+        .annotation-dimension.functional {
+            border-left-color: var(--function-color);
+        }
+        
+        .annotation-dimension.content {
+            border-left-color: var(--content-color);
+        }
+        
+        .annotation-dimension.emotional {
+            border-left-color: var(--emotion-color);
+        }
+        
+        .annotation-dimension.evidence {
+            border-left-color: var(--evidence-color);
+        }
+        
+        .annotation-dimension.uncertainty {
+            border-left-color: var(--uncertainty-color);
+        }
+        
+        .dimension-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            opacity: 0.6;
+            margin-bottom: 0.375rem;
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+        }
+        
+        .dimension-icon {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+        
+        .dimension-content {
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+        
+        .dimension-detail {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        
+        .confidence-tag {
+            display: inline-block;
+            padding: 0.125rem 0.375rem;
+            background: var(--border);
+            border-radius: 3px;
+            font-size: 0.625rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+            opacity: 0.7;
+        }
+        
+        /* Minimal annotations for simple turns */
+        .minimal-annotation {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.75rem;
+            padding: 0.5rem 0.75rem;
+            background: var(--surface-secondary);
+            border-radius: 4px;
+            display: inline-block;
+        }
+        
+        /* Priority list */
+        .priority-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+        
+        .priority-item {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+        
+        .priority-rank {
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.6875rem;
+            font-weight: 600;
+        }
+        
+        .priority-name {
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--text-muted);
+            border-radius: 5px;
+            background-clip: padding-box;
+            border: 3px solid transparent;
+        }
+        
+        /* Mobile */
+        @media (max-width: 768px) {
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .annotation-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls-content {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <h1>Interview 089 — Young, Río Negro</h1>
+            <div class="header-meta">
+                <span>May 29, 2025</span>
+                <span>14:59</span>
+                <span>45 minutes</span>
+            </div>
+        </div>
+    </header>
+
+    <section class="analysis-section">
+        <div class="analysis-content">
+            <div class="analysis-header">
+                <h2 class="analysis-title">Healthcare Worker's Plea: When Money Blocks Care</h2>
+                <p class="analysis-subtitle">
+                    A 40-year resident of Young reveals how economic constraints cascade through every aspect of rural social services, 
+                    from elderly care capacity to youth drug epidemics.
+                </p>
+            </div>
+            
+            <div class="analysis-grid">
+                <div class="analysis-card">
+                    <h3 class="analysis-card-title">Identified Priorities</h3>
+                    <div class="priority-list">
+                        
+                <div class="priority-item">
+                    <span class="priority-rank">1</span>
+                    <span class="priority-name">Youth and Drug Prevention</span>
+                </div>
+            
+
+                <div class="priority-item">
+                    <span class="priority-rank">2</span>
+                    <span class="priority-name">Child Education and Welfare</span>
+                </div>
+            
+
+                <div class="priority-item">
+                    <span class="priority-rank">3</span>
+                    <span class="priority-name">Support for Elderly and Social Assistance</span>
+                </div>
+            
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3 class="analysis-card-title">Key Insight</h3>
+                    <div style="font-size: 1rem; line-height: 1.6; color: var(--text-primary);">
+                        "Todo eso es a raíz de la falta de dinero" - This crystallizing moment reveals how economic constraints underpin every challenge discussed.
+                    </div>
+                </div>
+                
+                <div class="analysis-card">
+                    <h3 class="analysis-card-title">Narrative Arc</h3>
+                    <p style="font-size: 0.95rem; line-height: 1.6; color: var(--text-secondary);">
+                        The conversation evolves from abstract national priorities to visceral local realities.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="controls-section">
+        <div class="controls-content">
+            <div class="progress-indicator">
+                <span id="expandedCount">10</span> of 51 turns expanded
+            </div>
+            <div class="control-buttons">
+                <button class="control-button" onclick="expandAll()">Expand All</button>
+                <button class="control-button" onclick="collapseAll()">Collapse All</button>
+                <button class="control-button" onclick="showKeyMoments()">Key Moments</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="conversation-section">
+        <div class="conversation-content">
+            
+            <div class="turn expanded key-moment" data-turn="1">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 1</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Marita, la idea es conversar, si identificás una prioridad q...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Marita, la idea es conversar, si identificás una prioridad que debería tener el gobierno de Yamandú Orsi. ¿En qué tres temas debería enfocarse?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        problem_identification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer introduces the topic by asking the participant to identify priorities for the government, prompting a broad reflection on key issues. This functions as an open-ended question aimed at eliciting the participant's values and concerns, serving as a problem identification and problem framing device.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        social welfare • public policy priorities
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        
+                    </div>
+                    <div class="dimension-detail">
+                        The turn functions as a neutral prompt, not evoking specific emotions.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="2">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 2</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Se me ocurre la niñez. También la juventud y los adultos may...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Se me ocurre la niñez. También la juventud y los adultos mayores.
+
+Ahora lo que, capaz que viene la pregunta esa. Si va a salir lo de las seis horas, no se sabe.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds with specific social groups she considers priorities: children, youth, and the elderly. This indicates her focus on vulnerable populations and social welfare. It reflects her values and perceptions of societal needs.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        child welfare • youth • elderly
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        A mild concern for social groups needing attention.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            Participant's moral stance on social priorities.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="3">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 3</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">No.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">No.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        clarification
+                        <span class="confidence-tag">80%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer responds with a simple 'No,' which appears to be a correction or clarification, possibly indicating that the initial broad categories are not sufficient or that the question requires more specificity.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        clarification • response correction
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.1</span>
+                    </div>
+                    <div class="dimension-detail">
+                        A neutral correction, possibly indicating a desire for more precise responses.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="4">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 4</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Porque eso sería una cosa que aquí, por ejemplo, el tema de ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Porque eso sería una cosa que aquí, por ejemplo, el tema de las seis horas, quizás que sí que sirve. Sería un poco más difícil completar los turnos. Porque yo necesitaría, lo que más hace falta, lo que te falta siempre es el dinero. Llegar a fin de mes con el dinero porque no llega, fíjate. Nosotros estamos cobrando, en promedio, 24.000 pesos por persona. Me entra en 465.000 pesos pero de sueldo tengo más de la mitad. BPS que nunca me baja de 80, 85.000 pesos. Ahora tengo aguinaldos. Después tengo seguro. Porque yo no tengo a nadie. Porque nunca me ha pasado nada, ya te digo, en todo el tiempo que he estado nunca me ha pasado nada. Pero es un riesgo. Porque se lleguen a lastimar o algo, no sé.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds with a detailed personal narrative, discussing economic concerns, social safety nets, and her personal financial situation. This shift indicates a move from abstract priorities to concrete lived experiences, emphasizing economic security as a core concern.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        economic security • social benefits • personal finance
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, concern
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Expresses worry about financial insecurity and social safety nets.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            Personal financial details illustrating economic insecurity.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="5">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 5</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Cuando vos decís, Marita, niñez. ¿Enfocado en qué, en la niñ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Cuando vos decís, Marita, niñez. ¿Enfocado en qué, en la niñez? ¿En qué estaría bueno o qué?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        clarification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer seeks clarification on the previous mention of 'niñez,' asking for specifics about the focus area, indicating an intent to deepen understanding of the participant's priorities.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        education • child welfare • policy focus
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.1</span>
+                    </div>
+                    <div class="dimension-detail">
+                        A straightforward request for clarification.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="6">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 6</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Yo pienso en las escuelas. A veces veo que las madres, de ac...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Yo pienso en las escuelas. A veces veo que las madres, de acá, dicen hoy la maestra no les hizo esto, hoy le mandaron un trabajo y no se los corrigieron. Yo me enfoco en la niñez, en la edad escolar. Programas de estudio, me parece a mí. Mirá que en eso yo escucho a mis funcionarias que hablan de eso. Yo antes sí, porque viste que a mí siempre me gustó. O sea que sí, hace dos años me dieron del Rotary el premio del Día de la Mujer. Como reconocimiento, porque yo he actuado en todas las comisiones, los nueve años con mis hijos, yo tengo dos hijos. Actué en la comisión de la Escuela 17 de acá. Siendo Presidenta siempre tratando de colaborar y en silencio. Mirá que yo no soy de esas que digo, yo hice esto, yo hice aquello. A mí me gusta trabajar en silencio. No me gustan mucho las cámaras que me estén, no, eso no.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant elaborates on her focus on childhood, specifically on schools and educational programs. She references her personal involvement and recognition, emphasizing her active engagement and moral commitment to community service.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        education • community involvement • public service
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        pride, humility, dedication
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Expresses pride in her community work and a humble attitude towards recognition.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            Personal involvement in school committees and community recognition.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="7">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 7</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Si tuvieras que ponerle un plazo para que haya alguna modifi...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Si tuvieras que ponerle un plazo para que haya alguna modificación en los programas o en las escuelas, ¿cuánto decís que demora?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer is seeking to gauge the participant's perception of the timeline for implementing changes in educational programs, which indicates an interest in understanding participant expectations and perceptions of feasibility.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        education • policy implementation
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        uncertainty
+                        <span class="confidence-tag">0.4</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses a cautious, non-committal stance, indicating neither optimism nor pessimism.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Hearsay
+                        </div>
+                        <div class="dimension-detail">
+                            The participant relays what others have told her, indicating a reliance on community or informal sources.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="8">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 8</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">No tengo idea, pero les puede llevar, capaz que les pueda ll...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">No tengo idea, pero les puede llevar, capaz que les pueda llevar el período.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        response
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant admits to not knowing exact timelines but suggests a broad, indefinite period ('el período'), reinforcing the theme of uncertainty.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        education • policy change
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        uncertainty
+                        <span class="confidence-tag">0.4</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant shows a passive stance, acknowledging her lack of information without frustration or hope.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            The participant's admission of ignorance suggests a lack of direct evidence or knowledge.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="9">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 9</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Lo preguntamos para ver qué piensan ustedes. Así que eso es ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Lo preguntamos para ver qué piensan ustedes. Así que eso es la respuesta que queremos. Solo tú, lo que vos pensás que puede llevar.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        clarification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer clarifies the purpose of the question, emphasizing that the participant's personal opinion is what matters, which may influence the participant's response to be more candid.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        interview process • participant engagement
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The turn is functional, serving to clarify rather than evoke emotion.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="10">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 10</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Habría que priorizar de la niñez escolar. ¿Cuál es el proble...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Habría que priorizar de la niñez escolar. ¿Cuál es el problema que ves? No me quedó del todo claro.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer attempts to clarify the main issue—what is the core problem regarding children's education—highlighting a potential lack of clarity in the participant's previous responses.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        education • child welfare
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Procedural, aimed at clarification rather than emotional engagement.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="11">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 11</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Por lo que me cuentan las chicas acá, por ejemplo, o que no ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Por lo que me cuentan las chicas acá, por ejemplo, o que no trabajan mucho en clase, o que les mandan deberes y quedan para corregir después, porque son chicas que a veces de noche...</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        response
+                        <span class="confidence-tag">85%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant begins to specify concerns based on information from peers ('las chicas acá') and mentions issues like drug use and youth problems, indicating a shift from vague to more concrete concerns.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug use • youth • social problems
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern, worry
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant shows concern about social issues affecting youth, indicating emotional investment.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Community Observation
+                        </div>
+                        <div class="dimension-detail">
+                            The participant relays what she hears from others, emphasizing social perception.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="12">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 12</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Asociadas entonces a la educación.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Asociadas entonces a la educación.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer seeks to specify how to address youth drug consumption, asking about the approach or responsibility side, indicating an interest in policy or intervention strategies.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug policy • youth • intervention strategies
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.3</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Procedural, aimed at eliciting opinion rather than evoking emotion.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="13">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 13</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Vi los otros días a una chica que le estaba haciendo, le dig...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Vi los otros días a una chica que le estaba haciendo, le digo, pero vos no le tenés que hacer a tu hija los dibujos acá. Y tenía que ir, salía de acá a las nueve y media de la noche, ir a ayudarla a la botija que está en quinto, a hacerle todas las cosas, eso tiene que ser un poco en la escuela, que también lo... No sé, mirá que es mi modesto opinión.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        problem_identification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant elaborates on the issue of youth drug consumption, linking it to local community conditions and behaviors. They express concern about the proximity of consumption and related crimes, indicating a problem rooted in neighborhood dynamics. The mention of specific families and their living conditions suggests a focus on socio-economic factors influencing youth behavior.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • community safety • socio-economic conditions
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern, frustration
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses worry about neighborhood safety and youth behavior, indicating emotional engagement with the issue.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Community Observation
+                        </div>
+                        <div class="dimension-detail">
+                            Descriptions of neighborhood layout, family living conditions, and observed behaviors.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="14">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 14</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Ahora entendí bien, pero... [...] Había notado como medida m...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Ahora entendí bien, pero... [...] Había notado como medida mejoremos los programas de estudio...</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        clarification
+                        <span class="confidence-tag">100%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer simply clarifies the topic, confirming that the participant is discussing drug consumption. This turn functions as a clarification point, ensuring shared understanding.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        
+                    </div>
+                    <div class="dimension-detail">
+                        N/A
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="15">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 15</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">¿Entendiste?</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">¿Entendiste?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        elaboration|personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expands on the issue, linking drug use to family and personal experiences, especially concerning their grandchildren. They reflect on moral education and the difficulty of reaching families to instill values, indicating concern about social and familial influences on youth behavior.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        family influence • moral education • youth behavior
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern, responsibility, frustration
+                        <span class="confidence-tag">0.75</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Expresses emotional investment in moral education and worries about youth susceptibility.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            Reflections on grandchildren and moral upbringing.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="16">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 16</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Había notado como medida mejoremos los programas de estudio....</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Había notado como medida mejoremos los programas de estudio...</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer prompts the participant to consider whether the issue is seen as a national problem, encouraging broader framing. This turn shifts from local to national perspective, testing the participant's view on scope.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        scope of social issues • national vs local
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        
+                    </div>
+                    <div class="dimension-detail">
+                        N/A
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="17">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 17</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Eso pienso yo, de lo que a mí eso me cuentan acá.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Eso pienso yo, de lo que a mí eso me cuentan acá.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        agreement|confirmation
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant agrees with the idea of a national scope, citing general awareness of issues across the country. This indicates a perception that the problem is widespread and not confined to their immediate neighborhood.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        national issues • public awareness
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Acknowledges awareness without strong emotional charge.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Hearsay|General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            Refers to what 'one hears' about the country.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="18">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 18</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Está bien.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Está bien.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        acknowledgment|clarification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer acknowledges the participant's point, emphasizing that while the issue may extend beyond youth, the youth are central to the concern. This turn functions as a bridging statement, maintaining focus on youth while recognizing broader scope.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        youth • broader social issues
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.4</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Supports participant's focus on youth, with a tone of understanding.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="19">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 19</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Cuando mencionás a la juventud, ¿desde qué punto de vista? I...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Cuando mencionás a la juventud, ¿desde qué punto de vista? Igualito que a la niñez, pero en juventud, ¿cuál sería como el problema o el...?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        agreement
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant affirms the previous statement about the issue being at a national level, indicating agreement and reinforcement of the prior discourse. This turn functions primarily as an affirmation and confirmation, possibly serving to establish consensus or validate the shared understanding.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • national policy
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Lacks emotional content; primarily factual.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Hearsay
+                        </div>
+                        <div class="dimension-detail">
+                            Relies on personal listening and general awareness.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="20">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 20</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">De que no sé cómo combate la droga, las cosas... [...] El co...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">De que no sé cómo combate la droga, las cosas... [...] El consumo en los jóvenes, porque acá es <span class="emphasis">impresionante</span>.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer explicitly asks whether the issue of drug consumption is perceived as a national problem, prompting the participant to articulate their view. This turn functions as a clarifying question aimed at exploring the participant's perception of the scope of the issue.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • perception of scope
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.1</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Purely inquisitive, no emotional tone.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="21">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 21</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Ahí es muy específico, el consumo en los jóvenes.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Ahí es muy específico, el consumo en los jóvenes.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        agreement
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant repeats their affirmation that the issue is at a national level, indicating consistency and reinforcement of their previous stance. This repetition may serve to emphasize their perception or to respond affirmatively to the question.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • national scope
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Factual reinforcement, no emotional content.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            Based on listening and general awareness.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="22">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 22</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">El consumo en los jóvenes, porque acá es impresionante.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">El consumo en los jóvenes, porque acá es <span class="emphasis">impresionante</span>.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer again emphasizes that the issue may not be solely for youth but acknowledges their presence in the problem. This turn functions as a prompt for the participant to reflect on the scope and possibly expand or clarify their view.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • youth • broad societal impact
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.1</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Inquisitive, neutral tone.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="23">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 23</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">¿Qué medida, desde qué lado iría el trabajar eso? [...] Pens...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">¿Qué medida, desde qué lado iría el trabajar eso? [...] Pensando en los jóvenes de acá, de esta zona o algo. ¿Qué se podría hacer?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        agreement
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant again affirms the national scope, indicating consistency and possibly emphasizing their view. This repetition may serve to reinforce their perception or to respond affirmatively to the prompt.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        drug consumption • national scope
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Factual reinforcement.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            Listening and general awareness.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="24">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 24</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">No es fácil.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">No es fácil.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer asks about the timeframe for implementing measures to reduce drug consumption, shifting from perception to policy/action. This turn functions as a question about solutions and timelines, aiming to elicit the participant’s expectations or beliefs about policy effectiveness.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        policy measures • timing • drug reduction
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Inquisitive, anticipatory tone.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="25">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 25</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Pensando en los jóvenes de acá, de esta zona o algo. ¿Qué se...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Pensando en los jóvenes de acá, de esta zona o algo. ¿Qué se podría hacer?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        elaboration
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant emphasizes that implementing measures to reduce drug consumption is a gradual process, indicating an understanding of policy complexity and time requirements. The phrase 'lleva su tiempo' suggests patience and acknowledgment of systemic challenges.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        public policy • social change • drug consumption
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        hope, patience
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses a calm, hopeful attitude towards future change.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            General Assertion
+                        </div>
+                        <div class="dimension-detail">
+                            The participant states that change takes time, reflecting a common understanding rather than specific evidence.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="26">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 26</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Además tenemos todo este barrio, que es un barrio... no sé s...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Además tenemos todo este barrio, que es un barrio... no sé si te podría decir un barrio humilde, porque ellos tienen sus autos, sus vehículos, su todo. Pero, por ejemplo, acá al frente, ahí, deben de vivir 15 familias. En un pequeño terreno. Una casita pegada a la otra. Y ahí consumen, ahí es donde salen los robos. ¿Viste que de acá las chicas tienen que guardar las bicicletas y todas las cosas? Porque igual de ahí adelante le sacan. Ellas no creen... sí, pasan. Yo ahí sí, no sé cómo enfocarlo realmente a esa parte de decir cómo se puede manejar el tema de...</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer seeks clarification on the participant's mention of prioritizing different age groups, specifically adults mayores, linking this to public policy priorities. This indicates an interest in understanding the participant's views on social policy focus.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        public policy • elderly care • social priorities
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The question is straightforward, reflecting a neutral curiosity.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="27">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 27</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">El consumo de drogas.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">El consumo de drogas.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant discusses difficulties in accessing social support, linking lack of support from BPS to financial constraints and bureaucratic issues, illustrating personal struggles with social services.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        social support • elderly care • bureaucracy • financial hardship
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, worry
+                        <span class="confidence-tag">0.8</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses frustration with systemic barriers and concern over financial hardship.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant recounts their own difficulties with bureaucratic support and financial limitations.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="28">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 28</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">El tema de drogas, quizás también un poco en la casa, que se...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">El tema de drogas, quizás también un poco en la casa, que se preocupa un poco por los chicos. Será porque yo tengo nietos y fueron también adolescentes y todas esas cosas, pero uno siempre inculcándole lo mejor, lo que es bueno y lo que es malo. ¿Vos probás? Porque de repente prueban y ahí se dan cuenta de que eso no les sirve. Pero, ¿cómo hacés para llegar a cada hogar, a cada familia que aplique eso? Porque vos viste que hoy la juventud está muy difícil. Le dicen no. No sé, eso es un poco, esa parte es...</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer seeks clarification on whether the participant is referring to support for elderly centers, aiming to specify the type of social support discussed.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        social support • elderly care • public services
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The question is straightforward, reflecting a neutral desire for clarification.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="29">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 29</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Lo ves como un asunto a nivel nacional, ¿no?</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Lo ves como un asunto a nivel nacional, ¿no?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant elaborates on financial limitations affecting their ability to support elderly care, providing specific monetary details and personal constraints, illustrating systemic resource issues.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        social support • elderly care • financial hardship
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, helplessness
+                        <span class="confidence-tag">0.8</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant feels overwhelmed by financial constraints, expressing dissatisfaction with systemic support levels.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant recounts their financial situation, emphasizing the insufficiency of monetary support.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="30">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 30</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Es a nivel nacional, para mí es a nivel nacional. Porque las...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Es a nivel nacional, para mí es a nivel nacional. Porque las cosas que vos ves acá, y no solamente quizás en los adolescentes, lo ves en personas, las cosas que están pasando, que uno mira. Acá, por ejemplo, yo miraba mucho los informativos. Pero empecé a decirle a las chicas, busquen un canal de música, que tengan música, no miren los informativos. Porque después estas señoras que tienen demencia, porque tengo mucha gente con demencia, con distinto tipo de demencia. Entonces ellas empiezan con que, oh, que me van a matar. Es mucho lo que reciben de información. Entonces dije: no van más informativos, pongan música. Pongan música, busquen un canal de música, y si no vamos a conseguir, ellas tienen parlantes y cosas, ahí les ponemos música. Bailamos un poco ahí, porque yo viste que yo vengo de mañana a las once, yo dejo todo organizado. Vengo de mañana a las once y me voy a eso de doce y media, más o menos, según uno menos veinte, según lo que tenga que hacer, porque después ya dejo para hacer los pagos que tengo que hacer, porque viste que tengo que hacer retención de anda, de copac, de las cosas que ya tengo. Entonces todos los días tengo algo que hacer.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer asks about the regulation and inspection of food safety standards (mides), indicating an interest in systemic oversight and compliance issues relevant to social services or elderly care facilities.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        regulation • inspection • public health • elderly care
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The question is straightforward, reflecting a neutral interest in oversight procedures.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="31">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 31</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Claro, ya lo tenés organizado.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Claro, ya lo tenés organizado.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        elaboration
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant provides detailed information about the oversight and administrative processes related to Mides and local health/nutrition authorities, indicating a focus on institutional interactions and personnel. The mention of specific names and roles suggests an attempt to contextualize the bureaucratic environment and current leadership, reflecting awareness of institutional dynamics.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        institutional oversight • health and nutrition services • administrative processes
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.4</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant's tone is matter-of-fact, indicating informational focus rather than emotional engagement.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant recounts specific visits and personnel involved, providing concrete details.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="32">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 32</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Ya lo tengo organizado de esa manera. Pero eso ya te digo, p...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Ya lo tengo organizado de esa manera. Pero eso ya te digo, para mí, en la televisión, en eso, a ellos... les hace mal, entonces tome esa determinación.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        clarification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer clarifies the previous discussion about support, focusing on the procedural aspects such as paperwork and regulatory processes. This indicates an interest in operational barriers or facilitators affecting support for elderly homes.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        administrative procedures • support mechanisms • regulatory processes
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The turn is purely informational and procedural.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="33">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 33</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">¿Y pensás que esto del consumo de drogas y eso es como a niv...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">¿Y pensás que esto del consumo de drogas y eso es como a nivel nacional?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        problem_identification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds to the clarification by emphasizing the need for flexibility in administrative processes, specifically in terms of payment installments or phased approvals. This indicates a desire for more adaptable bureaucratic procedures.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        administrative flexibility • bureaucratic procedures • support for elderly homes
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, hope
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses a desire for change, indicating engagement and concern.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant shares a specific suggestion based on perceived procedural rigidity.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="34">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 34</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Ah, sí, a nivel nacional. Para mí es a nivel nacional porque...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Ah, sí, a nivel nacional. Para mí es a nivel nacional porque uno escucha y todo lo que pasa.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer asks for a time estimate regarding the implementation of flexibility, indicating an interest in the urgency and planning aspects of reforms.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        administrative reform • urgency • planning
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        impatience
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The question implies a concern about delays and the need for timely reforms.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="35">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 35</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Quizás no solo para la juventud, pero sí, la juventud está a...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Quizás no solo para la juventud, pero sí, la juventud está ahí.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        response
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds briefly, emphasizing that the fastest possible timeline is preferred, indicating a sense of urgency and impatience.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        urgency • administrative reform
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        impatience, hope
+                        <span class="confidence-tag">0.8</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The turn reflects a proactive desire for quick change.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="36">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 36</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Sí, a nivel nacional.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Sí, a nivel nacional.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer seeks to quantify the previous response, emphasizing the need for measurable timelines and planning, which connects to broader themes of implementation and accountability.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        timelines • implementation • planning
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.4</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The turn is focused on operational details rather than emotional content.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="37">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 37</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Se entiende.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Se entiende.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        problem_identification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant is indicating that the decision or process will be completed after a certain period, implying a sequence of actions or a timeline. The phrase 'ustedes terminarán de hacer todo' suggests an expectation that the interlocutor or authorities will complete their tasks first, and then the participant's actions or responses will follow. This indicates a problem of timing or sequencing, possibly related to policy implementation or administrative procedures.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        administrative process • timing • responsibility
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, hope
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant navigates between understanding procedural requirements and wishing for expedited outcomes.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant reflects on the process and anticipates a future point when actions will be taken.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="38">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 38</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">Y más allá de que capaz que no hay ninguna medida concreta, ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">Y más allá de que capaz que no hay ninguna medida concreta, si te ocurre como decir, bueno, espero que este gobierno no le tome tanto tiempo.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer provides a concrete timeframe ('Seis meses, un año'), prompting the participant to consider and respond to specific durations. This indicates an attempt to quantify or clarify the timeline discussed previously.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        timing • administrative procedures
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        This turn functions as a neutral bridge in the conversation.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Media Reference
+                        </div>
+                        <div class="dimension-detail">
+                            The interviewer introduces a specific timeframe to anchor the discussion.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="39">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 39</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Ah, yo tengo confianza en este gobierno.</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Ah, yo tengo confianza en este gobierno.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds with an acknowledgment that a year or two might be realistic, indicating a pragmatic acceptance of procedural timelines. They also express a broader concern about the feasibility of everything happening within that period, hinting at underlying frustration or skepticism.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        timing • accountability • feasibility
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern, realism
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant navigates between acceptance of the timeline and doubts about outcomes.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant provides an estimate and reflects on the likelihood of success within that timeframe.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="40">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 40</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GERMÁN</span>
+                        <span class="turn-preview-text">¿Cuánto tiempo le puede llevar tomar medidas para bajar al c...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Germán Busch</div>
+                            <div class="speech interviewer">¿Cuánto tiempo le puede llevar tomar medidas para bajar al consumo de drogas?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer shifts focus to the topic of support and prioritization, framing it as a sectoral issue. They seek to understand the participant's perspective on what should be prioritized within this context.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        support • prioritization • sectoral issues
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Serves as a neutral inquiry.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Media Reference
+                        </div>
+                        <div class="dimension-detail">
+                            The question is designed to elicit the participant's opinion on priorities.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="41">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 41</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Les va a llevar su tiempo también. Yo pienso que eso lleva s...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Les va a llevar su tiempo también. Yo pienso que eso lleva su tiempo. Todo lleva su tiempo y ojalá que en el periodo que puedan llegar a todo eso.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds by suggesting other groups or issues that could be prioritized, such as elderly care or local community concerns. This indicates their perception of needs and priorities, possibly reflecting personal or community experiences.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        elderly care • community support • local issues
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        engagement, concern
+                        <span class="confidence-tag">0.75</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant demonstrates a proactive attitude towards community needs.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience
+                        </div>
+                        <div class="dimension-detail">
+                            The participant shares specific groups and issues they consider important.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="42">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 42</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Cuando mencionaste, niñez, juventud y los adultos mayores, ¿...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Cuando mencionaste, niñez, juventud y los adultos mayores, ¿cuando mencionás adultos mayores que debería ser como cuestión de prioridad de la política pública a cargo del Estado?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer repeats the previous question, possibly to clarify or emphasize the importance of the participant's opinion, or to prompt further elaboration.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        priorities • community issues
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.5</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Serves as a neutral prompt.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Media Reference
+                        </div>
+                        <div class="dimension-detail">
+                            The interviewer seeks to deepen understanding of the participant's views.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="43">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 43</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Quizás no recibo apoyo del BPS porque tengo vencido lo del M...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Quizás no recibo apoyo del BPS porque tengo vencido lo del Ministerio de Salud Pública. Y todas esas cosas, y eso te acarrea las otras cosas, pero todo eso es a raíz de la falta de dinero. De la falta de entrada de dinero.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        problem_identification
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant introduces a problem regarding the demand for elderly care and the limited capacity of their facility, indicating a concern about service availability.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        elderly care • capacity limitations • service demand
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        concern, frustration
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses concern about the inability to meet demand, reflecting frustration with systemic limitations.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience|Community Observation
+                        </div>
+                        <div class="dimension-detail">
+                            The participant states the existence of two homes and high demand, which is a direct observation.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="44">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 44</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Vos decís un apoyo a estos tipos de centros, de este tipo de...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Vos decís un apoyo a estos tipos de centros, de este tipo de lugares.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer prompts for potential solutions or additional perspectives, seeking clarification or expansion.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        service expansion • policy • community involvement
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Neutral inquiry to deepen understanding.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="45">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 45</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Creo que hay apoyo para los hogares de ancianos. Si vos está...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Creo que hay apoyo para los hogares de ancianos. Si vos estás con todo al día, hay apoyo. Pero para ponerte con todo al día necesitas bastante dinero. Yo realmente no lo he podido hacer ahora. Yo, por ejemplo, te voy a decir del BPS, tengo apoyo de, por ejemplo, viene el 19 de junio, el Día de los Abuelos, y a mí me coincide con los funcionarios de los hogares de ancianos. Entonces, para ese día, por ejemplo, el BPS me manda 3.000 pesos. Yo con 3.000 pesos no sé hacer nada. Casi que 3.000 pesos te va costando una torta. Si vos te pones a hacer una torta grande... Entonces hay cosas que hay que cambiar en eso. Capaz que uno lo piensa de afuera y no es tan fácil adentro. Me parece que tendría que ser más apoyo a esto, porque de repente nos exigen a nosotros que tengamos todo en regla. Mides, por ejemplo, es una cosa que te exige, te exige, te exige, pero a veces no tenés el dinero como para hacer esas cosas. Fíjate que la habilitación de bomberos nomás. La habilitación de bomberos sale carísima. Yo realmente se me venció y tengo todo. Están los bomberitos, está todo, todo, todo, pero no la he podido hacer.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative|problem_explanation
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant elaborates on the difficulties of expanding elderly care services, citing bureaucratic hurdles and personal experience with regulatory processes.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        regulatory barriers • bureaucracy • cost of habilitation • personal effort
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, disappointment
+                        <span class="confidence-tag">0.8</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant conveys frustration with the regulatory system, emphasizing the difficulty and cost involved.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience|Anecdotal
+                        </div>
+                        <div class="dimension-detail">
+                            The participant recounts personal attempts to expand the facility, interactions with BPS, and regulatory requirements.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="46">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 46</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">¿Ha venido la inspección de mides? ¿Es regular eso?</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">¿Ha venido la inspección de mides? ¿Es regular eso?</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer asks about current capacity and future plans, seeking to understand if the participant considers expansion or alternative options.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        capacity • future planning • alternative options
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Neutral inquiry about capacity and future options.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn expanded key-moment" data-turn="47">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 47</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Mides, viene cada tanto. Después tenemos la de acá, de la ci...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Mides, viene cada tanto. Después tenemos la de acá, de la ciudad, vamos a decir, que es la nutricionista, que esa viene por INDA. A su vez Alejandra Braga es ahora, me parece, la que quedó, no sé si le quedó a ella en el Mides ahora de directora del Mides, porque creo que no había nombrado todavía directora para el Mides.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative|problem_explanation
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant responds with a detailed personal account of physical and regulatory barriers to expansion, including specific examples of past projects and current plans.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        physical infrastructure • regulatory compliance • financial barriers • past projects
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, disappointment, fatigue
+                        <span class="confidence-tag">0.8</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Expresses emotional exhaustion from navigating complex bureaucratic and financial barriers.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience|Project Documentation
+                        </div>
+                        <div class="dimension-detail">
+                            Narrates specific projects, costs, regulatory steps, and personal efforts to expand the facility.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="48">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 48</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Estaba pensando, cuando vos hablabas de este apoyo para los ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Estaba pensando, cuando vos hablabas de este apoyo para los hogares, va más vinculado a los trámites, las habilitaciones, las cuestiones, de ese aspecto.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        question
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer asks for a synthesis or summary of the main difficulties faced by the facility, aiming to understand systemic challenges from the participant's perspective.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        systemic barriers • regulatory challenges • hurdles to expansion
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        <span class="confidence-tag">0.2</span>
+                    </div>
+                    <div class="dimension-detail">
+                        Neutral inquiry for systemic summary.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="49">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 49</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Que sean más flexibles, esa es la palabra. Que digan, yo voy...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Que sean más flexibles, esa es la palabra. Que digan, yo voy a hacer la habilitación de bomberos y que me den cuotas, por ejemplo, por decirte.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative|problem_identification|elaboration
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant reflects on economic hardships affecting daily life, emphasizing the increased cost of food and the decline in community cooperation over the past decade. The mention of INDA and the necessity of personal expenditure indicates a focus on material struggles and social dynamics.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        economic hardship • social support • community cooperation
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        frustration, concern
+                        <span class="confidence-tag">0.7</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses worry about current economic conditions and a sense of loss regarding community support.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience|Community Observation
+                        </div>
+                        <div class="dimension-detail">
+                            The participant shares personal and community-level observations about economic conditions and social behaviors.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="50">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 50</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge interviewer">GABRIELA</span>
+                        <span class="turn-preview-text">Quería ponerle como un nombre que explique bien lo que vos e...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">Gabriela Medina</div>
+                            <div class="speech interviewer">Quería ponerle como un nombre que explique bien lo que vos estás pensando.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        acknowledgment|clarification
+                        <span class="confidence-tag">95%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The interviewer acknowledges the participant's statement, indicating understanding and encouraging clarity. This turn functions as a brief validation and facilitation of the participant's narrative.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        Neutral
+                        
+                    </div>
+                    <div class="dimension-detail">
+                        No emotional content.
+                    </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="turn collapsed " data-turn="51">
+                <div class="turn-header" onclick="toggleTurn(this)">
+                    <span class="turn-number">TURN 51</span>
+                    <div class="turn-preview">
+                        <span class="speaker-badge participant">PARTICIPANT</span>
+                        <span class="turn-preview-text">Es exactamente lo que yo estoy pensando, capaz que yo no lo ...</span>
+                    </div>
+                    <span class="turn-expand-icon">⌄</span>
+                </div>
+                <div class="turn-content">
+                    <div class="turn-content-inner">
+                        <div class="speech-block">
+                            <div class="speaker-name">María Herlinda Ferret</div>
+                            <div class="speech participant">Es exactamente lo que yo estoy pensando, capaz que yo no lo sé expresar.</div>
+                        </div>
+                        <div class="annotation-grid">
+                <div class="annotation-dimension functional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">🎯</span>
+                        FUNCTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        personal_narrative|problem_explanation|hope
+                        <span class="confidence-tag">90%</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant elaborates on economic hardships, specifically the depletion of personal funds, reliance on donations, and changes in community practices like clothing fairs. They mention ongoing requests to MIDES for supplies, indicating ongoing struggles and hope for future aid.
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension content">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">📄</span>
+                        CONTENT
+                    </div>
+                    <div class="dimension-content">
+                        economic hardship • community aid • social support • institutional assistance
+                    </div>
+                    <div class="dimension-detail">
+                        
+                    </div>
+                </div>
+             
+                <div class="annotation-dimension emotional">
+                    <div class="dimension-label">
+                        <span class="dimension-icon">💭</span>
+                        EMOTIONAL
+                    </div>
+                    <div class="dimension-content">
+                        hope, concern
+                        <span class="confidence-tag">0.75</span>
+                    </div>
+                    <div class="dimension-detail">
+                        The participant expresses worry about unmet needs but maintains hope for future assistance, reflecting resilience.
+                    </div>
+                </div>
+             
+                    <div class="annotation-dimension evidence">
+                        <div class="dimension-label">
+                            <span class="dimension-icon">📊</span>
+                            EVIDENCE
+                        </div>
+                        <div class="dimension-content">
+                            Personal Experience|Community Observation|Institutional Request
+                        </div>
+                        <div class="dimension-detail">
+                            The participant recounts personal efforts, community practices, and formal requests to MIDES, illustrating ongoing hardship and hope.
+                        </div>
+                    </div>
+                </div>
+                    </div>
+                </div>
+            </div>
+        
+        </div>
+    </section>
+
+    <script>
+        let expandedTurns = new Set([1, 2, 3, 18, 19, 31, 35, 36, 44, 47].map(String));
+        
+        function updateProgressIndicator() {
+            const expanded = document.querySelectorAll('.turn.expanded').length;
+            document.getElementById('expandedCount').textContent = expanded;
+        }
+        
+        function toggleTurn(element) {
+            const turn = element.parentElement;
+            const turnId = turn.dataset.turn;
+            
+            if (turn.classList.contains('expanded')) {
+                turn.classList.remove('expanded');
+                turn.classList.add('collapsed');
+                expandedTurns.delete(turnId);
+            } else {
+                turn.classList.remove('collapsed');
+                turn.classList.add('expanded');
+                expandedTurns.add(turnId);
+            }
+            
+            updateProgressIndicator();
+        }
+        
+        function expandAll() {
+            document.querySelectorAll('.turn').forEach(turn => {
+                turn.classList.remove('collapsed');
+                turn.classList.add('expanded');
+                expandedTurns.add(turn.dataset.turn);
+            });
+            updateProgressIndicator();
+        }
+        
+        function collapseAll() {
+            document.querySelectorAll('.turn').forEach(turn => {
+                turn.classList.remove('expanded');
+                turn.classList.add('collapsed');
+            });
+            expandedTurns.clear();
+            updateProgressIndicator();
+        }
+        
+        function showKeyMoments() {
+            document.querySelectorAll('.turn').forEach(turn => {
+                turn.classList.remove('expanded');
+                turn.classList.add('collapsed');
+            });
+            expandedTurns.clear();
+            
+            document.querySelectorAll('.turn.key-moment').forEach(turn => {
+                turn.classList.remove('collapsed');
+                turn.classList.add('expanded');
+                expandedTurns.add(turn.dataset.turn);
+            });
+            updateProgressIndicator();
+        }
+        
+        updateProgressIndicator();
+    </script>
+</body>
+</html>
