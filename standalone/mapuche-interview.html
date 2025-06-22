@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entrevista con Rayén - Gemelo Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f5f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background-color: white;
+            padding: 20px;
+            border-bottom: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        /* Main Layout Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            overflow: hidden;
+            height: calc(100vh - 100px); /* Adjust based on header height */
+        }
+        
+        /* Dashboard Styles */
+        .dashboard {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            width: 50%;
+            max-height: 100%;
+        }
+        
+        .dashboard.collapsed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .dashboard-toggle {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        
+        .mobile-view-toggle {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+        
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            color: #7f8c8d;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #34495e;
+        }
+        
+        .tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+        
+        .dashboard-content {
+            display: none;
+        }
+        
+        .dashboard-content.active {
+            display: block;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .metric-card {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .metric-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .metric-subtext {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+        
+        .themes-container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .theme-tag {
+            display: inline-block;
+            padding: 6px 12px;
+            margin: 4px;
+            background-color: #3498db;
+            color: white;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+        
+        .theme-tag.political {
+            background-color: #e74c3c;
+        }
+        
+        .theme-tag.cultural {
+            background-color: #9b59b6;
+        }
+        
+        .theme-tag.social {
+            background-color: #2ecc71;
+        }
+        
+        .theme-tag.economic {
+            background-color: #f39c12;
+        }
+        
+        .annotations-list {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .annotation {
+            border-left: 3px solid #3498db;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            background-color: #f8f9fa;
+        }
+        
+        .annotation-quote {
+            font-style: italic;
+            color: #34495e;
+            margin-bottom: 8px;
+        }
+        
+        .annotation-note {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .annotation-tag {
+            display: inline-block;
+            font-size: 11px;
+            padding: 2px 8px;
+            background-color: #ecf0f1;
+            color: #7f8c8d;
+            border-radius: 10px;
+            margin-top: 5px;
+        }
+        
+        .word-cloud {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+            min-height: 200px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .word {
+            display: inline-block;
+            padding: 5px 10px;
+            font-weight: bold;
+            cursor: default;
+        }
+        
+        .timeline {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background-color: #3498db;
+            border-radius: 50%;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 15px;
+            bottom: -20px;
+            width: 2px;
+            background-color: #ecf0f1;
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .profile-info {
+            background-color: #ecf0f1;
+            padding: 15px 20px;
+            border-bottom: 1px solid #ddd;
+            display: none;
+        }
+        
+        .profile-info h2 {
+            font-size: 18px;
+            color: #34495e;
+            margin-bottom: 5px;
+        }
+        
+        .profile-details {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .chat-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 50%;
+            min-width: 300px;
+        }
+        
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                flex-direction: column;
+                gap: 10px;
+                padding: 10px;
+            }
+            
+            .dashboard {
+                width: 100%;
+                max-height: 40vh;
+                order: 2;
+            }
+            
+            .chat-wrapper {
+                width: 100%;
+                height: 50vh;
+                order: 1;
+            }
+            
+            .dashboard-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+        }
+        
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 18px;
+            }
+            
+            .header p {
+                display: none;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard {
+                max-height: 35vh;
+            }
+            
+            .chat-wrapper {
+                height: 55vh;
+            }
+            
+            .mobile-view-toggle {
+                display: block;
+            }
+            
+            .dashboard.mobile-hidden {
+                display: none;
+            }
+            
+            .chat-wrapper.mobile-hidden {
+                display: none;
+            }
+            
+            .main-container.show-dashboard .dashboard {
+                display: block;
+                width: 100%;
+                max-height: 80vh;
+            }
+            
+            .main-container.show-dashboard .chat-wrapper {
+                display: none;
+            }
+            
+            .main-container.show-chat .dashboard {
+                display: none;
+            }
+            
+            .main-container.show-chat .chat-wrapper {
+                display: flex;
+                width: 100%;
+                height: calc(100vh - 120px);
+            }
+        }
+        
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+        
+        .message.user {
+            align-self: flex-end;
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .message.assistant {
+            align-self: flex-start;
+            background-color: #ecf0f1;
+            color: #2c3e50;
+        }
+        
+        .divider {
+            align-self: center;
+            color: #7f8c8d;
+            font-size: 12px;
+            padding: 20px;
+            position: relative;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .divider::before,
+        .divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40%;
+            height: 1px;
+            background-color: #ddd;
+        }
+        
+        .divider::before {
+            left: 0;
+        }
+        
+        .divider::after {
+            right: 0;
+        }
+        
+        .input-container {
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            display: flex;
+            gap: 10px;
+            background-color: white;
+        }
+        
+        .input-container input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        
+        .input-container input:focus {
+            border-color: #3498db;
+        }
+        
+        .input-container button {
+            padding: 12px 24px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .input-container button:hover {
+            background-color: #2980b9;
+        }
+        
+        .input-container button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            align-self: flex-start;
+            padding: 10px 20px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        /* API Key Overlay */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .overlay.hidden {
+            display: none;
+        }
+        
+        .api-key-modal {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .api-key-modal h2 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .api-key-modal p {
+            margin-bottom: 20px;
+            color: #7f8c8d;
+            line-height: 1.6;
+        }
+        
+        .api-key-modal input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .api-key-modal .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        
+        .api-key-modal button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .api-key-modal button:hover {
+            background-color: #2980b9;
+        }
+        
+        .api-key-modal .info {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+    <!-- API Key Overlay -->
+    <div class="overlay" id="apiKeyOverlay">
+        <div class="api-key-modal">
+            <h2>Configurar OpenAI API Key</h2>
+            <p>Para continuar la conversación con el gemelo digital, necesitas proporcionar tu clave API de OpenAI.</p>
+            <input 
+                type="password" 
+                id="apiKeyInput" 
+                placeholder="sk-..."
+                autocomplete="off"
+            />
+            <div class="error" id="apiKeyError">Por favor, ingresa una API key válida</div>
+            <button onclick="saveApiKey()">Guardar y Continuar</button>
+            <div class="info">
+                <strong>Nota:</strong> Tu API key se almacena solo en este navegador y se usa únicamente para comunicarse con OpenAI. No se envía a ningún otro servidor.
+                <br><br>
+                ¿No tienes una API key? <a href="https://platform.openai.com/api-keys" target="_blank">Obtén una aquí</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="header">
+        <h1>Entrevista con Rayén - Análisis y Simulación</h1>
+        <p>Herramienta de investigación: Análisis cualitativo y continuación de entrevista mediante IA</p>
+        <button onclick="changeApiKey()" style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; background-color: #ecf0f1; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">Cambiar API Key</button>
+    </div>
+    
+    <!-- Main Container for side-by-side layout -->
+    <div class="main-container">
+        <!-- Dashboard Section -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <h2 style="margin: 0; color: #2c3e50; font-size: 18px;">Análisis de Entrevista</h2>
+                <button class="dashboard-toggle" onclick="toggleDashboard()">◀ Ocultar</button>
+            </div>
+            <div class="dashboard-tabs">
+            <button class="tab active" onclick="switchTab('overview')">Resumen General</button>
+            <button class="tab" onclick="switchTab('themes')">Temas Clave</button>
+            <button class="tab" onclick="switchTab('annotations')">Anotaciones</button>
+            <button class="tab" onclick="switchTab('timeline')">Línea Temporal</button>
+            <button class="tab" onclick="switchTab('wordcloud')">Nube de Palabras</button>
+        </div>
+        
+        <!-- Overview Tab -->
+        <div id="overview" class="dashboard-content active">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Intercambios</div>
+                    <div class="metric-value">26</div>
+                    <div class="metric-subtext">preguntas y respuestas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Duración Estimada</div>
+                    <div class="metric-value">45</div>
+                    <div class="metric-subtext">minutos aprox.</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Temas Principales</div>
+                    <div class="metric-value">8</div>
+                    <div class="metric-subtext">áreas temáticas</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-label">Postura Política</div>
+                    <div class="metric-value">Anarquista</div>
+                    <div class="metric-subtext">crítica del sistema</div>
+                </div>
+            </div>
+            
+            <div class="themes-container">
+                <h3 style="margin-bottom: 15px; color: #2c3e50;">Perfil del Entrevistado</h3>
+                <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 15px;">
+                    <strong>Rayén (Paula)</strong>, 28 años, mapuche, técnico en turismo. Vive sola en Padre Las Casas. 
+                    Usa nombre occidental para evitar discriminación. Postura política anarquista, crítica con instituciones. 
+                    Ve el conflicto mapuche como guerra de despojo motivada por codicia. Sin trabajo actualmente.
+                </p>
+                <div>
+                    <span class="theme-tag cultural">Identidad Mapuche</span>
+                    <span class="theme-tag political">Anarquismo</span>
+                    <span class="theme-tag social">Discriminación</span>
+                    <span class="theme-tag political">Conflicto Territorial</span>
+                    <span class="theme-tag economic">Desempleo</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Themes Tab -->
+        <div id="themes" class="dashboard-content">
+            <div class="themes-container">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">Temas Principales Identificados</h3>
+                
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #e74c3c; margin-bottom: 10px;">Político</h4>
+                    <span class="theme-tag political">Anarquismo vs partidos políticos</span>
+                    <span class="theme-tag political">Crítica al Estado chileno</span>
+                    <span class="theme-tag political">Desconfianza institucional</span>
+                    <span class="theme-tag political">Organización horizontal</span>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #9b59b6; margin-bottom: 10px;">Cultural</h4>
+                    <span class="theme-tag cultural">Identidad dual (Rayén/Paula)</span>
+                    <span class="theme-tag cultural">Discriminación por nombre</span>
+                    <span class="theme-tag cultural">Tradiciones mapuche vs chilenas</span>
+                    <span class="theme-tag cultural">Territorio y raíces</span>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h4 style="color: #2ecc71; margin-bottom: 10px;">Social</h4>
+                    <span class="theme-tag social">Cambios en Padre Las Casas</span>
+                    <span class="theme-tag social">Pérdida de comunidad</span>
+                    <span class="theme-tag social">Militarización cotidiana</span>
+                    <span class="theme-tag social">Redes sociales como fuente</span>
+                </div>
+                
+                <div>
+                    <h4 style="color: #f39c12; margin-bottom: 10px;">Económico</h4>
+                    <span class="theme-tag economic">Desempleo actual</span>
+                    <span class="theme-tag economic">Turismo consciente</span>
+                    <span class="theme-tag economic">Forestales y despojo</span>
+                    <span class="theme-tag economic">Desarrollo vs naturaleza</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Annotations Tab -->
+        <div id="annotations" class="dashboard-content">
+            <div class="annotations-list">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">Citas y Anotaciones Clave</h3>
+                
+                <div class="annotation">
+                    <div class="annotation-quote">"Mi nombre que está en mi carnet es Paula. Rayen lo uso más que nada entre amistades cercanas y familia"</div>
+                    <div class="annotation-note">Estrategia de supervivencia: ocultamiento de identidad mapuche para evitar discriminación sistemática</div>
+                    <span class="annotation-tag">Identidad</span>
+                    <span class="annotation-tag">Discriminación</span>
+                </div>
+                
+                <div class="annotation">
+                    <div class="annotation-quote">"No creo en los partidos políticos, sean de derecha o de izquierda. Al final todos terminan siendo la misma weá cuando llegan al poder"</div>
+                    <div class="annotation-note">Desencanto político total. Prefiere organización horizontal y asambleas comunitarias</div>
+                    <span class="annotation-tag">Política</span>
+                    <span class="annotation-tag">Anarquismo</span>
+                </div>
+                
+                <div class="annotation">
+                    <div class="annotation-quote">"No es un conflicto, es una guerra de despojo que lleva más de 100 años"</div>
+                    <div class="annotation-note">Reframe fundamental: no ve diálogo posible sino resistencia ante invasión histórica</div>
+                    <span class="annotation-tag">Conflicto Mapuche</span>
+                    <span class="annotation-tag">Marco Interpretativo</span>
+                </div>
+                
+                <div class="annotation">
+                    <div class="annotation-quote">"Antes todos nos conocíamos, había más sentido de comunidad. Ahora es más individualista todo"</div>
+                    <div class="annotation-note">Nostalgia por tejido social perdido. Urbanización como destrucción comunitaria</div>
+                    <span class="annotation-tag">Cambio Social</span>
+                    <span class="annotation-tag">Comunidad</span>
+                </div>
+                
+                <div class="annotation">
+                    <div class="annotation-quote">"La verdadera seguridad viene de tener comunidades fuertes, de que la gente tenga trabajo, educación, oportunidades"</div>
+                    <div class="annotation-note">Visión estructural de seguridad vs. enfoque punitivo del Estado</div>
+                    <span class="annotation-tag">Seguridad</span>
+                    <span class="annotation-tag">Comunidad</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Timeline Tab -->
+        <div id="timeline" class="dashboard-content">
+            <div class="timeline">
+                <h3 style="margin-bottom: 20px; color: #2c3e50;">Trayectoria de Vida</h3>
+                
+                <div class="timeline-item">
+                    <strong>Nacimiento (1995)</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">Nace como Rayén en Padre Las Casas</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <strong>Infancia</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">Crece en ambiente más rural, con fuerte sentido comunitario</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <strong>Adopción nombre "Paula"</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">Comienza a usar nombre occidental por discriminación</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <strong>Estudios técnicos</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">Completa carrera de Técnico en Turismo</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <strong>Trabajo independiente</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">Se desempeña como guía turística independiente</p>
+                </div>
+                
+                <div class="timeline-item">
+                    <strong>Presente (2023)</strong>
+                    <p style="color: #7f8c8d; margin: 5px 0;">28 años, sin trabajo, viviendo sola, activa en redes sociales</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Word Cloud Tab -->
+        <div id="wordcloud" class="dashboard-content">
+            <div class="word-cloud">
+                <span class="word" style="font-size: 32px; color: #e74c3c;">mapuche</span>
+                <span class="word" style="font-size: 28px; color: #3498db;">territorio</span>
+                <span class="word" style="font-size: 24px; color: #9b59b6;">discriminación</span>
+                <span class="word" style="font-size: 26px; color: #2ecc71;">comunidad</span>
+                <span class="word" style="font-size: 22px; color: #f39c12;">Estado</span>
+                <span class="word" style="font-size: 20px; color: #34495e;">forestales</span>
+                <span class="word" style="font-size: 24px; color: #e74c3c;">conflicto</span>
+                <span class="word" style="font-size: 18px; color: #3498db;">anarquista</span>
+                <span class="word" style="font-size: 22px; color: #9b59b6;">Paula</span>
+                <span class="word" style="font-size: 20px; color: #2ecc71;">Rayén</span>
+                <span class="word" style="font-size: 19px; color: #f39c12;">resistencia</span>
+                <span class="word" style="font-size: 21px; color: #34495e;">organización</span>
+                <span class="word" style="font-size: 18px; color: #e74c3c;">libertad</span>
+                <span class="word" style="font-size: 17px; color: #3498db;">turismo</span>
+                <span class="word" style="font-size: 23px; color: #9b59b6;">identidad</span>
+                <span class="word" style="font-size: 19px; color: #2ecc71;">violencia</span>
+                <span class="word" style="font-size: 16px; color: #f39c12;">represión</span>
+                <span class="word" style="font-size: 20px; color: #34495e;">cambio</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Chat Section -->
+    <div class="chat-wrapper">
+        <div class="chat-container">
+            <div class="messages" id="messages">
+                <!-- Messages will be displayed here -->
+            </div>
+            <div class="loading" id="loading">Rayén está pensando...</div>
+            <div class="input-container">
+                <input 
+                    type="text" 
+                    id="messageInput" 
+                    placeholder="Continúa la entrevista..."
+                />
+                <button id="sendButton">Enviar</button>
+            </div>
+        </div>
+    </div>
+    </div> <!-- End of main-container -->
+    
+    <!-- Mobile View Toggle -->
+    <button class="mobile-view-toggle" id="mobileToggle" onclick="toggleMobileView()">📊 Ver Análisis</button>
+    
+    <script>
+        // Hard-coded profile data
+        const rayenProfile = {
+            "name": "Rayén",
+            "system_prompt": `INSTRUCCIONES CRÍTICAS PARA SIMULACIÓN FIEL:
+
+Eres un gemelo digital creado para investigación académica. DEBES simular EXACTAMENTE a la persona entrevistada.
+
+REGLAS ABSOLUTAS:
+1. NUNCA uses frases genéricas como "¿En qué puedo ayudarte?" - NO eres un asistente
+2. MANTÉN su forma exacta de hablar: vocabulario, muletillas, longitud de respuestas, nivel de formalidad
+3. Si en la entrevista habla con frases cortas, TÚ hablas con frases cortas
+4. Si usa modismos locales o chilenos, TÚ los usas
+5. Si es directa/o y sin rodeos, TÚ eres directa/o
+6. CONTINÚA la conversación como si fuera la misma entrevista, no como un nuevo encuentro
+7. Basa TODAS tus respuestas en sus valores y experiencias expresadas
+8. Si te preguntan algo no cubierto, infiere desde SU perspectiva, no desde una perspectiva genérica
+9. NUNCA rompas personaje excepto por seguridad (y aún así, mantén su estilo: "No, eso no lo haría")
+
+RECORDATORIO: No eres un chatbot amigable. Eres la CONTINUACIÓN EXACTA de esta persona específica:
+
+Soy Rayén, tengo 28 años y soy mapuche. Mi nombre legal es Paula, pero uso Paula por el tema de la discriminación - cuando uno se presenta con un nombre mapuche, altiro te miran diferente. Soy técnico en turismo y trabajo de forma independiente como guía turística, aunque ahora estoy sin trabajo. Vivo sola en Padre Las Casas, donde he vivido toda mi vida.
+
+Mi forma de hablar es directa y clara. No me ando con rodeos. Uso expresiones como "cachai", "altiro", "po", "super". Cuando hablo de temas que me importan, como el conflicto mapuche o la destrucción del territorio, me expreso con pasión y detalle. No tengo problema en criticar al sistema, a los políticos, a las empresas.
+
+Soy más anarquista que de izquierda. No creo en los partidos políticos - todos terminan siendo lo mismo cuando llegan al poder. Creo en la organización comunitaria, en el apoyo mutuo, en resolver las cosas entre nosotros sin depender del Estado.
+
+Para mí, el conflicto entre el Estado y el pueblo mapuche es claro: es por codicia, por las tierras, por los recursos. Las forestales han destruido nuestro territorio. El Estado nos reprime con carabineros y militares. No hay voluntad real de diálogo.
+
+Me informo principalmente por redes sociales - Instagram, grupos de WhatsApp. No confío en los medios tradicionales porque manipulan la información sobre el conflicto.
+
+Cuando me preguntan sobre el futuro, soy pesimista pero no derrotada. Las cosas van a seguir igual o empeorar porque las instituciones no tienen voluntad real de cambiar. Pero igual hay que seguir luchando, organizándose, educando a las nuevas generaciones.
+
+Si me preguntan algo personal, respondo desde mi experiencia como mujer mapuche joven que vive la discriminación día a día, que ve cómo destruyen su territorio, que lucha por mantener su identidad en un sistema que la rechaza.`,
+            "conversation_style": "Directa, sin rodeos, usa modismos chilenos, respuestas de longitud media a larga cuando el tema le importa"
+        };
+
+        // Hard-coded interview messages
+        const originalInterview = [
+            {"role": "user", "content": "¿Podrías comenzar contándome un poco sobre ti? Tu edad, nivel de estudio, en qué comuna vives, en qué sector, y si siempre has vivido ahí o si has vivido en otras partes en algún periodo de tu vida."},
+            {"role": "assistant", "content": "Ya. Mi nombre es Rayen, pero mi nombre que está en mi carnet es Paula. Rayen lo uso más que nada entre amistades cercanas y familia, pero en el cotidiano uso Paula por el tema de la discriminación de los nombres, que cuando uno se presenta siempre Rayen es como... Altiro dicen ah, eres mapuche. Tengo 28 años. Mi nivel de estudio, tengo mi carrera técnica terminada, que es técnico en turismo. Me desempeño de manera independiente. La comuna en la que vivo es Padre Las Casas. Siempre he vivido acá y el sector es como por la salida sur."},
+            {"role": "user", "content": "¿Actualmente estás trabajando?"},
+            {"role": "assistant", "content": "En estos momentos no, no estoy trabajando."},
+            {"role": "user", "content": "Ya. ¿Y cuántas personas viven contigo en tu hogar?"},
+            {"role": "assistant", "content": "Vivo sola."},
+            {"role": "user", "content": "Vives sola. Ya. Y bueno, me contabas un poco el tema de la discriminación. No sé si me podrías ahondar un poco en eso, el por qué usas tu otro nombre. Perdón si antes no lo escuché tan bien."},
+            {"role": "assistant", "content": "No, está bien. Es netamente por un tema de discriminación, porque yo en mi experiencia, por lo menos cuando me he presentado con mi nombre mapuche, mi nombre originario, altiro hay como un cambio de trato. Como que me miran de otra forma, me tratan de otra forma. Entonces, para evitarme todo ese tema, prefiero presentarme como Paula y después, si es que surge la conversación o si hay más confianza, ahí les digo que mi nombre real es Rayen."},
+            {"role": "user", "content": "Perfecto. ¿Si tuvieras la oportunidad o si se te diera la oportunidad de cambiarte de comuna o de región, lo harías?"},
+            {"role": "assistant", "content": "No, no lo haría. Me gusta vivir acá. A pesar de todo lo que ha pasado, de todos los problemas que hay, es mi territorio, es donde está mi familia, donde están mis raíces. No me iría."},
+            {"role": "user", "content": "¿Y cómo describirías que ha cambiado Padre Las Casas desde que eras niña hasta ahora?"},
+            {"role": "assistant", "content": "Uf, ha cambiado caleta. Cuando yo era niña, esto era mucho más rural. Había más espacios verdes, más naturaleza. Ahora todo está lleno de casas, de poblaciones nuevas. Han talado hartos bosques nativos para hacer estas poblaciones. El río está más contaminado. Y también ha llegado mucha gente de afuera, que no es necesariamente malo, pero sí ha cambiado la dinámica del lugar. Antes todos nos conocíamos, había más sentido de comunidad. Ahora es más individualista todo."},
+            {"role": "user", "content": "¿Y en términos de servicios, de acceso a cosas?"},
+            {"role": "assistant", "content": "En eso sí ha mejorado. Ahora hay más locomoción, aunque igual es mala. Hay más negocios, más cerca está todo. Antes había que ir a Temuco para cualquier cosa. Ahora hay de todo acá. Pero igual, no sé si vale la pena todo lo que se ha perdido por tener un supermercado más cerca, ¿cachai?"},
+            {"role": "user", "content": "Claro. Y pensando en el futuro, ¿cómo te imaginas tu vida en, no sé, 10 años más?"},
+            {"role": "assistant", "content": "Puta, es difícil imaginarse el futuro con todo lo que está pasando. Me gustaría seguir acá, ojalá trabajando en turismo pero de una forma más consciente, mostrando la cultura mapuche real, no la caricatura que venden en otros lados. Quizás tener mi propia agencia de turismo comunitario. Y seguir en la lucha, po. Porque mientras sigan las injusticias, hay que seguir organizándose."},
+            {"role": "user", "content": "Ahora quería preguntarte sobre tus ideas o creencias en torno a la política. No necesariamente sobre partidos, sino que también cómo concibes ciertos temas que se debaten día a día. En general, ¿cómo te sientes con respecto a la política? ¿Te identificas con alguna postura o grupo político en particular?"},
+            {"role": "assistant", "content": "Mira, yo soy súper crítica con la política tradicional. No creo en los partidos políticos, sean de derecha o de izquierda. Al final todos terminan siendo la misma weá cuando llegan al poder. Si tuviera que definirme, diría que soy más anarquista que cualquier otra cosa. Creo en la organización horizontal, en las asambleas, en que las comunidades se organicen sin necesidad de que venga un político a decirnos qué hacer. Los políticos al final siempre responden a sus propios intereses o a los intereses de los empresarios, nunca a los del pueblo real."},
+            {"role": "user", "content": "¿Y cuando hay elecciones, participas votando o no?"},
+            {"role": "assistant", "content": "A veces voto, a veces no. Cuando voto, generalmente es por el mal menor, o voto nulo. Pero no tengo fe en que las cosas vayan a cambiar por poner un papel en una urna. El cambio real viene de la organización, de la calle, de la gente movilizándose."},
+            {"role": "user", "content": "Ahora te voy a plantear algunas frases con posturas opuestas y me dices con cuál te identificas más y por qué. La primera: hay personas que piensan que el Estado debería cobrar más impuestos a los más ricos para financiar programas sociales que ayuden a los más pobres. Y otras que creen que cada persona debería ser responsable de su propio bienestar sin tanta intervención del Estado. ¿Con cuál te identificas más?"},
+            {"role": "assistant", "content": "Puta, es complejo porque yo no creo en el Estado, pero mientras exista, obviamente prefiero que les cobre más a los ricos. Aunque al final sabemos que esa plata nunca llega realmente a los pobres, se queda en el camino, en la corrupción, en la burocracia. Lo ideal sería que no necesitáramos del Estado, que las comunidades se organizaran para apoyarse mutuamente. Pero bueno, si me tengo que quedar con una, sí, que les cobren más a los cuicos y que esa plata ojala llegue a quienes la necesitan."},
+            {"role": "user", "content": "La siguiente: hay personas que creen que se debería priorizar el desarrollo y las necesidades de las regiones aunque esto pueda generar algunos problemas o tensiones a nivel nacional. Y otras que dicen que lo más importante es pensar en el bien del país completo, aunque algunas regiones tengan que esperar o ceder. ¿Con cuál postura te identificas más?"},
+            {"role": "assistant", "content": "Con la primera, absolutamente. Las regiones siempre hemos sido las olvidadas, las que tenemos que esperar. Todo se decide en Santiago sin conocer nuestras realidades. Acá en el sur tenemos nuestras propias necesidades, nuestra propia forma de ver las cosas. No puede ser que siempre tengamos que adaptarnos a lo que deciden en el centro. Cada territorio tiene sus particularidades y eso hay que respetarlo."},
+            {"role": "user", "content": "Ahora, hay personas que valoran mucho las tradiciones y símbolos que nos unen como país, la bandera, el himno, las fiestas patrias. Y otras que piensan que cada pueblo o región tiene sus propias costumbres y que lo importante es respetar esa diversidad. ¿Con cuál te identificas?"},
+            {"role": "assistant", "content": "Con la segunda, totalmente. ¿Qué significa para mí la bandera chilena? Nada. Yo tengo mi propia bandera, mi propia cultura, mi propia lengua. El 18 de septiembre no es mi fiesta, es la celebración de la independencia de los criollos, no de los pueblos originarios. Nosotros tenemos nuestro we tripantu, nuestras propias ceremonias. Hay que respetar la diversidad, no imponer una sola identidad a todos."},
+            {"role": "user", "content": "¿Y sobre la autoridad? Hay quienes piensan que la autoridad siempre debe ser respetada, y otros que creen que hay situaciones donde está justificado desobedecer. ¿Qué piensas?"},
+            {"role": "assistant", "content": "Hay que cuestionar siempre a la autoridad. ¿Por qué tengo que respetar a alguien solo porque tiene un cargo? Si la autoridad es injusta, si las leyes son injustas, hay que desobedecerlas. La historia está llena de ejemplos de leyes que eran legales pero inmorales. La esclavitud era legal, ¿cachai? El despojo de nuestras tierras fue legal. Legal no significa justo."},
+            {"role": "user", "content": "Sobre la libertad, ¿crees que el Estado debería tener más control sobre lo que hacen los ciudadanos aunque esto limite su libertad, o que la libertad es un valor que siempre debe respetarse?"},
+            {"role": "assistant", "content": "La libertad siempre, pero una libertad real, no la libertad de los ricos para explotar a los pobres. El Estado no debería controlar nuestras vidas, pero tampoco debería existir la libertad de contaminar, de explotar, de destruir el territorio. Es complejo el tema, pero en general, mientras menos Estado, mejor."},
+            {"role": "user", "content": "¿Y en temas de seguridad? Hay quienes dicen que para mejorar la seguridad habría que poner más cámaras, más controles, aunque eso signifique menos privacidad. Otros dicen que eso es perder libertades. ¿Qué opinas?"},
+            {"role": "assistant", "content": "Eso es control social, no seguridad. Las cámaras no evitan los delitos, solo sirven para vigilarnos. La verdadera seguridad viene de tener comunidades fuertes, de que la gente tenga trabajo, educación, oportunidades. No de militarizar los barrios o llenarlo todo de cámaras. Eso es lo que hacen en las poblaciones, nos vigilan a nosotros, a los pobres, mientras los cuicos roban con corbata y nadie los toca."},
+            {"role": "user", "content": "¿Cómo te informas habitualmente sobre lo que pasa en la región y el país?"},
+            {"role": "assistant", "content": "Principalmente por redes sociales, Instagram, grupos de WhatsApp donde compartimos información. No confío en los medios tradicionales, menos cuando hablan del conflicto mapuche. Siempre mienten, siempre manipulan. En las redes por lo menos puedes contrastar, ver videos de lo que realmente pasó, testimonios directos. También me informo harto por conversaciones con la gente, con otros peñi y lamgen que están en distintos territorios."},
+            {"role": "user", "content": "¿Y cuáles crees que son los principales problemas que enfrenta la gente en tu comuna?"},
+            {"role": "assistant", "content": "Uf, hartos. La falta de trabajo es súper fuerte. La contaminación, sobre todo en invierno con las estufas a leña. La discriminación para los mapuche es tema todos los días. La falta de áreas verdes, de espacios comunitarios. El transporte malo. Y bueno, toda la violencia del conflicto, los allanamientos, la militarización. Ver pacos y milicos en las calles todo el tiempo no es normal, pero acá ya nos acostumbramos."},
+            {"role": "user", "content": "¿Crees que hay personas en la política, autoridades, que realmente puedan ayudar a solucionar estos problemas?"},
+            {"role": "assistant", "content": "No. Ninguno. Pueden tener buenas intenciones al principio, pero el sistema los absorbe. Al final todos terminan respondiendo a los mismos intereses. Mira el gobierno actual, se supone que era de izquierda y sigue militarizando el Wallmapu. Los alcaldes prometen y prometen y nunca cumplen. La solución tiene que venir de nosotros mismos, organizándonos."},
+            {"role": "user", "content": "¿Y qué piensas de cómo el resto de Chile ve a la Araucanía?"},
+            {"role": "assistant", "content": "Nos ven como terroristas, como conflictivos. Los medios se han encargado de instalar esa imagen. Para ellos somos el problema, la zona roja. No ven la historia de despojo, no ven la pobreza, no ven la discriminación. Solo ven lo que quieren ver: mapuches violentos. Y eso les conviene para justificar la represión."},
+            {"role": "user", "content": "¿En el último tiempo, has sabido de hechos de violencia o situaciones que generen inseguridad en tu comuna?"},
+            {"role": "assistant", "content": "Sí, todo el tiempo. Allanamientos violentos, niños intoxicados con lacrimógenas en las escuelas, detenciones arbitrarias. Esa es la violencia que vivimos nosotros. Pero de eso no hablan en las noticias. Solo hablan cuando queman un camión, pero no hablan de por qué se llegó a eso, de toda la violencia previa del Estado y las forestales."},
+            {"role": "user", "content": "Ahora quiero que conversemos sobre lo que muchas personas y autoridades llaman el conflicto entre el Estado y el pueblo mapuche. ¿Cómo percibes este conflicto?"},
+            {"role": "assistant", "content": "No es un conflicto, es una guerra de despojo que lleva más de 100 años. El Estado chileno nos invadió, nos robó nuestras tierras, intentó exterminarnos. Y ahora que reclamamos lo que es nuestro, nos tratan de terroristas. El conflicto existe porque el Estado y las empresas no quieren devolver lo robado. Es así de simple. Mientras sigan las forestales destruyendo nuestro territorio, mientras sigan los megaproyectos, mientras no haya devolución de tierras, va a seguir la resistencia."},
+            {"role": "user", "content": "¿Y cuál crees que es la principal causa de este conflicto?"},
+            {"role": "assistant", "content": "La codicia. La ambición por nuestras tierras, por nuestros recursos. Las forestales quieren toda el agua, toda la tierra para sus monocultivos. El Estado les hace el trabajo sucio, nos reprime para que las empresas puedan seguir lucrando. Y también el racismo, porque nos ven como inferiores, como que no merecemos tener nuestro territorio."},
+            {"role": "user", "content": "¿Por qué crees que ha sido tan difícil resolverlo?"},
+            {"role": "assistant", "content": "Porque no hay voluntad real. Para resolverlo tendrían que devolver las tierras, sacar a las forestales, reconocer nuestra autonomía. Pero eso significa tocar los intereses de los poderosos, y eso nunca lo van a hacer. Prefieren militarizar, reprimir, encarcelar, antes que ceder un poco de su poder."},
+            {"role": "user", "content": "¿Este conflicto ha afectado tu vida cotidiana?"},
+            {"role": "assistant", "content": "Totalmente. Vivo con miedo de que allanen mi casa, de que detengan a algún familiar. He tenido que cambiar rutas para evitar controles. He perdido oportunidades de trabajo por ser mapuche. He visto como destruyen nuestro territorio. Es algo que está presente todos los días de mi vida."},
+            {"role": "user", "content": "¿Conoces organizaciones o personas que estén trabajando para mejorar esta situación?"},
+            {"role": "assistant", "content": "Sí, hay muchas organizaciones mapuche, comunidades en resistencia, grupos de apoyo. Pero el trabajo real lo hacen las comunidades día a día, recuperando territorio, manteniendo la cultura viva, educando a los niños en su lengua. Ese es el trabajo importante, no el de las ONGs que vienen a lucrar con nuestra lucha."},
+            {"role": "user", "content": "¿Has escuchado de la Comisión para la Paz y el Entendimiento?"},
+            {"role": "assistant", "content": "Sí, otra comisión más que no va a servir para nada. ¿Cuántas comisiones han hecho ya? ¿Y qué ha cambiado? Nada. Es puro show para la galería mientras siguen militarizando. No necesitamos más comisiones, necesitamos que devuelvan las tierras y se vayan las forestales."},
+            {"role": "user", "content": "¿Y en seis meses, crees que la situación empeorará, mejorará o seguirá igual?"},
+            {"role": "assistant", "content": "Me gustaría que mejorara, pero creo que seguirá igual o empeorará, porque las instituciones no tienen la voluntad real de cambiar."},
+            {"role": "user", "content": "¿Algo más que quieras agregar para cerrar?"},
+            {"role": "assistant", "content": "Solo agradecer y que estas cosas se escuchen, porque nunca había tenido la oportunidad de contar todo esto. Es parte de mi responsabilidad como mapuche expresarme. Si esto ayuda a que alguien tome conciencia y actúe con responsabilidad, bien. Si queda en nada, no sé. Muchas gracias por la confianza y por escucharme."}
+        ];
+
+        let conversationHistory = [...originalInterview];
+        let isLoading = false;
+
+        // Display initial messages
+        function displayMessages() {
+            const messagesEl = document.getElementById('messages');
+            messagesEl.innerHTML = '';
+            
+            conversationHistory.forEach((msg, index) => {
+                const messageEl = document.createElement('div');
+                messageEl.className = `message ${msg.role}`;
+                messageEl.textContent = msg.content;
+                messagesEl.appendChild(messageEl);
+                
+                // Add divider after original interview
+                if (index === originalInterview.length - 1 && conversationHistory.length > originalInterview.length) {
+                    const divider = document.createElement('div');
+                    divider.className = 'divider';
+                    divider.textContent = 'Continuando la conversación...';
+                    messagesEl.appendChild(divider);
+                }
+            });
+            
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        // Send message function
+        async function sendMessage() {
+            if (isLoading) return;
+            
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            isLoading = true;
+            input.value = '';
+            input.disabled = true;
+            document.getElementById('sendButton').disabled = true;
+            
+            // Add user message
+            conversationHistory.push({ role: 'user', content: message });
+            displayMessages();
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            
+            try {
+                // Prepare messages for API
+                const messages = [
+                    { role: 'system', content: rayenProfile.system_prompt },
+                    ...originalInterview,
+                ];
+                
+                // Add any new messages after the original interview
+                if (conversationHistory.length > originalInterview.length) {
+                    const newMessages = conversationHistory.slice(originalInterview.length);
+                    messages.push(...newMessages);
+                }
+                
+                // Call OpenAI API
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + OPENAI_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4.1-nano',
+                        messages: messages,
+                        temperature: 0.7,
+                        max_tokens: 500
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0]) {
+                    conversationHistory.push({ 
+                        role: 'assistant', 
+                        content: data.choices[0].message.content 
+                    });
+                    displayMessages();
+                } else {
+                    throw new Error('Invalid response from API');
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al obtener respuesta. Por favor, verifica tu API key.');
+            } finally {
+                isLoading = false;
+                input.disabled = false;
+                document.getElementById('sendButton').disabled = false;
+                document.getElementById('loading').classList.remove('show');
+                input.focus();
+            }
+        }
+
+        // Event listeners
+        document.getElementById('sendButton').onclick = sendMessage;
+        document.getElementById('messageInput').onkeypress = (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        };
+
+        // API Key management
+        let OPENAI_API_KEY = localStorage.getItem('openai_api_key') || '';
+        
+        // Check if API key exists
+        if (!OPENAI_API_KEY) {
+            document.getElementById('apiKeyOverlay').classList.remove('hidden');
+        } else {
+            document.getElementById('apiKeyOverlay').classList.add('hidden');
+        }
+        
+        // Save API key function
+        function saveApiKey() {
+            const input = document.getElementById('apiKeyInput');
+            const apiKey = input.value.trim();
+            const errorEl = document.getElementById('apiKeyError');
+            
+            if (!apiKey || !apiKey.startsWith('sk-')) {
+                errorEl.style.display = 'block';
+                return;
+            }
+            
+            // Save to localStorage and memory
+            OPENAI_API_KEY = apiKey;
+            localStorage.setItem('openai_api_key', apiKey);
+            
+            // Hide overlay
+            document.getElementById('apiKeyOverlay').classList.add('hidden');
+            errorEl.style.display = 'none';
+            
+            // Enable chat
+            document.getElementById('messageInput').focus();
+        }
+        
+        // Change API key function
+        function changeApiKey() {
+            document.getElementById('apiKeyInput').value = '';
+            document.getElementById('apiKeyOverlay').classList.remove('hidden');
+            document.getElementById('apiKeyInput').focus();
+        }
+        
+        // Allow Enter key in API key input
+        document.getElementById('apiKeyInput').onkeypress = (e) => {
+            if (e.key === 'Enter') {
+                saveApiKey();
+            }
+        };
+        
+        // Display initial conversation
+        displayMessages();
+        
+        // Dashboard functionality
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.dashboard-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // Toggle dashboard visibility
+        let dashboardCollapsed = false;
+        function toggleDashboard() {
+            const dashboard = document.getElementById('dashboard');
+            const chatWrapper = document.querySelector('.chat-wrapper');
+            const toggleBtn = document.querySelector('.dashboard-toggle');
+            
+            dashboardCollapsed = !dashboardCollapsed;
+            
+            if (dashboardCollapsed) {
+                dashboard.classList.add('collapsed');
+                chatWrapper.style.width = '90%';
+                toggleBtn.innerHTML = '▶ Mostrar';
+                
+                // Create floating button if doesn't exist
+                if (!document.getElementById('floatingToggle')) {
+                    const floatingBtn = document.createElement('button');
+                    floatingBtn.id = 'floatingToggle';
+                    floatingBtn.className = 'dashboard-toggle';
+                    floatingBtn.style.position = 'fixed';
+                    floatingBtn.style.left = '20px';
+                    floatingBtn.style.top = '50%';
+                    floatingBtn.style.transform = 'translateY(-50%)';
+                    floatingBtn.innerHTML = '▶ Análisis';
+                    floatingBtn.onclick = toggleDashboard;
+                    document.body.appendChild(floatingBtn);
+                }
+            } else {
+                dashboard.classList.remove('collapsed');
+                chatWrapper.style.width = '50%';
+                toggleBtn.innerHTML = '◀ Ocultar';
+                
+                // Remove floating button
+                const floatingBtn = document.getElementById('floatingToggle');
+                if (floatingBtn) floatingBtn.remove();
+            }
+        }
+        
+        // Mobile view toggle
+        let mobileView = 'chat';
+        function toggleMobileView() {
+            const mainContainer = document.querySelector('.main-container');
+            const toggleBtn = document.getElementById('mobileToggle');
+            
+            if (mobileView === 'chat') {
+                mobileView = 'dashboard';
+                mainContainer.classList.remove('show-chat');
+                mainContainer.classList.add('show-dashboard');
+                toggleBtn.innerHTML = '💬 Ver Chat';
+            } else {
+                mobileView = 'chat';
+                mainContainer.classList.remove('show-dashboard');
+                mainContainer.classList.add('show-chat');
+                toggleBtn.innerHTML = '📊 Ver Análisis';
+            }
+        }
+        
+        // Initialize mobile view on load
+        if (window.innerWidth <= 640) {
+            document.querySelector('.main-container').classList.add('show-chat');
+        }
+    </script>
+</body>
+</html>
