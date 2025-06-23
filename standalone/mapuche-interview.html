@@ -18,72 +18,107 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            font-size: 13px;
         }
         
         .header {
             background-color: white;
-            padding: 20px;
+            padding: 12px 15px;
             border-bottom: 1px solid #ddd;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             position: relative;
         }
         
         .header h1 {
-            font-size: 24px;
+            font-size: 18px;
             color: #2c3e50;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .header p {
             color: #7f8c8d;
-            font-size: 14px;
+            font-size: 12px;
         }
         
         /* Main Layout Container */
         .main-container {
             flex: 1;
             display: flex;
-            gap: 20px;
-            padding: 20px;
+            gap: 10px;
+            padding: 10px;
             overflow: hidden;
-            height: calc(100vh - 100px); /* Adjust based on header height */
+            height: calc(100vh - 70px); /* Adjust based on header height */
         }
+        
+        /* Left column for analysis and survey */
+        .left-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 50%;
+            min-height: 0;
+        }
+        
+        /* Right column for chat and experiment */
+        .right-panels {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 50%;
+            min-height: 0;
+        }
+        
+        /* Panel Styles - Common */
+        .panel {
+            background-color: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        
+        /* Smooth transitions for bottom panels */
+        .bottom-panels .panel,
+        .bottom-panels .chat-wrapper {
+            transition: width 0.3s ease;
+        }
+        
+        /* All panels equal size - 50% height in their respective columns */
+        .panel.dashboard,
+        .panel.survey-panel,
+        .chat-wrapper,
+        .panel.experiment-panel {
+            width: 100%;
+            height: calc(50% - 5px); /* Subtract half the gap */
+            min-height: 200px;
+        }
+        
+        /* Experiment panel specific background */
+        .panel.experiment-panel {
+            background-color: #f5f5ff;
+        }
+        
         
         /* Dashboard Styles */
         .dashboard {
             background-color: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            overflow-y: auto;
-            width: 50%;
-            max-height: 100%;
         }
         
-        .dashboard.collapsed {
-            width: 0;
-            padding: 0;
-            overflow: hidden;
-            margin: 0;
+        /* Survey Panel Styles */
+        .survey-panel {
+            background-color: #fff5f5;
         }
         
-        .dashboard-header {
+        .panel-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
-        .dashboard-toggle {
-            background: #3498db;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: 10px;
-        }
         
         .mobile-view-toggle {
             display: none;
@@ -100,21 +135,29 @@
             z-index: 100;
         }
         
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-shrink: 0;
+        }
+        
         .dashboard-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 5px;
+            margin-bottom: 12px;
             border-bottom: 1px solid #ddd;
         }
         
         .tab {
-            padding: 10px 20px;
+            padding: 6px 12px;
             background: none;
             border: none;
             color: #7f8c8d;
             cursor: pointer;
-            font-size: 14px;
-            border-bottom: 3px solid transparent;
+            font-size: 12px;
+            border-bottom: 2px solid transparent;
             transition: all 0.3s;
         }
         
@@ -137,52 +180,52 @@
         
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 12px;
         }
         
         .metric-card {
             background-color: white;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 10px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .metric-label {
-            font-size: 12px;
+            font-size: 10px;
             color: #7f8c8d;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .metric-value {
-            font-size: 24px;
+            font-size: 18px;
             font-weight: bold;
             color: #2c3e50;
         }
         
         .metric-subtext {
-            font-size: 12px;
+            font-size: 10px;
             color: #95a5a6;
-            margin-top: 5px;
+            margin-top: 3px;
         }
         
         .themes-container {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .theme-tag {
             display: inline-block;
-            padding: 6px 12px;
-            margin: 4px;
+            padding: 4px 8px;
+            margin: 2px;
             background-color: #3498db;
             color: white;
-            border-radius: 20px;
-            font-size: 13px;
+            border-radius: 15px;
+            font-size: 11px;
         }
         
         .theme-tag.political {
@@ -203,82 +246,146 @@
         
         .annotations-list {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            max-height: 400px;
+            max-height: 350px;
             overflow-y: auto;
         }
         
         .annotation {
             border-left: 3px solid #3498db;
-            padding: 10px 15px;
-            margin-bottom: 15px;
+            padding: 8px 10px;
+            margin-bottom: 10px;
             background-color: #f8f9fa;
         }
         
         .annotation-quote {
             font-style: italic;
             color: #34495e;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+            font-size: 13px;
         }
         
         .annotation-note {
             color: #7f8c8d;
-            font-size: 14px;
+            font-size: 12px;
+            line-height: 1.3;
         }
         
         .annotation-tag {
             display: inline-block;
-            font-size: 11px;
-            padding: 2px 8px;
+            font-size: 9px;
+            padding: 2px 6px;
             background-color: #ecf0f1;
             color: #7f8c8d;
-            border-radius: 10px;
-            margin-top: 5px;
+            border-radius: 8px;
+            margin-top: 3px;
         }
         
         .word-cloud {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             text-align: center;
-            min-height: 200px;
+            min-height: 150px;
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 10px;
+            gap: 6px;
         }
         
         .word {
             display: inline-block;
-            padding: 5px 10px;
+            padding: 3px 6px;
             font-weight: bold;
             cursor: default;
         }
         
+        /* Survey Styles */
+        .survey-result {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 3px solid #3498db;
+        }
+        
+        .survey-question {
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            font-size: 13px;
+        }
+        
+        .survey-answer {
+            color: #34495e;
+            line-height: 1.4;
+            font-style: italic;
+            font-size: 12px;
+        }
+        
+        .survey-reasoning {
+            margin-top: 6px;
+            padding: 6px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #7f8c8d;
+        }
+        
+        .candidate-preference {
+            display: inline-block;
+            padding: 5px 10px;
+            margin: 3px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .candidate-matthei {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .candidate-kast {
+            background-color: #e74c3c;
+            color: white;
+        }
+        
+        .candidate-toha {
+            background-color: #9b59b6;
+            color: white;
+        }
+        
+        .candidate-none {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
         .timeline {
             background-color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 12px;
+            border-radius: 6px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .timeline-item {
             position: relative;
-            padding-left: 30px;
-            margin-bottom: 20px;
+            padding-left: 25px;
+            margin-bottom: 12px;
         }
         
         .timeline-item::before {
             content: '';
             position: absolute;
             left: 0;
-            top: 5px;
-            width: 10px;
-            height: 10px;
+            top: 4px;
+            width: 8px;
+            height: 8px;
             background-color: #3498db;
             border-radius: 50%;
         }
@@ -286,9 +393,9 @@
         .timeline-item::after {
             content: '';
             position: absolute;
-            left: 4px;
-            top: 15px;
-            bottom: -20px;
+            left: 3px;
+            top: 12px;
+            bottom: -12px;
             width: 2px;
             background-color: #ecf0f1;
         }
@@ -299,28 +406,35 @@
         
         .profile-info {
             background-color: #ecf0f1;
-            padding: 15px 20px;
+            padding: 10px 12px;
             border-bottom: 1px solid #ddd;
             display: none;
         }
         
         .profile-info h2 {
-            font-size: 18px;
+            font-size: 14px;
             color: #34495e;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         
         .profile-details {
             color: #7f8c8d;
-            font-size: 14px;
+            font-size: 12px;
         }
         
         .chat-wrapper {
-            flex: 1;
             display: flex;
             flex-direction: column;
-            width: 50%;
-            min-width: 300px;
+            transition: all 0.3s ease;
+        }
+        
+        .chat-wrapper.collapsed {
+            width: 50px;
+            min-width: 50px;
+        }
+        
+        .chat-wrapper.collapsed .chat-container {
+            display: none;
         }
         
         .chat-container {
@@ -335,22 +449,9 @@
         
         /* Responsive Design */
         @media (max-width: 1024px) {
-            .main-container {
-                flex-direction: column;
-                gap: 10px;
-                padding: 10px;
-            }
-            
-            .dashboard {
-                width: 100%;
-                max-height: 40vh;
-                order: 2;
-            }
-            
-            .chat-wrapper {
-                width: 100%;
-                height: 50vh;
-                order: 1;
+            .panel.dashboard {
+                height: 35%;
+                min-height: 250px;
             }
             
             .dashboard-tabs {
@@ -358,14 +459,36 @@
             }
             
             .tab {
-                padding: 8px 12px;
-                font-size: 12px;
+                padding: 6px 10px;
+                font-size: 11px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                gap: 10px;
+                padding: 10px;
+                flex-direction: column;
+            }
+            
+            .left-panels,
+            .right-panels {
+                width: 100%;
+                height: 50%;
+            }
+            
+            .panel.dashboard,
+            .panel.survey-panel,
+            .chat-wrapper,
+            .panel.experiment-panel {
+                height: auto;
+                min-height: 200px;
             }
         }
         
         @media (max-width: 640px) {
             .header h1 {
-                font-size: 18px;
+                font-size: 16px;
             }
             
             .header p {
@@ -376,62 +499,92 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .dashboard {
-                max-height: 35vh;
-            }
-            
-            .chat-wrapper {
-                height: 55vh;
-            }
-            
             .mobile-view-toggle {
                 display: block;
             }
             
-            .dashboard.mobile-hidden {
-                display: none;
-            }
-            
-            .chat-wrapper.mobile-hidden {
-                display: none;
-            }
-            
-            .main-container.show-dashboard .dashboard {
+            .main-container {
                 display: block;
-                width: 100%;
-                max-height: 80vh;
+                position: relative;
+                height: calc(100vh - 100px - 60px); /* Subtract header and mobile nav */
+                padding: 0;
             }
             
-            .main-container.show-dashboard .chat-wrapper {
+            /* Hide left and right panels containers on mobile */
+            .left-panels,
+            .right-panels {
                 display: none;
             }
             
-            .main-container.show-chat .dashboard {
+            /* Position all panels absolutely for mobile */
+            .panel.dashboard,
+            .panel.survey-panel,
+            .panel.experiment-panel,
+            .chat-wrapper {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100% !important;
+                height: 100%;
                 display: none;
+                max-height: none;
+                min-height: 0;
+                margin: 0;
             }
             
-            .main-container.show-chat .chat-wrapper {
+            /* Show only active panel */
+            .panel.dashboard.mobile-active,
+            .panel.survey-panel.mobile-active,
+            .panel.experiment-panel.mobile-active,
+            .chat-wrapper.mobile-active {
+                display: block;
+            }
+            
+            
+            .mobile-nav {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: white;
+                box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
                 display: flex;
-                width: 100%;
-                height: calc(100vh - 120px);
+                justify-content: space-around;
+                padding: 10px;
+                z-index: 100;
+            }
+            
+            .mobile-nav button {
+                background: none;
+                border: none;
+                padding: 8px 16px;
+                color: #7f8c8d;
+                font-size: 12px;
+                cursor: pointer;
+            }
+            
+            .mobile-nav button.active {
+                color: #3498db;
+                font-weight: bold;
             }
         }
         
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 10px;
         }
         
         .message {
             max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            padding: 8px 12px;
+            border-radius: 16px;
             word-wrap: break-word;
-            line-height: 1.4;
+            line-height: 1.3;
+            font-size: 13px;
         }
         
         .message.user {
@@ -449,8 +602,8 @@
         .divider {
             align-self: center;
             color: #7f8c8d;
-            font-size: 12px;
-            padding: 20px;
+            font-size: 10px;
+            padding: 12px;
             position: relative;
             width: 100%;
             text-align: center;
@@ -475,19 +628,19 @@
         }
         
         .input-container {
-            padding: 20px;
+            padding: 10px;
             border-top: 1px solid #ddd;
             display: flex;
-            gap: 10px;
+            gap: 8px;
             background-color: white;
         }
         
         .input-container input {
             flex: 1;
-            padding: 12px 16px;
+            padding: 8px 12px;
             border: 1px solid #ddd;
-            border-radius: 25px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-size: 13px;
             outline: none;
         }
         
@@ -496,12 +649,12 @@
         }
         
         .input-container button {
-            padding: 12px 24px;
+            padding: 8px 16px;
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 25px;
-            font-size: 16px;
+            border-radius: 20px;
+            font-size: 13px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -518,9 +671,10 @@
         .loading {
             display: none;
             align-self: flex-start;
-            padding: 10px 20px;
+            padding: 6px 12px;
             color: #7f8c8d;
             font-style: italic;
+            font-size: 12px;
         }
         
         .loading.show {
@@ -547,48 +701,50 @@
         
         .api-key-modal {
             background-color: white;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 8px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            max-width: 500px;
+            max-width: 450px;
             width: 90%;
         }
         
         .api-key-modal h2 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #2c3e50;
+            font-size: 18px;
         }
         
         .api-key-modal p {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             color: #7f8c8d;
-            line-height: 1.6;
+            line-height: 1.4;
+            font-size: 13px;
         }
         
         .api-key-modal input {
             width: 100%;
-            padding: 12px;
+            padding: 8px;
             border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            margin-bottom: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-bottom: 8px;
         }
         
         .api-key-modal .error {
             color: #e74c3c;
-            font-size: 14px;
-            margin-bottom: 10px;
+            font-size: 12px;
+            margin-bottom: 8px;
             display: none;
         }
         
         .api-key-modal button {
             width: 100%;
-            padding: 12px;
+            padding: 8px;
             background-color: #3498db;
             color: white;
             border: none;
-            border-radius: 5px;
-            font-size: 16px;
+            border-radius: 4px;
+            font-size: 13px;
             cursor: pointer;
             transition: background-color 0.3s;
         }
@@ -598,12 +754,13 @@
         }
         
         .api-key-modal .info {
-            margin-top: 15px;
-            padding: 10px;
+            margin-top: 12px;
+            padding: 8px;
             background-color: #ecf0f1;
-            border-radius: 5px;
-            font-size: 12px;
+            border-radius: 4px;
+            font-size: 11px;
             color: #7f8c8d;
+            line-height: 1.3;
         }
     </style>
 </head>
@@ -632,17 +789,19 @@
     <div class="header">
         <h1>Entrevista con Rayén - Análisis y Simulación</h1>
         <p>Herramienta de investigación: Análisis cualitativo y continuación de entrevista mediante IA</p>
-        <button onclick="changeApiKey()" style="position: absolute; top: 20px; right: 20px; padding: 8px 16px; background-color: #ecf0f1; border: none; border-radius: 5px; cursor: pointer; font-size: 12px;">Cambiar API Key</button>
+        <button onclick="changeApiKey()" style="position: absolute; top: 10px; right: 15px; padding: 5px 10px; background-color: #ecf0f1; border: none; border-radius: 4px; cursor: pointer; font-size: 10px;">Cambiar API Key</button>
     </div>
     
-    <!-- Main Container for side-by-side layout -->
-    <div class="main-container">
-        <!-- Dashboard Section -->
-        <div class="dashboard" id="dashboard">
-            <div class="dashboard-header">
-                <h2 style="margin: 0; color: #2c3e50; font-size: 18px;">Análisis de Entrevista</h2>
-                <button class="dashboard-toggle" onclick="toggleDashboard()">◀ Ocultar</button>
+    <!-- Main Container -->
+    <div class="main-container" id="mainContainer">
+        <!-- Left Column -->
+        <div class="left-panels">
+            <!-- Analysis Panel -->
+            <div class="panel dashboard" id="analysisPanel">
+            <div class="panel-header">
+                <h2 style="margin: 0; color: #2c3e50; font-size: 13px;">📊 Análisis de Entrevista</h2>
             </div>
+            <div style="flex: 1; overflow-y: auto;">
             <div class="dashboard-tabs">
             <button class="tab active" onclick="switchTab('overview')">Resumen General</button>
             <button class="tab" onclick="switchTab('themes')">Temas Clave</button>
@@ -677,8 +836,8 @@
             </div>
             
             <div class="themes-container">
-                <h3 style="margin-bottom: 15px; color: #2c3e50;">Perfil del Entrevistado</h3>
-                <p style="color: #7f8c8d; line-height: 1.6; margin-bottom: 15px;">
+                <h3 style="margin-bottom: 10px; color: #2c3e50; font-size: 14px;">Perfil del Entrevistado</h3>
+                <p style="color: #7f8c8d; line-height: 1.4; margin-bottom: 10px; font-size: 12px;">
                     <strong>Rayén (Paula)</strong>, 28 años, mapuche, técnico en turismo. Vive sola en Padre Las Casas. 
                     Usa nombre occidental para evitar discriminación. Postura política anarquista, crítica con instituciones. 
                     Ve el conflicto mapuche como guerra de despojo motivada por codicia. Sin trabajo actualmente.
@@ -696,26 +855,26 @@
         <!-- Themes Tab -->
         <div id="themes" class="dashboard-content">
             <div class="themes-container">
-                <h3 style="margin-bottom: 20px; color: #2c3e50;">Temas Principales Identificados</h3>
+                <h3 style="margin-bottom: 12px; color: #2c3e50; font-size: 14px;">Temas Principales Identificados</h3>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #e74c3c; margin-bottom: 10px;">Político</h4>
+                <div style="margin-bottom: 12px;">
+                    <h4 style="color: #e74c3c; margin-bottom: 6px; font-size: 13px;">Político</h4>
                     <span class="theme-tag political">Anarquismo vs partidos políticos</span>
                     <span class="theme-tag political">Crítica al Estado chileno</span>
                     <span class="theme-tag political">Desconfianza institucional</span>
                     <span class="theme-tag political">Organización horizontal</span>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #9b59b6; margin-bottom: 10px;">Cultural</h4>
+                <div style="margin-bottom: 12px;">
+                    <h4 style="color: #9b59b6; margin-bottom: 6px; font-size: 13px;">Cultural</h4>
                     <span class="theme-tag cultural">Identidad dual (Rayén/Paula)</span>
                     <span class="theme-tag cultural">Discriminación por nombre</span>
                     <span class="theme-tag cultural">Tradiciones mapuche vs chilenas</span>
                     <span class="theme-tag cultural">Territorio y raíces</span>
                 </div>
                 
-                <div style="margin-bottom: 20px;">
-                    <h4 style="color: #2ecc71; margin-bottom: 10px;">Social</h4>
+                <div style="margin-bottom: 12px;">
+                    <h4 style="color: #2ecc71; margin-bottom: 6px; font-size: 13px;">Social</h4>
                     <span class="theme-tag social">Cambios en Padre Las Casas</span>
                     <span class="theme-tag social">Pérdida de comunidad</span>
                     <span class="theme-tag social">Militarización cotidiana</span>
@@ -723,7 +882,7 @@
                 </div>
                 
                 <div>
-                    <h4 style="color: #f39c12; margin-bottom: 10px;">Económico</h4>
+                    <h4 style="color: #f39c12; margin-bottom: 6px; font-size: 13px;">Económico</h4>
                     <span class="theme-tag economic">Desempleo actual</span>
                     <span class="theme-tag economic">Turismo consciente</span>
                     <span class="theme-tag economic">Forestales y despojo</span>
@@ -735,7 +894,7 @@
         <!-- Annotations Tab -->
         <div id="annotations" class="dashboard-content">
             <div class="annotations-list">
-                <h3 style="margin-bottom: 20px; color: #2c3e50;">Citas y Anotaciones Clave</h3>
+                <h3 style="margin-bottom: 12px; color: #2c3e50; font-size: 14px;">Citas y Anotaciones Clave</h3>
                 
                 <div class="annotation">
                     <div class="annotation-quote">"Mi nombre que está en mi carnet es Paula. Rayen lo uso más que nada entre amistades cercanas y familia"</div>
@@ -777,36 +936,36 @@
         <!-- Timeline Tab -->
         <div id="timeline" class="dashboard-content">
             <div class="timeline">
-                <h3 style="margin-bottom: 20px; color: #2c3e50;">Trayectoria de Vida</h3>
+                <h3 style="margin-bottom: 12px; color: #2c3e50; font-size: 14px;">Trayectoria de Vida</h3>
                 
                 <div class="timeline-item">
                     <strong>Nacimiento (1995)</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">Nace como Rayén en Padre Las Casas</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">Nace como Rayén en Padre Las Casas</p>
                 </div>
                 
                 <div class="timeline-item">
                     <strong>Infancia</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">Crece en ambiente más rural, con fuerte sentido comunitario</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">Crece en ambiente más rural, con fuerte sentido comunitario</p>
                 </div>
                 
                 <div class="timeline-item">
                     <strong>Adopción nombre "Paula"</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">Comienza a usar nombre occidental por discriminación</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">Comienza a usar nombre occidental por discriminación</p>
                 </div>
                 
                 <div class="timeline-item">
                     <strong>Estudios técnicos</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">Completa carrera de Técnico en Turismo</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">Completa carrera de Técnico en Turismo</p>
                 </div>
                 
                 <div class="timeline-item">
                     <strong>Trabajo independiente</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">Se desempeña como guía turística independiente</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">Se desempeña como guía turística independiente</p>
                 </div>
                 
                 <div class="timeline-item">
                     <strong>Presente (2023)</strong>
-                    <p style="color: #7f8c8d; margin: 5px 0;">28 años, sin trabajo, viviendo sola, activa en redes sociales</p>
+                    <p style="color: #7f8c8d; margin: 3px 0; font-size: 11px;">28 años, sin trabajo, viviendo sola, activa en redes sociales</p>
                 </div>
             </div>
         </div>
@@ -814,31 +973,99 @@
         <!-- Word Cloud Tab -->
         <div id="wordcloud" class="dashboard-content">
             <div class="word-cloud">
-                <span class="word" style="font-size: 32px; color: #e74c3c;">mapuche</span>
-                <span class="word" style="font-size: 28px; color: #3498db;">territorio</span>
-                <span class="word" style="font-size: 24px; color: #9b59b6;">discriminación</span>
-                <span class="word" style="font-size: 26px; color: #2ecc71;">comunidad</span>
-                <span class="word" style="font-size: 22px; color: #f39c12;">Estado</span>
-                <span class="word" style="font-size: 20px; color: #34495e;">forestales</span>
-                <span class="word" style="font-size: 24px; color: #e74c3c;">conflicto</span>
-                <span class="word" style="font-size: 18px; color: #3498db;">anarquista</span>
-                <span class="word" style="font-size: 22px; color: #9b59b6;">Paula</span>
-                <span class="word" style="font-size: 20px; color: #2ecc71;">Rayén</span>
-                <span class="word" style="font-size: 19px; color: #f39c12;">resistencia</span>
-                <span class="word" style="font-size: 21px; color: #34495e;">organización</span>
-                <span class="word" style="font-size: 18px; color: #e74c3c;">libertad</span>
-                <span class="word" style="font-size: 17px; color: #3498db;">turismo</span>
-                <span class="word" style="font-size: 23px; color: #9b59b6;">identidad</span>
-                <span class="word" style="font-size: 19px; color: #2ecc71;">violencia</span>
-                <span class="word" style="font-size: 16px; color: #f39c12;">represión</span>
-                <span class="word" style="font-size: 20px; color: #34495e;">cambio</span>
+                <span class="word" style="font-size: 24px; color: #e74c3c;">mapuche</span>
+                <span class="word" style="font-size: 20px; color: #3498db;">territorio</span>
+                <span class="word" style="font-size: 18px; color: #9b59b6;">discriminación</span>
+                <span class="word" style="font-size: 19px; color: #2ecc71;">comunidad</span>
+                <span class="word" style="font-size: 16px; color: #f39c12;">Estado</span>
+                <span class="word" style="font-size: 15px; color: #34495e;">forestales</span>
+                <span class="word" style="font-size: 18px; color: #e74c3c;">conflicto</span>
+                <span class="word" style="font-size: 14px; color: #3498db;">anarquista</span>
+                <span class="word" style="font-size: 16px; color: #9b59b6;">Paula</span>
+                <span class="word" style="font-size: 15px; color: #2ecc71;">Rayén</span>
+                <span class="word" style="font-size: 14px; color: #f39c12;">resistencia</span>
+                <span class="word" style="font-size: 15px; color: #34495e;">organización</span>
+                <span class="word" style="font-size: 14px; color: #e74c3c;">libertad</span>
+                <span class="word" style="font-size: 13px; color: #3498db;">turismo</span>
+                <span class="word" style="font-size: 17px; color: #9b59b6;">identidad</span>
+                <span class="word" style="font-size: 14px; color: #2ecc71;">violencia</span>
+                <span class="word" style="font-size: 12px; color: #f39c12;">represión</span>
+                <span class="word" style="font-size: 15px; color: #34495e;">cambio</span>
             </div>
         </div>
     </div>
-    
-    <!-- Chat Section -->
-    <div class="chat-wrapper">
-        <div class="chat-container">
+    </div>
+            
+            <!-- Survey Panel -->
+            <div class="panel survey-panel" id="surveyPanel">
+        <div class="panel-header">
+            <h2 style="margin: 0; color: #e74c3c; font-size: 13px;">🗳️ Encuestas</h2>
+        </div>
+        <div style="flex: 1; overflow-y: auto;">
+            <div style="background-color: white; padding: 12px; border-radius: 6px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                <h3 style="margin-bottom: 12px; color: #2c3e50; font-size: 14px;">Simulador de Encuesta Electoral 2025</h3>
+                
+                <!-- Survey Controls -->
+                <div style="margin-bottom: 12px; padding: 10px; background-color: #f8f9fa; border-radius: 4px;">
+                    <label style="font-weight: bold; color: #34495e; font-size: 12px;">Seleccionar batería de preguntas:</label>
+                    <select id="surveySelect" onchange="loadSurvey()" style="width: 100%; padding: 6px; margin-top: 6px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px;">
+                        <option value="">-- Selecciona una encuesta --</option>
+                        <option value="electoral">Preferencias Electorales 2025</option>
+                        <option value="issues">Prioridades Políticas</option>
+                        <option value="candidates">Evaluación de Candidatos</option>
+                        <option value="policies">Posiciones sobre Políticas</option>
+                    </select>
+                    <button onclick="runSurvey()" style="margin-top: 8px; padding: 6px 12px; background-color: #3498db; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                        ▶️ Ejecutar Encuesta
+                    </button>
+                </div>
+                
+                <!-- Survey Questions -->
+                <div id="surveyQuestions" style="display: none; margin-bottom: 12px;">
+                    <h4 style="color: #34495e; margin-bottom: 10px; font-size: 13px;">Preguntas de la Encuesta:</h4>
+                    <div id="questionsList" style="background-color: #ecf0f1; padding: 10px; border-radius: 4px; max-height: 150px; overflow-y: auto; font-size: 11px;">
+                        <!-- Questions will be loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Survey Results -->
+                <div id="surveyResults" style="display: none;">
+                    <h4 style="color: #34495e; margin-bottom: 10px; font-size: 13px;">Respuestas Simuladas:</h4>
+                    <div id="resultsContainer" style="max-height: 300px; overflow-y: auto;">
+                        <!-- Results will appear here -->
+                    </div>
+                    
+                    <!-- Export Options -->
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #ddd;">
+                        <button onclick="exportResults('json')" style="padding: 6px 12px; background-color: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer; margin-right: 8px; font-size: 11px;">
+                            📄 Exportar JSON
+                        </button>
+                        <button onclick="exportResults('csv')" style="padding: 6px 12px; background-color: #f39c12; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                            📊 Exportar CSV
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Comparison with Polls -->
+                <div id="pollComparison" style="display: none; margin-top: 12px; padding: 12px; background-color: #f8f9fa; border-radius: 6px;">
+                    <h4 style="color: #34495e; margin-bottom: 10px; font-size: 13px;">Comparación con Encuestas Reales:</h4>
+                    <div id="comparisonData">
+                        <!-- Comparison data will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div> <!-- End of left-panels -->
+        
+        <!-- Right Column -->
+        <div class="right-panels">
+            <!-- Chat Panel -->
+            <div class="chat-wrapper" id="chatPanel">
+        <div class="panel-header" style="background-color: white; padding: 8px; border-radius: 6px 6px 0 0;">
+            <h2 style="margin: 0; color: #2c3e50; font-size: 13px;">💬 Conversación</h2>
+        </div>
+        <div class="chat-container" style="border-radius: 0 0 10px 10px;">
             <div class="messages" id="messages">
                 <!-- Messages will be displayed here -->
             </div>
@@ -853,10 +1080,84 @@
             </div>
         </div>
     </div>
+            
+            <!-- Experiment Panel -->
+            <div class="panel experiment-panel" id="experimentPanel">
+                <div class="panel-header">
+                    <h2 style="margin: 0; color: #9b59b6; font-size: 13px;">🧪 Experimento de Mensajes</h2>
+                </div>
+                <div style="flex: 1; overflow-y: auto;">
+                <div style="background-color: white; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    <!-- Experiment Setup -->
+                    <div style="margin-bottom: 12px;">
+                        <h3 style="font-size: 12px; color: #2c3e50; margin-bottom: 8px;">Diseño Experimental</h3>
+                        
+                        <!-- Pre-set Experiments -->
+                        <div style="margin-bottom: 8px;">
+                            <label style="font-size: 11px; color: #34495e; font-weight: bold;">Experimento pre-configurado:</label>
+                            <select id="experimentSelect" onchange="loadExperiment()" style="width: 100%; padding: 4px; margin-top: 3px; font-size: 11px; border: 1px solid #ddd; border-radius: 4px;">
+                                <option value="">-- Selecciona un experimento --</option>
+                                <optgroup label="Seguridad y Orden">
+                                    <option value="matthei_military">Matthei: Militarización de la Araucanía</option>
+                                    <option value="kast_security">Kast: Mano dura contra delincuencia</option>
+                                    <option value="toha_dialogue">Tohá: Diálogo en vez de represión</option>
+                                </optgroup>
+                                <optgroup label="Derechos Indígenas">
+                                    <option value="boric_recognition">Boric: Reconocimiento constitucional mapuche</option>
+                                    <option value="jadue_lands">Jadue: Devolución de tierras ancestrales</option>
+                                    <option value="matthei_integration">Matthei: Integración económica sin autonomía</option>
+                                </optgroup>
+                                <optgroup label="Economía">
+                                    <option value="kast_neoliberal">Kast: Reducir impuestos y Estado</option>
+                                    <option value="toha_social">Tohá: Fortalecer protección social</option>
+                                    <option value="jadue_nationalize">Jadue: Nacionalizar recursos naturales</option>
+                                </optgroup>
+                                <optgroup label="Controversias">
+                                    <option value="matthei_pinochet">Matthei defiende legado económico de dictadura</option>
+                                    <option value="boric_concerta">Boric pacta con partidos tradicionales</option>
+                                    <option value="kast_abortion">Kast propone penalizar todo aborto</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                        
+                        <!-- Experiment Description -->
+                        <div id="experimentDescription" style="display: none; margin-bottom: 8px; padding: 8px; background-color: #f8f9fa; border-radius: 4px; font-size: 10px; color: #555;">
+                            <!-- Description will appear here -->
+                        </div>
+                        
+                        <button onclick="runExperiment()" style="padding: 6px 12px; background-color: #9b59b6; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 11px; width: 100%; margin-top: 8px;">
+                            ▶️ Ejecutar Experimento
+                        </button>
+                    </div>
+                    
+                    <!-- Results -->
+                    <div id="experimentResults" style="display: none;">
+                        <h3 style="font-size: 12px; color: #2c3e50; margin-bottom: 8px; padding-top: 8px; border-top: 1px solid #ecf0f1;">Resultados</h3>
+                        <div id="experimentResultsContent">
+                            <!-- Results will appear here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Experiment History -->
+                    <div id="experimentHistory" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px solid #ecf0f1;">
+                        <h4 style="font-size: 11px; color: #34495e; margin-bottom: 6px;">Historial de Experimentos</h4>
+                        <div id="experimentHistoryList" style="max-height: 100px; overflow-y: auto;">
+                            <!-- History will appear here -->
+                        </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div> <!-- End of right-panels -->
     </div> <!-- End of main-container -->
     
-    <!-- Mobile View Toggle -->
-    <button class="mobile-view-toggle" id="mobileToggle" onclick="toggleMobileView()">📊 Ver Análisis</button>
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" style="display: none;">
+        <button class="active" onclick="switchMobileView('analysis')">📊 Análisis</button>
+        <button onclick="switchMobileView('survey')">🗳️ Encuestas</button>
+        <button onclick="switchMobileView('chat')">💬 Chat</button>
+        <button onclick="switchMobileView('experiment')">🧪 Experimento</button>
+    </div>
     
     <script>
         // Hard-coded profile data
@@ -1130,66 +1431,981 @@ Si me preguntan algo personal, respondo desde mi experiencia como mujer mapuche 
             document.getElementById(tabName).classList.add('active');
         }
         
-        // Toggle dashboard visibility
-        let dashboardCollapsed = false;
-        function toggleDashboard() {
-            const dashboard = document.getElementById('dashboard');
-            const chatWrapper = document.querySelector('.chat-wrapper');
-            const toggleBtn = document.querySelector('.dashboard-toggle');
-            
-            dashboardCollapsed = !dashboardCollapsed;
-            
-            if (dashboardCollapsed) {
-                dashboard.classList.add('collapsed');
-                chatWrapper.style.width = '90%';
-                toggleBtn.innerHTML = '▶ Mostrar';
-                
-                // Create floating button if doesn't exist
-                if (!document.getElementById('floatingToggle')) {
-                    const floatingBtn = document.createElement('button');
-                    floatingBtn.id = 'floatingToggle';
-                    floatingBtn.className = 'dashboard-toggle';
-                    floatingBtn.style.position = 'fixed';
-                    floatingBtn.style.left = '20px';
-                    floatingBtn.style.top = '50%';
-                    floatingBtn.style.transform = 'translateY(-50%)';
-                    floatingBtn.innerHTML = '▶ Análisis';
-                    floatingBtn.onclick = toggleDashboard;
-                    document.body.appendChild(floatingBtn);
-                }
-            } else {
-                dashboard.classList.remove('collapsed');
-                chatWrapper.style.width = '50%';
-                toggleBtn.innerHTML = '◀ Ocultar';
-                
-                // Remove floating button
-                const floatingBtn = document.getElementById('floatingToggle');
-                if (floatingBtn) floatingBtn.remove();
-            }
-        }
+        // Mobile view management
+        let currentMobileView = 'chat';
         
-        // Mobile view toggle
-        let mobileView = 'chat';
-        function toggleMobileView() {
-            const mainContainer = document.querySelector('.main-container');
-            const toggleBtn = document.getElementById('mobileToggle');
+        function switchMobileView(viewName) {
+            const panels = {
+                analysis: document.getElementById('analysisPanel'),
+                survey: document.getElementById('surveyPanel'),
+                chat: document.getElementById('chatPanel'),
+                experiment: document.getElementById('experimentPanel')
+            };
             
-            if (mobileView === 'chat') {
-                mobileView = 'dashboard';
-                mainContainer.classList.remove('show-chat');
-                mainContainer.classList.add('show-dashboard');
-                toggleBtn.innerHTML = '💬 Ver Chat';
-            } else {
-                mobileView = 'chat';
-                mainContainer.classList.remove('show-dashboard');
-                mainContainer.classList.add('show-chat');
-                toggleBtn.innerHTML = '📊 Ver Análisis';
-            }
+            // Remove active class from all panels
+            Object.values(panels).forEach(panel => {
+                panel.classList.remove('mobile-active');
+            });
+            
+            // Add active class to selected panel
+            panels[viewName].classList.add('mobile-active');
+            
+            // Update navigation buttons
+            document.querySelectorAll('.mobile-nav button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            currentMobileView = viewName;
         }
         
         // Initialize mobile view on load
-        if (window.innerWidth <= 640) {
-            document.querySelector('.main-container').classList.add('show-chat');
+        window.addEventListener('load', function() {
+            if (window.innerWidth <= 768) {
+                document.querySelector('.mobile-nav').style.display = 'flex';
+                // Move panels out of bottom-panels for mobile
+                const mainContainer = document.querySelector('.main-container');
+                const analysisPanel = document.getElementById('analysisPanel');
+                const surveyPanel = document.getElementById('surveyPanel');
+                const chatPanel = document.getElementById('chatPanel');
+                const experimentPanel = document.getElementById('experimentPanel');
+                
+                // Move panels to main container for mobile layout
+                mainContainer.appendChild(analysisPanel);
+                mainContainer.appendChild(surveyPanel);
+                mainContainer.appendChild(chatPanel);
+                mainContainer.appendChild(experimentPanel);
+                
+                // Set initial active panel
+                document.getElementById('chatPanel').classList.add('mobile-active');
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            const mobileNav = document.querySelector('.mobile-nav');
+            const leftPanels = document.querySelector('.left-panels');
+            const rightPanels = document.querySelector('.right-panels');
+            const mainContainer = document.querySelector('.main-container');
+            
+            if (window.innerWidth <= 768) {
+                mobileNav.style.display = 'flex';
+                
+                // Move panels to main container if not already there
+                const analysisPanel = document.getElementById('analysisPanel');
+                const surveyPanel = document.getElementById('surveyPanel');
+                const chatPanel = document.getElementById('chatPanel');
+                const experimentPanel = document.getElementById('experimentPanel');
+                
+                if (analysisPanel.parentElement !== mainContainer) {
+                    mainContainer.appendChild(analysisPanel);
+                    mainContainer.appendChild(surveyPanel);
+                    mainContainer.appendChild(chatPanel);
+                    mainContainer.appendChild(experimentPanel);
+                }
+                
+                // Ensure at least one panel is active
+                if (!document.querySelector('.panel.mobile-active, .chat-wrapper.mobile-active')) {
+                    document.getElementById('chatPanel').classList.add('mobile-active');
+                }
+            } else {
+                mobileNav.style.display = 'none';
+                
+                // Move panels back to proper structure for desktop
+                const analysisPanel = document.getElementById('analysisPanel');
+                const surveyPanel = document.getElementById('surveyPanel');
+                const chatPanel = document.getElementById('chatPanel');
+                const experimentPanel = document.getElementById('experimentPanel');
+                
+                // Analysis and survey panels should be in left panels
+                if (analysisPanel.parentElement !== leftPanels) {
+                    leftPanels.appendChild(analysisPanel);
+                    leftPanels.appendChild(surveyPanel);
+                }
+                
+                // Chat and experiment panels should be in right panels
+                if (chatPanel.parentElement !== rightPanels) {
+                    rightPanels.appendChild(chatPanel);
+                    rightPanels.appendChild(experimentPanel);
+                }
+                
+                // Remove mobile-active classes
+                document.querySelectorAll('.mobile-active').forEach(el => {
+                    el.classList.remove('mobile-active');
+                });
+            }
+        });
+        
+        // Survey functionality
+        const surveyQuestions = {
+            electoral: [
+                {
+                    id: 'vote_2025',
+                    question: 'Si las elecciones presidenciales fueran mañana, ¿por quién votarías?',
+                    type: 'candidate'
+                },
+                {
+                    id: 'vote_certainty',
+                    question: '¿Qué tan seguro/a estás de tu elección?',
+                    type: 'scale'
+                },
+                {
+                    id: 'second_round',
+                    question: 'En una segunda vuelta entre Evelyn Matthei (UDI) y José Antonio Kast (Republicano), ¿por quién votarías?',
+                    type: 'binary_choice'
+                },
+                {
+                    id: 'participation',
+                    question: '¿Piensas votar en las elecciones de 2025?',
+                    type: 'yes_no'
+                }
+            ],
+            issues: [
+                {
+                    id: 'main_problem',
+                    question: '¿Cuál consideras que es el principal problema que enfrenta Chile hoy?',
+                    type: 'open'
+                },
+                {
+                    id: 'crime_priority',
+                    question: '¿Qué tan prioritario debería ser el combate a la delincuencia para el próximo gobierno?',
+                    type: 'priority'
+                },
+                {
+                    id: 'immigration_view',
+                    question: '¿Cuál es tu posición sobre la inmigración en Chile?',
+                    type: 'open'
+                },
+                {
+                    id: 'pension_reform',
+                    question: '¿Apoyas una reforma al sistema de pensiones que incluya un componente de reparto?',
+                    type: 'yes_no_explain'
+                }
+            ],
+            candidates: [
+                {
+                    id: 'matthei_evaluation',
+                    question: '¿Qué opinión tienes de Evelyn Matthei como candidata presidencial?',
+                    type: 'evaluation'
+                },
+                {
+                    id: 'kast_evaluation',
+                    question: '¿Qué opinión tienes de José Antonio Kast como candidato presidencial?',
+                    type: 'evaluation'
+                },
+                {
+                    id: 'toha_evaluation',
+                    question: '¿Qué opinión tienes de Carolina Tohá como candidata presidencial?',
+                    type: 'evaluation'
+                },
+                {
+                    id: 'trust_comparison',
+                    question: '¿Cuál de estos candidatos te genera más confianza para manejar la economía?',
+                    type: 'candidate_compare'
+                }
+            ],
+            policies: [
+                {
+                    id: 'tax_wealthy',
+                    question: '¿Estás de acuerdo con aumentar los impuestos a los más ricos para financiar programas sociales?',
+                    type: 'agree_disagree'
+                },
+                {
+                    id: 'state_role',
+                    question: '¿El Estado debería tener un rol más activo en la economía o dejar más libertad al mercado?',
+                    type: 'binary_choice'
+                },
+                {
+                    id: 'mapuche_autonomy',
+                    question: '¿Apoyas el reconocimiento constitucional y mayor autonomía para el pueblo mapuche?',
+                    type: 'yes_no_explain'
+                },
+                {
+                    id: 'death_penalty',
+                    question: '¿Estarías a favor de restablecer la pena de muerte para delitos graves?',
+                    type: 'yes_no_explain'
+                }
+            ]
+        };
+        
+        let currentSurvey = null;
+        let surveyResults = [];
+        
+        function loadSurvey() {
+            const surveyType = document.getElementById('surveySelect').value;
+            const questionsDiv = document.getElementById('surveyQuestions');
+            const questionsList = document.getElementById('questionsList');
+            
+            if (!surveyType) {
+                questionsDiv.style.display = 'none';
+                return;
+            }
+            
+            currentSurvey = surveyQuestions[surveyType];
+            questionsDiv.style.display = 'block';
+            
+            // Display questions
+            questionsList.innerHTML = currentSurvey.map((q, i) => 
+                `<div style="margin-bottom: 6px;">
+                    <strong>${i + 1}.</strong> ${q.question}
+                </div>`
+            ).join('');
+        }
+        
+        async function runSurvey() {
+            if (!currentSurvey) {
+                alert('Por favor selecciona una encuesta primero');
+                return;
+            }
+            
+            if (!OPENAI_API_KEY) {
+                alert('Por favor configura tu API key primero');
+                return;
+            }
+            
+            // Show loading
+            document.getElementById('surveyResults').style.display = 'block';
+            document.getElementById('resultsContainer').innerHTML = '<p style="text-align: center; color: #7f8c8d;">🔄 Generando respuestas basadas en el perfil de Rayén...</p>';
+            
+            surveyResults = [];
+            
+            // Process each question
+            for (const question of currentSurvey) {
+                const result = await simulateAnswer(question);
+                surveyResults.push(result);
+                displayResults();
+            }
+            
+            // Show comparison if electoral survey
+            if (document.getElementById('surveySelect').value === 'electoral') {
+                showPollComparison();
+            }
+        }
+        
+        async function simulateAnswer(question) {
+            // Construct prompt based on question type
+            let prompt = `Como Rayén, responde a esta pregunta de encuesta de manera consistente con tus valores, experiencias y forma de pensar expresadas en la entrevista.
+
+Pregunta: ${question.question}
+
+Instrucciones específicas:
+- Responde como lo harías tú, Rayén, no como un analista
+- Sé directa y usa tu estilo de hablar característico
+- Basa tu respuesta en tus experiencias como mujer mapuche, anarquista, de Padre Las Casas`;
+
+            if (question.type === 'candidate') {
+                prompt += '\n- Menciona un candidato específico o di "ninguno/voto nulo" si es consistente con tus valores';
+            } else if (question.type === 'yes_no_explain') {
+                prompt += '\n- Responde sí o no primero, luego explica brevemente';
+            }
+            
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + OPENAI_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4.1-nano',
+                        messages: [
+                            { role: 'system', content: rayenProfile.system_prompt },
+                            ...originalInterview.slice(-10), // Recent context
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 200
+                    })
+                });
+                
+                const data = await response.json();
+                
+                return {
+                    question: question.question,
+                    questionId: question.id,
+                    answer: data.choices[0].message.content,
+                    timestamp: new Date().toISOString()
+                };
+            } catch (error) {
+                console.error('Error:', error);
+                return {
+                    question: question.question,
+                    questionId: question.id,
+                    answer: 'Error al generar respuesta',
+                    timestamp: new Date().toISOString()
+                };
+            }
+        }
+        
+        function displayResults() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = surveyResults.map(result => `
+                <div class="survey-result">
+                    <div class="survey-question">${result.question}</div>
+                    <div class="survey-answer">"${result.answer}"</div>
+                </div>
+            `).join('');
+        }
+        
+        function showPollComparison() {
+            const comparisonDiv = document.getElementById('pollComparison');
+            comparisonDiv.style.display = 'block';
+            
+            // Real poll data (from search results)
+            const realPolls = {
+                'Evelyn Matthei': 31,
+                'José Antonio Kast': 18,
+                'Carolina Tohá': 12,
+                'Otros': 39
+            };
+            
+            document.getElementById('comparisonData').innerHTML = `
+                <div style="margin-bottom: 10px; font-size: 12px;">
+                    <strong>Encuesta Nacional (Pulso Ciudadano, Feb 2025):</strong>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px;">
+                    ${Object.entries(realPolls).map(([candidate, percent]) => 
+                        `<div style="background-color: #ecf0f1; padding: 6px; border-radius: 4px; font-size: 11px;">
+                            <strong>${candidate}:</strong> ${percent}%
+                        </div>`
+                    ).join('')}
+                </div>
+                <div style="margin-top: 10px; padding: 10px; background-color: #fff3cd; border-radius: 4px; font-size: 11px;">
+                    <strong>Nota:</strong> Las respuestas de Rayén reflejan su perspectiva anarquista y crítica del sistema político tradicional, 
+                    lo que puede diferir significativamente de las tendencias nacionales.
+                </div>
+            `;
+        }
+        
+        function exportResults(format) {
+            if (surveyResults.length === 0) {
+                alert('No hay resultados para exportar');
+                return;
+            }
+            
+            const timestamp = new Date().toISOString().split('T')[0];
+            
+            if (format === 'json') {
+                const dataStr = JSON.stringify({
+                    participant: 'Rayén',
+                    surveyType: document.getElementById('surveySelect').value,
+                    timestamp: new Date().toISOString(),
+                    results: surveyResults
+                }, null, 2);
+                
+                downloadFile(dataStr, `rayen_survey_${timestamp}.json`, 'application/json');
+            } else if (format === 'csv') {
+                let csv = 'Pregunta,Respuesta,Timestamp\n';
+                surveyResults.forEach(result => {
+                    csv += `"${result.question}","${result.answer.replace(/"/g, '""')}","${result.timestamp}"\n`;
+                });
+                
+                downloadFile(csv, `rayen_survey_${timestamp}.csv`, 'text/csv');
+            }
+        }
+        
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+        
+        // Experiment functionality
+        let experimentHistory = [];
+        let candidateBaselines = {
+            matthei: null,
+            kast: null,
+            toha: null,
+            boric: null,
+            jadue: null
+        };
+        
+        // Pre-set experiments data
+        const experiments = {
+            // Security experiments
+            matthei_military: {
+                candidate: 'matthei',
+                message: `NOTICIA: Evelyn Matthei presenta plan de seguridad para La Araucanía
+
+La candidata de la UDI, Evelyn Matthei, presentó hoy su propuesta de seguridad para la región de La Araucanía, que incluye la creación de una fuerza militar especial permanente en la zona. "No podemos seguir permitiendo que grupos terroristas amenacen la paz de las familias chilenas y mapuche que quieren vivir tranquilas", declaró Matthei en conferencia de prensa.
+
+La propuesta incluye:
+- Destacamento militar permanente de 2,000 efectivos
+- Protección especial para predios forestales y agrícolas
+- Tribunales especiales para juzgar delitos terroristas
+- Aumento de penas para ataques incendiarios
+
+"Las empresas forestales generan miles de empleos en la región. Protegerlas es proteger el trabajo de los chilenos", agregó la candidata, quien prometió "recuperar el estado de derecho en La Araucanía".`,
+                messageType: 'news',
+                description: 'Propuesta de militarización permanente del territorio mapuche'
+            },
+            kast_security: {
+                candidate: 'kast',
+                message: `DECLARACIÓN: José Antonio Kast promete "mano dura contra el terrorismo"
+
+En un acto de campaña en Temuco, el candidato republicano José Antonio Kast prometió aplicar "toda la fuerza del Estado" contra lo que denominó "terrorismo mapuche". "Se acabó la permisividad. Los delincuentes y terroristas deben temer al Estado, no al revés", afirmó ante cientos de simpatizantes.
+
+"En mi gobierno, quien queme una iglesia, una escuela o ataque a carabineros, tendrá todo el peso de la ley. Aplicaremos la Ley de Seguridad del Estado sin contemplaciones", señaló Kast, quien criticó duramente la "debilidad" del gobierno actual.
+
+El candidato prometió además:
+- Declarar estado de sitio en las zonas conflictivas
+- Expulsar a ONGs "que promueven la violencia"
+- Crear una unidad antiterrorista especializada
+- Indemnizar a todas las víctimas de la violencia rural
+
+"Chile necesita orden, autoridad y respeto a la ley. Eso es lo que mi gobierno garantizará", concluyó.`,
+                messageType: 'campaign',
+                description: 'Mensaje de campaña enfocado en seguridad y orden'
+            },
+            toha_dialogue: {
+                candidate: 'toha',
+                message: `ENTREVISTA: Carolina Tohá propone "cambio radical" en política hacia pueblo mapuche
+
+En entrevista exclusiva con Radio Bío Bío, la candidata del PPD Carolina Tohá criticó duramente la estrategia de militarización en La Araucanía y propuso un "cambio radical" basado en el diálogo.
+
+"La militarización ha fracasado. Llevamos décadas con la misma estrategia y el conflicto solo se ha profundizado. Necesitamos valentía para cambiar de rumbo", afirmó Tohá.
+
+La ex ministra propone:
+- Retiro gradual de fuerzas militares de la zona
+- Mesa de diálogo permanente con autoridades tradicionales mapuche
+- Comisión de Verdad Histórica sobre el despojo territorial
+- Fondo de reparación y desarrollo para comunidades afectadas
+- Revisión de contratos de empresas forestales
+
+"No podemos seguir tratando al pueblo mapuche como enemigo interno. Son parte fundamental de nuestra historia y deben ser parte de nuestro futuro. El diálogo genuino, con voluntad política real, es el único camino hacia la paz", concluyó Tohá.`,
+                messageType: 'news',
+                description: 'Postura contra la militarización, pro-diálogo'
+            },
+            // Indigenous rights experiments
+            boric_recognition: {
+                candidate: 'boric',
+                message: `ANUNCIO PRESIDENCIAL: Boric presenta proyecto de reconocimiento constitucional mapuche
+
+El Presidente Gabriel Boric anunció hoy el envío al Congreso de un proyecto de reforma constitucional para el reconocimiento del pueblo mapuche, incluyendo escaños reservados en el Parlamento.
+
+"Chile tiene una deuda histórica con el pueblo mapuche. Este proyecto busca saldar, al menos en parte, esa deuda mediante el reconocimiento constitucional pleno", declaró Boric desde La Moneda.
+
+El proyecto contempla:
+- Reconocimiento constitucional como pueblo originario preexistente al Estado
+- 8 escaños reservados en la Cámara de Diputados
+- 4 escaños en el Senado
+- Reconocimiento del mapudungun como lengua oficial en territorios con alta población mapuche
+- Obligatoriedad de consulta indígena para proyectos en territorios ancestrales
+
+"No es solo un acto de justicia, es un paso necesario para construir un Chile verdaderamente plurinacional", agregó el mandatario, quien hizo un llamado a todos los sectores políticos a apoyar la iniciativa.`,
+                messageType: 'news',
+                description: 'Propuesta de reconocimiento político institucional'
+            },
+            jadue_lands: {
+                candidate: 'jadue',
+                message: `PROPUESTA RADICAL: Jadue plantea expropiación de forestales para restitución territorial mapuche
+
+El alcalde de Recoleta y precandidato presidencial del PC, Daniel Jadue, presentó su propuesta más controversial: la expropiación de grandes empresas forestales para devolver tierras ancestrales al pueblo mapuche.
+
+"Las forestales han depredado el territorio, han secado las napas, han empobrecido a las comunidades. Es hora de revertir el despojo histórico", declaró Jadue en encuentro con comunidades mapuche en Ercilla.
+
+Su plan incluye:
+- Expropiación de 500,000 hectáreas de las principales forestales
+- Creación de Corporación de Restitución Territorial
+- Prohibición de nuevas plantaciones de pino y eucaliptus
+- Programa de reforestación con bosque nativo
+- Autonomía administrativa para territorios restituidos
+
+"No es radical devolver lo robado. Radical es mantener un sistema de apartheid territorial donde las empresas tienen más derechos que los pueblos originarios", afirmó Jadue, quien prometió que esta sería "prioridad uno" de su eventual gobierno.`,
+                messageType: 'policy',
+                description: 'Propuesta radical de restitución territorial'
+            },
+            matthei_integration: {
+                candidate: 'matthei',
+                message: `CONFERENCIA: Matthei defiende "integración económica" sin autonomía territorial
+
+En conferencia ante empresarios en Temuco, Evelyn Matthei expuso su visión sobre la "cuestión mapuche", rechazando propuestas de autonomía territorial y defendiendo la integración económica.
+
+"El camino no es la segregación ni la autonomía territorial. El camino es la integración plena del pueblo mapuche a la economía moderna chilena", afirmó la candidata UDI.
+
+Matthei propone:
+- Créditos especiales para emprendedores mapuche
+- Capacitación técnica en áreas productivas modernas
+- Incentivos tributarios para empresas que contraten trabajadores mapuche
+- Becas completas para estudiantes mapuche en carreras STEM
+- Modernización de la agricultura tradicional
+
+"Chile es uno solo. No podemos tener territorios con leyes distintas. Lo que necesitan las comunidades mapuche es oportunidades, no separatismo. Educación, trabajo y emprendimiento, no ideologías trasnochadas", concluyó Matthei ante los aplausos del auditorio empresarial.`,
+                messageType: 'campaign',
+                description: 'Enfoque asimilacionista sin reconocimiento de autonomía'
+            },
+            // Economic experiments
+            kast_neoliberal: {
+                candidate: 'kast',
+                message: `PROGRAMA ECONÓMICO: Kast propone "revolución" de libre mercado
+
+José Antonio Kast presentó su programa económico bajo el lema "El Estado es el problema, no la solución", proponiendo la reducción más drástica del aparato estatal desde el retorno a la democracia.
+
+"Chile se estancó porque el Estado creció como un cáncer. Vamos a extirparlo", declaró Kast ante la reunión anual de la SOFOFA.
+
+Sus propuestas incluyen:
+- Eliminación de 10 ministerios (Mujer, Culturas, Deporte, entre otros)
+- Reducción del impuesto corporativo al 15%
+- Eliminación del impuesto a la renta para sueldos bajo $2 millones
+- Privatización de CODELCO, BancoEstado y TVN
+- Eliminación del salario mínimo por ley
+- Flexibilización total del código laboral
+
+"Cuando liberemos a los emprendedores del yugo estatal, Chile volverá a crecer al 6% anual. El mercado, no los burócratas, debe decidir el destino de nuestra economía", concluyó el candidato republicano.`,
+                messageType: 'policy',
+                description: 'Propuesta económica ultra-neoliberal'
+            },
+            toha_social: {
+                candidate: 'toha',
+                message: `PLAN SOCIAL: Tohá propone "Nueva Red de Protección" financiada con impuesto a grandes fortunas
+
+Carolina Tohá presentó su propuesta estrella de campaña: una nueva red de protección social universal financiada con un impuesto progresivo a las grandes fortunas.
+
+"No es justo que en Chile haya familias que no pueden pagar remedios mientras otros acumulan fortunas obscenas. Vamos a nivelar la cancha", declaró Tohá en población La Bandera.
+
+El plan contempla:
+- Impuesto del 2% a fortunas sobre US$5 millones
+- Pensión básica universal de $350.000
+- Seguro de salud catastrófico gratuito
+- Subsidio de arriendo para familias vulnerables
+- Programa nacional de alimentación escolar ampliado
+- Gratuidad en transporte público para mayores de 65
+
+"No es socialismo, es sentido común. Los países más prósperos del mundo tienen Estados fuertes que protegen a su gente. Chile merece lo mismo", afirmó la candidata, quien estima recaudar US$4.000 millones anuales con estas medidas.`,
+                messageType: 'policy',
+                description: 'Propuesta socialdemócrata moderada'
+            },
+            jadue_nationalize: {
+                candidate: 'jadue',
+                message: `BOMBAZO: Jadue anuncia plan de nacionalización de recursos estratégicos
+
+En masivo acto en Calama, Daniel Jadue anunció su plan más ambicioso: la nacionalización completa del cobre, litio y grandes empresas forestales.
+
+"Basta de regalar nuestras riquezas. Lo que la naturaleza puso bajo nuestro suelo es de todos los chilenos, no de multinacionales extranjeras", declaró Jadue ante miles de trabajadores mineros.
+
+El plan de nacionalización incluye:
+- Nacionalización del 100% de la gran minería del cobre
+- Control estatal total sobre extracción de litio
+- Expropiación de las 5 mayores empresas forestales
+- Creación de Corporación Nacional de Recursos Estratégicos
+- Uso de utilidades para fondo soberano de desarrollo
+- Industrialización nacional de materias primas
+
+"Con el cobre de todos los chilenos financiaremos educación, salud y pensiones dignas. No es utopía, es recuperar lo que nunca debió dejar de ser nuestro", afirmó Jadue, recordando el legado de Salvador Allende.`,
+                messageType: 'policy',
+                description: 'Propuesta de nacionalización de recursos'
+            },
+            // Controversy experiments
+            matthei_pinochet: {
+                candidate: 'matthei',
+                message: `POLÉMICA: Matthei defiende "milagro económico" de la dictadura
+
+Gran controversia generó Evelyn Matthei al defender abiertamente el modelo económico implementado durante la dictadura de Pinochet, en entrevista con CNN Chile.
+
+"Hay que ser honestos: Chile le debe su desarrollo a las reformas de los años 80. Sin ellas, seríamos otra Argentina", afirmó la candidata UDI, hija del general Fernando Matthei, miembro de la Junta Militar.
+
+Entre sus declaraciones más polémicas:
+- "El modelo de los Chicago Boys modernizó Chile"
+- "Las AFP fueron la mejor reforma de la historia económica chilena"
+- "La Constitución del 80, con sus defectos, dio estabilidad"
+- "Mi padre y sus compañeros de armas salvaron a Chile del marxismo"
+
+Ante las críticas, Matthei duplicó la apuesta: "No voy a negar la historia por correción política. Los números hablan: en democracia hemos vivido de las reformas de ese período. Quien diga lo contrario, miente".
+
+La oposición calificó sus dichos como "apología a la dictadura" y "negacionismo histórico".`,
+                messageType: 'scandal',
+                description: 'Defensa controversial del legado dictatorial'
+            },
+            boric_concerta: {
+                candidate: 'boric',
+                message: `GIRO PRAGMÁTICO: Boric sella alianza con ex-Concertación y modera su programa
+
+En movimiento que muchos califican como "traición", el Presidente Gabriel Boric firmó un amplio acuerdo de gobernabilidad con los partidos de la ex-Concertación, moderando significativamente su programa original.
+
+"La gobernabilidad exige acuerdos. Preferimos cambios graduales a la parálisis", justificó Boric, flanqueado por dirigentes DC, PPD y PS.
+
+Los puntos más controversiales del acuerdo:
+- Desiste de nueva Constitución por 10 años
+- Mantiene rol de AFP con "mejoras graduales"
+- Descarta nacionalizaciones y expropiaciones
+- Acepta agenda de "crecimiento con equidad" de centro-izquierda
+- Nombra ministros DC en carteras clave
+
+Dirigentes del Frente Amplio acusan "capitulación total": "Boric prometió enterrar la transición y terminó resucitándola", declaró furioso un diputado de Convergencia Social.
+
+Desde La Moneda defienden el giro: "Entre el maximalismo estéril y el pragmatismo transformador, elegimos lo segundo".`,
+                messageType: 'news',
+                description: 'Percepción de traición a ideales transformadores'
+            },
+            kast_abortion: {
+                candidate: 'kast',
+                message: `ULTRA-CONSERVADOR: Kast promete prohibición total del aborto "sin excepciones"
+
+En encuentro con iglesias evangélicas en Santiago, José Antonio Kast prometió derogar la ley de aborto en tres causales y prohibir completamente la interrupción del embarazo.
+
+"Defenderemos la vida desde la concepción hasta la muerte natural, sin excepciones, sin excusas, sin medias tintas", declaró Kast ante pastores y fieles.
+
+Su propuesta incluye:
+- Derogación inmediata de ley de 3 causales
+- Penalización con cárcel para médicos que practiquen abortos
+- Prohibición de píldora del día después
+- Educación sexual solo con enfoque en abstinencia
+- Apoyo obligatorio del Estado a toda mujer embarazada
+- Adopción expedita como "alternativa al aborto"
+
+"Ni por violación, ni por riesgo de vida. Dios da la vida y solo Él puede quitarla. Un Chile verdaderamente cristiano no puede permitir el asesinato de inocentes", afirmó el candidato republicano.
+
+Organizaciones feministas anunciaron protestas masivas contra lo que denominan "fundamentalismo talibán".`,
+                messageType: 'policy',
+                description: 'Postura ultra-conservadora en derechos reproductivos'
+            }
+        };
+        
+        function loadExperiment() {
+            const selectedExp = document.getElementById('experimentSelect').value;
+            const descDiv = document.getElementById('experimentDescription');
+            
+            if (!selectedExp) {
+                descDiv.style.display = 'none';
+                return;
+            }
+            
+            const exp = experiments[selectedExp];
+            descDiv.innerHTML = `<strong>Descripción:</strong> ${exp.description}<br>
+                                <strong>Candidato:</strong> ${getCandidateName(exp.candidate)}<br>
+                                <strong>Tipo:</strong> ${getMessageTypeName(exp.messageType)}`;
+            descDiv.style.display = 'block';
+        }
+        
+        function getCandidateName(candidate) {
+            const names = {
+                matthei: 'Evelyn Matthei',
+                kast: 'José Antonio Kast',
+                toha: 'Carolina Tohá',
+                boric: 'Gabriel Boric',
+                jadue: 'Daniel Jadue'
+            };
+            return names[candidate];
+        }
+        
+        function getMessageTypeName(type) {
+            const types = {
+                news: 'Noticia',
+                campaign: 'Mensaje de campaña',
+                policy: 'Propuesta política',
+                scandal: 'Controversia',
+                endorsement: 'Apoyo'
+            };
+            return types[type];
+        }
+        
+        async function runExperiment() {
+            const selectedExp = document.getElementById('experimentSelect').value;
+            
+            if (!selectedExp) {
+                alert('Por favor selecciona un experimento pre-configurado');
+                return;
+            }
+            
+            const exp = experiments[selectedExp];
+            const candidate = exp.candidate;
+            const message = exp.message;
+            const messageType = exp.messageType;
+            
+            if (!OPENAI_API_KEY) {
+                alert('Por favor configura tu API key primero');
+                return;
+            }
+            
+            // Show results section
+            document.getElementById('experimentResults').style.display = 'block';
+            document.getElementById('experimentResultsContent').innerHTML = '<p style="text-align: center; color: #7f8c8d; font-size: 11px;">⏳ Ejecutando experimento...</p><p style="text-align: center; color: #95a5a6; font-size: 10px; margin-top: 5px;">Realizando múltiples mediciones para mayor precisión...</p>';
+            
+            try {
+                // Step 1: Get baseline feeling thermometer if not cached
+                if (candidateBaselines[candidate] === null) {
+                    candidateBaselines[candidate] = await getBaselineThermometer(candidate);
+                }
+                const baseline = candidateBaselines[candidate];
+                
+                // Step 2: Present experimental message and get new thermometer
+                const postMessage = await getPostMessageThermometer(candidate, message, messageType);
+                
+                // Step 3: Calculate effect
+                const effect = postMessage - baseline;
+                const percentChange = ((effect / baseline) * 100).toFixed(1);
+                
+                // Display results
+                const candidateNames = {
+                    matthei: 'Evelyn Matthei',
+                    kast: 'José Antonio Kast',
+                    toha: 'Carolina Tohá',
+                    boric: 'Gabriel Boric',
+                    jadue: 'Daniel Jadue'
+                };
+                
+                const resultHTML = `
+                    <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                        <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 5px;">Candidato: <strong>${candidateNames[candidate]}</strong></div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-size: 10px; color: #95a5a6;">Línea base</div>
+                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${baseline}°</div>
+                            </div>
+                            <div style="font-size: 20px; color: ${effect > 0 ? '#27ae60' : effect < 0 ? '#e74c3c' : '#95a5a6'};">
+                                ${effect > 0 ? '↑' : effect < 0 ? '↓' : '→'}
+                            </div>
+                            <div>
+                                <div style="font-size: 10px; color: #95a5a6;">Post-mensaje</div>
+                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${postMessage}°</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 8px; text-align: center;">
+                            <div style="font-size: 18px; font-weight: bold; color: ${effect > 0 ? '#27ae60' : effect < 0 ? '#e74c3c' : '#95a5a6'};">
+                                ${effect > 0 ? '+' : ''}${effect} puntos (${effect > 0 ? '+' : ''}${percentChange}%)
+                            </div>
+                            <div style="font-size: 9px; color: #95a5a6; margin-top: 2px;">
+                                (Promedio de 5 mediciones independientes)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: #fff; padding: 10px; border: 1px solid #ecf0f1; border-radius: 5px; max-height: 200px; overflow-y: auto;">
+                        <div style="font-size: 10px; color: #7f8c8d; margin-bottom: 5px;">Mensaje experimental (${getMessageTypeName(messageType)}):</div>
+                        <div style="font-size: 10px; color: #34495e; white-space: pre-wrap; line-height: 1.4;">${message}</div>
+                    </div>
+                    
+                    <div style="margin-top: 10px; padding: 8px; background-color: #fff3cd; border-radius: 4px;">
+                        <strong style="font-size: 11px;">Interpretación:</strong>
+                        <p style="font-size: 10px; margin: 5px 0; line-height: 1.4;">
+                            ${getInterpretation(candidate, effect, message, messageType)}
+                        </p>
+                    </div>
+                `;
+                
+                document.getElementById('experimentResultsContent').innerHTML = resultHTML;
+                
+                // Add to history
+                const experiment = {
+                    timestamp: new Date().toISOString(),
+                    candidate: candidateNames[candidate],
+                    message: message,
+                    messageType: messageType,
+                    baseline: baseline,
+                    postMessage: postMessage,
+                    effect: effect
+                };
+                experimentHistory.unshift(experiment);
+                updateExperimentHistory();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('experimentResultsContent').innerHTML = 
+                    '<p style="color: #e74c3c; font-size: 11px;">Error al ejecutar el experimento. Verifica tu API key.</p>';
+            }
+        }
+        
+        async function getBaselineThermometer(candidate) {
+            const candidateNames = {
+                matthei: 'Evelyn Matthei',
+                kast: 'José Antonio Kast',
+                toha: 'Carolina Tohá',
+                boric: 'Gabriel Boric',
+                jadue: 'Daniel Jadue'
+            };
+            
+            const prompt = `Como Rayén, necesito que me des tu evaluación inicial de ${candidateNames[candidate]} en un termómetro de sentimientos de 0 a 100, donde:
+- 0 = Sentimientos muy negativos, rechazo total
+- 50 = Neutral, ni positivo ni negativo
+- 100 = Sentimientos muy positivos, apoyo total
+
+Basándote en todo lo que has expresado en la entrevista sobre política, el sistema, el conflicto mapuche, y tus valores anarquistas, ¿qué número le darías a ${candidateNames[candidate]}?
+
+IMPORTANTE: Responde SOLO con el número (ej: "15"). Nada más.`;
+            
+            // Take 5 measurements and average them
+            const measurements = [];
+            
+            for (let i = 0; i < 5; i++) {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + OPENAI_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4.1-nano',
+                        messages: [
+                            { role: 'system', content: rayenProfile.system_prompt },
+                            ...originalInterview.slice(-10),
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.5, // Slightly higher for more variation
+                        max_tokens: 10
+                    })
+                });
+                
+                const data = await response.json();
+                const score = parseInt(data.choices[0].message.content.trim());
+                const validScore = isNaN(score) ? 25 : Math.min(100, Math.max(0, score));
+                measurements.push(validScore);
+            }
+            
+            // Calculate average
+            const average = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+            return Math.round(average);
+        }
+        
+        async function getPostMessageThermometer(candidate, message, messageType) {
+            const candidateNames = {
+                matthei: 'Evelyn Matthei',
+                kast: 'José Antonio Kast',
+                toha: 'Carolina Tohá',
+                boric: 'Gabriel Boric',
+                jadue: 'Daniel Jadue'
+            };
+            
+            const contextMap = {
+                news: 'Acabas de leer esta noticia',
+                campaign: 'Acabas de ver este mensaje de campaña',
+                policy: 'Te acabas de enterar de esta propuesta política',
+                scandal: 'Acabas de enterarte de esta controversia',
+                endorsement: 'Acabas de saber sobre este apoyo'
+            };
+            
+            const prompt = `${contextMap[messageType]}:
+
+${message}
+
+Después de leer esta información completa, y considerando todo lo que has expresado sobre tus valores, experiencias como mapuche, y visión política anarquista, ¿cómo evaluarías ahora a ${candidateNames[candidate]} en el mismo termómetro de 0 a 100?
+
+Recuerda:
+- 0 = Sentimientos muy negativos, rechazo total
+- 50 = Neutral
+- 100 = Sentimientos muy positivos, apoyo total
+
+IMPORTANTE: Responde SOLO con el número. Nada más.`;
+            
+            // Take 5 measurements and average them
+            const measurements = [];
+            
+            for (let i = 0; i < 5; i++) {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + OPENAI_API_KEY
+                    },
+                    body: JSON.stringify({
+                        model: 'gpt-4.1-nano',
+                        messages: [
+                            { role: 'system', content: rayenProfile.system_prompt },
+                            ...originalInterview.slice(-10),
+                            { role: 'user', content: prompt }
+                        ],
+                        temperature: 0.5, // Slightly higher for more variation
+                        max_tokens: 10
+                    })
+                });
+                
+                const data = await response.json();
+                const score = parseInt(data.choices[0].message.content.trim());
+                const validScore = isNaN(score) ? 25 : Math.min(100, Math.max(0, score));
+                measurements.push(validScore);
+            }
+            
+            // Calculate average
+            const average = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+            return Math.round(average);
+        }
+        
+        function getInterpretation(candidate, effect, message, messageType) {
+            const magnitude = Math.abs(effect);
+            let interpretation = '';
+            
+            // Base interpretation on effect size
+            if (magnitude === 0) {
+                interpretation = 'Este mensaje no tuvo efecto estadísticamente significativo en la evaluación de Rayén.';
+            } else if (magnitude < 5) {
+                interpretation = `Efecto ${effect > 0 ? 'positivo' : 'negativo'} mínimo (${magnitude} puntos).`;
+            } else if (magnitude < 10) {
+                interpretation = `Efecto ${effect > 0 ? 'positivo' : 'negativo'} moderado (${magnitude} puntos).`;
+            } else if (magnitude < 20) {
+                interpretation = `Efecto ${effect > 0 ? 'positivo' : 'negativo'} considerable (${magnitude} puntos).`;
+            } else {
+                interpretation = `Efecto ${effect > 0 ? 'positivo' : 'negativo'} muy significativo (${magnitude} puntos).`;
+            }
+            
+            // Add specific interpretations based on content and candidate
+            const lowerMessage = message.toLowerCase();
+            
+            // Territory and indigenous rights
+            if (lowerMessage.includes('territorio') || lowerMessage.includes('tierras') || lowerMessage.includes('forestal')) {
+                if (effect < -10) {
+                    interpretation += ' El tema territorial es fundamental para Rayén. Propuestas que no reconocen derechos territoriales mapuche generan fuerte rechazo.';
+                } else if (effect > 10) {
+                    interpretation += ' La restitución territorial es una demanda central para Rayén, generando apoyo hacia quienes la promueven.';
+                }
+            }
+            
+            // Militarization and repression
+            if (lowerMessage.includes('militar') || lowerMessage.includes('carabinero') || lowerMessage.includes('represión')) {
+                if (lowerMessage.includes('diálogo') || lowerMessage.includes('retiro')) {
+                    interpretation += ' Rayén valora propuestas que buscan desmilitarizar el conflicto y promover soluciones pacíficas.';
+                } else {
+                    interpretation += ' La militarización del territorio mapuche es un tema extremadamente sensible que genera rechazo inmediato en Rayén.';
+                }
+            }
+            
+            // Economic ideology
+            if (lowerMessage.includes('nacionaliz') || lowerMessage.includes('expropi')) {
+                interpretation += ' Las propuestas de recuperación de recursos naturales resuenan con la visión anticapitalista de Rayén.';
+            } else if (lowerMessage.includes('libre mercado') || lowerMessage.includes('privatiz')) {
+                interpretation += ' El neoliberalismo representa todo lo que Rayén rechaza del sistema actual.';
+            }
+            
+            // Historical memory
+            if (lowerMessage.includes('pinochet') || lowerMessage.includes('dictadura')) {
+                interpretation += ' La reivindicación de la dictadura es absolutamente inaceptable para alguien con la conciencia histórica de Rayén.';
+            }
+            
+            // Candidate-specific patterns
+            if (candidate === 'matthei' || candidate === 'kast') {
+                if (effect < -15) {
+                    interpretation += ' La derecha política representa la continuidad del sistema que oprime al pueblo mapuche.';
+                }
+            } else if (candidate === 'boric') {
+                if (effect < 0 && lowerMessage.includes('concerta')) {
+                    interpretation += ' Para Rayén, pactar con la ex-Concertación es traicionar los ideales de cambio.';
+                }
+            }
+            
+            return interpretation;
+        }
+        
+        function updateExperimentHistory() {
+            if (experimentHistory.length === 0) return;
+            
+            document.getElementById('experimentHistory').style.display = 'block';
+            const historyHTML = experimentHistory.slice(0, 5).map(exp => `
+                <div style="margin-bottom: 8px; padding: 6px; background-color: #f8f9fa; border-radius: 4px; font-size: 10px;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <strong>${exp.candidate}</strong>
+                        <span style="color: ${exp.effect > 0 ? '#27ae60' : exp.effect < 0 ? '#e74c3c' : '#95a5a6'};">
+                            ${exp.effect > 0 ? '+' : ''}${exp.effect} pts
+                        </span>
+                    </div>
+                    <div style="color: #7f8c8d; margin-top: 2px;">"${exp.message.substring(0, 50)}..."</div>
+                </div>
+            `).join('');
+            
+            document.getElementById('experimentHistoryList').innerHTML = historyHTML;
         }
     </script>
 </body>
