@@ -1818,13 +1818,6 @@ Instrucciones específicas:
         
         // Experiment functionality
         let experimentHistory = [];
-        let candidateBaselines = {
-            matthei: null,
-            kast: null,
-            toha: null,
-            boric: null,
-            jadue: null
-        };
         
         // Pre-set experiments data
         const experiments = {
@@ -2128,18 +2121,15 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
             document.getElementById('experimentResultsContent').innerHTML = '<p style="text-align: center; color: #7f8c8d; font-size: 11px;">⏳ Ejecutando experimento...</p><p style="text-align: center; color: #95a5a6; font-size: 10px; margin-top: 5px;">Realizando múltiples mediciones para mayor precisión...</p>';
             
             try {
-                // Step 1: Get baseline feeling thermometer if not cached
-                if (candidateBaselines[candidate] === null) {
-                    candidateBaselines[candidate] = await getBaselineThermometer(candidate);
-                }
-                const baseline = candidateBaselines[candidate];
+                // Step 1: Get control group thermometer (no message)
+                const controlScore = await getControlThermometer(candidate);
                 
-                // Step 2: Present experimental message and get new thermometer
-                const postMessage = await getPostMessageThermometer(candidate, message, messageType);
+                // Step 2: Get treatment group thermometer (with message)
+                const treatmentScore = await getTreatmentThermometer(candidate, message, messageType);
                 
-                // Step 3: Calculate effect
-                const effect = postMessage - baseline;
-                const percentChange = ((effect / baseline) * 100).toFixed(1);
+                // Step 3: Calculate treatment effect
+                const effect = treatmentScore - controlScore;
+                const percentChange = ((effect / controlScore) * 100).toFixed(1);
                 
                 // Display results
                 const candidateNames = {
@@ -2155,15 +2145,15 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
                         <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 5px;">Candidato: <strong>${candidateNames[candidate]}</strong></div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div>
-                                <div style="font-size: 10px; color: #95a5a6;">Línea base</div>
-                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${baseline}°</div>
+                                <div style="font-size: 10px; color: #95a5a6;">Control</div>
+                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${controlScore}°</div>
                             </div>
                             <div style="font-size: 20px; color: ${effect > 0 ? '#27ae60' : effect < 0 ? '#e74c3c' : '#95a5a6'};">
                                 ${effect > 0 ? '↑' : effect < 0 ? '↓' : '→'}
                             </div>
                             <div>
-                                <div style="font-size: 10px; color: #95a5a6;">Post-mensaje</div>
-                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${postMessage}°</div>
+                                <div style="font-size: 10px; color: #95a5a6;">Tratamiento</div>
+                                <div style="font-size: 16px; font-weight: bold; color: #34495e;">${treatmentScore}°</div>
                             </div>
                         </div>
                         <div style="margin-top: 8px; text-align: center;">
@@ -2171,14 +2161,23 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
                                 ${effect > 0 ? '+' : ''}${effect} puntos (${effect > 0 ? '+' : ''}${percentChange}%)
                             </div>
                             <div style="font-size: 9px; color: #95a5a6; margin-top: 2px;">
-                                (Promedio de 5 mediciones independientes)
+                                (Diferencia entre grupos control y tratamiento, 5 mediciones cada uno)
                             </div>
                         </div>
                     </div>
                     
                     <div style="background-color: #fff; padding: 10px; border: 1px solid #ecf0f1; border-radius: 5px; max-height: 200px; overflow-y: auto;">
-                        <div style="font-size: 10px; color: #7f8c8d; margin-bottom: 5px;">Mensaje experimental (${getMessageTypeName(messageType)}):</div>
+                        <div style="font-size: 10px; color: #7f8c8d; margin-bottom: 5px;">Tratamiento informativo (${getMessageTypeName(messageType)}):</div>
                         <div style="font-size: 10px; color: #34495e; white-space: pre-wrap; line-height: 1.4;">${message}</div>
+                    </div>
+                    
+                    <div style="margin-top: 10px; padding: 8px; background-color: #e8f4f8; border-radius: 4px;">
+                        <strong style="font-size: 11px;">Diseño Experimental:</strong>
+                        <p style="font-size: 10px; margin: 5px 0; line-height: 1.4;">
+                            <strong>Grupo Control:</strong> Rayén evalúa a ${candidateNames[candidate]} sin información adicional<br>
+                            <strong>Grupo Tratamiento:</strong> Rayén evalúa después de leer el mensaje experimental<br>
+                            <strong>Efecto del Tratamiento:</strong> ${effect > 0 ? '+' : ''}${effect} puntos (${effect > 0 ? '+' : ''}${percentChange}%)
+                        </p>
                     </div>
                     
                     <div style="margin-top: 10px; padding: 8px; background-color: #fff3cd; border-radius: 4px;">
@@ -2197,8 +2196,8 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
                     candidate: candidateNames[candidate],
                     message: message,
                     messageType: messageType,
-                    baseline: baseline,
-                    postMessage: postMessage,
+                    controlScore: controlScore,
+                    treatmentScore: treatmentScore,
                     effect: effect
                 };
                 experimentHistory.unshift(experiment);
@@ -2211,7 +2210,7 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
             }
         }
         
-        async function getBaselineThermometer(candidate) {
+        async function getControlThermometer(candidate) {
             const candidateNames = {
                 matthei: 'Evelyn Matthei',
                 kast: 'José Antonio Kast',
@@ -2220,7 +2219,7 @@ Organizaciones feministas anunciaron protestas masivas contra lo que denominan "
                 jadue: 'Daniel Jadue'
             };
             
-            const prompt = `Como Rayén, necesito que me des tu evaluación inicial de ${candidateNames[candidate]} en un termómetro de sentimientos de 0 a 100, donde:
+            const prompt = `Como Rayén, necesito que me des tu evaluación de ${candidateNames[candidate]} en un termómetro de sentimientos de 0 a 100, donde:
 - 0 = Sentimientos muy negativos, rechazo total
 - 50 = Neutral, ni positivo ni negativo
 - 100 = Sentimientos muy positivos, apoyo total
@@ -2262,7 +2261,7 @@ IMPORTANTE: Responde SOLO con el número (ej: "15"). Nada más.`;
             return Math.round(average);
         }
         
-        async function getPostMessageThermometer(candidate, message, messageType) {
+        async function getTreatmentThermometer(candidate, message, messageType) {
             const candidateNames = {
                 matthei: 'Evelyn Matthei',
                 kast: 'José Antonio Kast',
@@ -2283,7 +2282,7 @@ IMPORTANTE: Responde SOLO con el número (ej: "15"). Nada más.`;
 
 ${message}
 
-Después de leer esta información completa, y considerando todo lo que has expresado sobre tus valores, experiencias como mapuche, y visión política anarquista, ¿cómo evaluarías ahora a ${candidateNames[candidate]} en el mismo termómetro de 0 a 100?
+Después de leer esta información, y considerando todo lo que has expresado sobre tus valores, experiencias como mapuche, y visión política anarquista, ¿cómo evaluarías a ${candidateNames[candidate]} en un termómetro de 0 a 100?
 
 Recuerda:
 - 0 = Sentimientos muy negativos, rechazo total
