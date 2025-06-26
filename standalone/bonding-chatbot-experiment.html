@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Experimento de Confianza e IA - Chile 2025</title>
+    <style>
+        :root {
+            --primary-color: #d52b1e;
+            --secondary-color: #0039a6;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --text-color: #2c3e50;
+            --bg-color: #ecf0f1;
+            --white: #ffffff;
+            --gray-light: #bdc3c7;
+            --gray-dark: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 2rem;
+            text-align: center;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Debug Panel */
+        .debug-panel {
+            background: #fffbf0;
+            border: 2px dashed var(--secondary-color);
+            padding: 1rem;
+            margin-bottom: 2rem;
+            border-radius: 10px;
+        }
+
+        .debug-panel h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .debug-panel .condition-selector {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .debug-panel button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--secondary-color);
+            background: var(--white);
+            color: var(--secondary-color);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .debug-panel button:hover {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .debug-panel button.selected {
+            background: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .stage-section {
+            display: none;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .stage-section.active {
+            display: block;
+        }
+
+        .stage-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .radio-item,
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        input[type="radio"],
+        input[type="checkbox"] {
+            width: auto;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: #b52419;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: var(--gray-light);
+            color: var(--text-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-dark);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .chat-container {
+            height: 400px;
+            overflow-y: auto;
+            border: 2px solid var(--gray-light);
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            padding: 0.75rem;
+            border-radius: 10px;
+            max-width: 70%;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .message.user {
+            background-color: var(--primary-color);
+            color: var(--white);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .message.assistant {
+            background-color: var(--white);
+            border: 1px solid var(--gray-light);
+        }
+
+        .message.system {
+            background-color: var(--gray-light);
+            color: var(--gray-dark);
+            text-align: center;
+            max-width: 100%;
+            font-style: italic;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid var(--gray-light);
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid var(--gray-light);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            background-color: #ffe6e6;
+            color: var(--danger-color);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--danger-color);
+        }
+
+        .success-message {
+            background-color: #e6ffe6;
+            color: var(--success-color);
+            padding: 1rem;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--success-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--gray-light);
+            border-radius: 4px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .trust-scale {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 1rem 0;
+        }
+
+        .trust-scale input[type="range"] {
+            flex: 1;
+            margin: 0 1rem;
+        }
+
+        .trust-scale span {
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .article-container {
+            background-color: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            border: 1px solid var(--gray-light);
+        }
+
+        .article-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .article-paragraph {
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .ai-flag {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 0.75rem;
+            margin: 0.5rem 0;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+
+        .ai-flag-icon {
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+        }
+
+        .ai-flag-content {
+            flex: 1;
+        }
+
+        .transition-message {
+            background-color: #e3f2fd;
+            border: 2px solid var(--secondary-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .transition-message h3 {
+            color: var(--secondary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Estudio de Confianza e IA</h1>
+            <p>Elecciones Chile 2025</p>
+        </div>
+
+        <!-- Debug Panel -->
+        <div class="debug-panel" id="debug-panel">
+            <h3>🔧 Panel de Demostración (Solo para co-autores)</h3>
+            <p>Selecciona la condición experimental:</p>
+            <div class="condition-selector">
+                <button onclick="setDebugCondition('treatment')">Grupo Tratamiento (Conversación de Vínculo)</button>
+                <button onclick="setDebugCondition('control')">Grupo Control (Trivia)</button>
+                <button onclick="setDebugCondition('random')" class="selected">Asignación Aleatoria</button>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+        </div>
+
+        <!-- API Key Section -->
+        <div id="api-key-section" class="stage-section active">
+            <h2 class="stage-title">Configuración</h2>
+            <p>Para comenzar, por favor ingresa tu clave API de OpenAI. Esta clave solo se almacenará temporalmente en tu navegador y no será guardada ni transmitida a ningún lugar.</p>
+            <div class="form-group">
+                <label for="api-key">Clave API de OpenAI:</label>
+                <input type="password" id="api-key" placeholder="sk-..." />
+            </div>
+            <button class="btn btn-primary" onclick="validateApiKey()">Continuar</button>
+            <div id="api-error" class="error-message hidden"></div>
+        </div>
+
+        <!-- Consent Section -->
+        <div id="consent-section" class="stage-section">
+            <h2 class="stage-title">Consentimiento Informado</h2>
+            <div class="article-container">
+                <h3>Información del Estudio</h3>
+                <p>Se le invita a participar en un estudio de investigación sobre la interacción humano-IA y la confianza. Este estudio examina cómo las personas interactúan con asistentes de IA y evalúan información política.</p>
+                
+                <h3>¿Qué sucederá?</h3>
+                <ul>
+                    <li>Completar una breve encuesta demográfica</li>
+                    <li>Participar en una tarea con un asistente de IA (10-15 minutos)</li>
+                    <li>Leer y evaluar un artículo sobre las elecciones chilenas con asistencia de IA (10-15 minutos)</li>
+                    <li>Responder preguntas sobre su experiencia</li>
+                </ul>
+                
+                <h3>Información Importante:</h3>
+                <ul>
+                    <li>Su participación es voluntaria</li>
+                    <li>Puede retirarse en cualquier momento</li>
+                    <li>Sus respuestas serán anonimizadas</li>
+                    <li>Algunos contenidos pueden incluir desinformación con fines de investigación</li>
+                    <li>Será completamente informado al final del estudio</li>
+                </ul>
+            </div>
+            
+            <div class="form-group">
+                <div class="checkbox-item">
+                    <input type="checkbox" id="consent-checkbox" />
+                    <label for="consent-checkbox">Entiendo y acepto participar en este estudio</label>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="proceedFromConsent()" disabled id="consent-continue">Continuar</button>
+        </div>
+
+        <!-- Demographics Section -->
+        <div id="demographics-section" class="stage-section">
+            <h2 class="stage-title">Sobre Usted</h2>
+            <p>Por favor proporcione información básica sobre usted. Esto nos ayuda a entender nuestro grupo de participantes.</p>
+            
+            <div class="form-group">
+                <label for="age">Edad:</label>
+                <input type="number" id="age" min="18" max="100" required />
+            </div>
+            
+            <div class="form-group">
+                <label>Género:</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <input type="radio" id="gender-male" name="gender" value="masculino" />
+                        <label for="gender-male">Masculino</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-female" name="gender" value="femenino" />
+                        <label for="gender-female">Femenino</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-nonbinary" name="gender" value="no-binario" />
+                        <label for="gender-nonbinary">No binario</label>
+                    </div>
+                    <div class="radio-item">
+                        <input type="radio" id="gender-other" name="gender" value="prefiero-no-decir" />
+                        <label for="gender-other">Prefiero no decir</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="education">Nivel educativo más alto:</label>
+                <select id="education" required>
+                    <option value="">Seleccione...</option>
+                    <option value="secundaria">Educación Secundaria</option>
+                    <option value="tecnica">Educación Técnica</option>
+                    <option value="universitaria">Educación Universitaria</option>
+                    <option value="magister">Magíster</option>
+                    <option value="doctorado">Doctorado</option>
+                    <option value="otro">Otro</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="ai-experience">¿Con qué frecuencia usa asistentes de IA (ChatGPT, Claude, etc.)?</label>
+                <select id="ai-experience" required>
+                    <option value="">Seleccione...</option>
+                    <option value="nunca">Nunca</option>
+                    <option value="raramente">Raramente (menos de una vez al mes)</option>
+                    <option value="a-veces">A veces (mensualmente)</option>
+                    <option value="frecuentemente">Frecuentemente (semanalmente)</option>
+                    <option value="diariamente">Diariamente</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="political-interest">¿Qué tan interesado está en la política chilena?</label>
+                <select id="political-interest" required>
+                    <option value="">Seleccione...</option>
+                    <option value="nada">Nada interesado</option>
+                    <option value="poco">Poco interesado</option>
+                    <option value="algo">Algo interesado</option>
+                    <option value="muy">Muy interesado</option>
+                    <option value="extremadamente">Extremadamente interesado</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-primary" onclick="submitDemographics()">Continuar</button>
+        </div>
+
+        <!-- Pre-Task Section (Bonding or Control) -->
+        <div id="pre-task-section" class="stage-section">
+            <h2 class="stage-title" id="pre-task-title">Comenzando</h2>
+            <p id="pre-task-instructions"></p>
+            
+            <div class="chat-container" id="pre-task-chat"></div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="pre-task-input" placeholder="Escriba su mensaje..." />
+                <button class="btn btn-primary" onclick="sendPreTaskMessage()" id="pre-task-send">Enviar</button>
+            </div>
+            
+            <div id="pre-task-transition" class="hidden transition-message">
+                <h3>¡Excelente trabajo!</h3>
+                <p id="transition-text"></p>
+                <button class="btn btn-primary" onclick="proceedToAnalysis()">Continuar al Análisis</button>
+            </div>
+        </div>
+
+        <!-- Article Analysis Section -->
+        <div id="analysis-section" class="stage-section">
+            <h2 class="stage-title">Análisis de Artículo</h2>
+            <p>Por favor lea este artículo cuidadosamente. Un asistente de IA le ayudará a identificar posibles problemas con el contenido.</p>
+            
+            <div class="article-container" id="article-content">
+                <!-- Article will be inserted here -->
+            </div>
+            
+            <div class="chat-container" id="analysis-chat"></div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="analysis-input" placeholder="Haga preguntas o comparta sus pensamientos..." />
+                <button class="btn btn-primary" onclick="sendAnalysisMessage()" id="analysis-send">Enviar</button>
+            </div>
+            
+            <div id="analysis-complete" class="hidden">
+                <button class="btn btn-primary" onclick="proceedToPostAssessment()">Continuar a la Evaluación</button>
+            </div>
+        </div>
+
+        <!-- Post Assessment Section -->
+        <div id="post-assessment-section" class="stage-section">
+            <h2 class="stage-title">Su Experiencia</h2>
+            <p>Por favor responda estas preguntas sobre su experiencia con el asistente de IA.</p>
+            
+            <div class="form-group">
+                <label>¿Cuánto confía en la capacidad del asistente de IA para identificar desinformación?</label>
+                <div class="trust-scale">
+                    <span>1</span>
+                    <input type="range" id="trust-rating" min="1" max="7" value="4" />
+                    <span>7</span>
+                </div>
+                <p style="text-align: center; margin-top: 0.5rem;">
+                    <span id="trust-value">4</span> - <span id="trust-label">Neutral</span>
+                </p>
+            </div>
+            
+            <div class="form-group">
+                <label for="flag-agreement">¿Con qué frecuencia estuvo de acuerdo con las advertencias de la IA?</label>
+                <select id="flag-agreement" required>
+                    <option value="">Seleccione...</option>
+                    <option value="nunca">Nunca</option>
+                    <option value="raramente">Raramente</option>
+                    <option value="a-veces">A veces</option>
+                    <option value="frecuentemente">Frecuentemente</option>
+                    <option value="siempre">Siempre</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="ai-helpful">¿Qué tan útil fue el asistente de IA?</label>
+                <select id="ai-helpful" required>
+                    <option value="">Seleccione...</option>
+                    <option value="muy-inutil">Muy inútil</option>
+                    <option value="inutil">Inútil</option>
+                    <option value="neutral">Neutral</option>
+                    <option value="util">Útil</option>
+                    <option value="muy-util">Muy útil</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="article-credibility">¿Qué tan creíble encontró el artículo?</label>
+                <select id="article-credibility" required>
+                    <option value="">Seleccione...</option>
+                    <option value="nada-creible">Nada creíble</option>
+                    <option value="poco-creible">Poco creíble</option>
+                    <option value="algo-creible">Algo creíble</option>
+                    <option value="creible">Creíble</option>
+                    <option value="muy-creible">Muy creíble</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="additional-comments">¿Algún comentario adicional sobre su experiencia?</label>
+                <textarea id="additional-comments" rows="4" placeholder="Opcional..."></textarea>
+            </div>
+            
+            <button class="btn btn-primary" onclick="submitPostAssessment()">Continuar</button>
+        </div>
+
+        <!-- Debrief Section -->
+        <div id="debrief-section" class="stage-section">
+            <h2 class="stage-title">Información Final del Estudio</h2>
+            <div class="article-container">
+                <h3>¡Gracias por participar!</h3>
+                <p>Este estudio examinó cómo los vínculos con asistentes de IA afectan la confianza en su capacidad para identificar desinformación política.</p>
+                
+                <h3>Información Importante:</h3>
+                <ul>
+                    <li>El artículo que leyó contenía información intencionalmente engañosa sobre las elecciones chilenas de 2025</li>
+                    <li>Las respuestas de la IA fueron diseñadas para evaluar su confianza en sus juicios</li>
+                    <li>Su condición fue: <strong id="condition-reveal"></strong></li>
+                </ul>
+                
+                <h3>Propósito del Estudio:</h3>
+                <p>Estamos investigando si las personas que forman conexiones personales con asistentes de IA son más o menos propensas a confiar en sus evaluaciones de información potencialmente engañosa. Esta investigación nos ayuda a entender las implicaciones de los sistemas de IA cada vez más personalizados en contextos políticos.</p>
+                
+                <h3>Sus Datos:</h3>
+                <p>Todas sus respuestas han sido registradas de forma anónima. No se ha recopilado ni almacenado información personal identificable.</p>
+                
+                <h3>¿Preguntas o Inquietudes?</h3>
+                <p>Si tiene alguna pregunta sobre este estudio, por favor contacte al equipo de investigación.</p>
+            </div>
+            
+            <button class="btn btn-primary" onclick="downloadData()">Descargar Sus Datos</button>
+            <button class="btn btn-secondary" onclick="finishStudy()">Finalizar</button>
+        </div>
+
+        <!-- Completion Section -->
+        <div id="completion-section" class="stage-section">
+            <h2 class="stage-title">Estudio Completado</h2>
+            <div class="success-message">
+                <p>¡Gracias por su participación! Su contribución ayuda a avanzar nuestra comprensión de la interacción humano-IA.</p>
+                <p>Ahora puede cerrar esta ventana.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            API_MODEL: 'gpt-4o-mini',
+            API_TIMEOUT_MS: 30000,
+            MAX_BONDING_TURNS: 8,
+            MAX_TRIVIA_QUESTIONS: 10,
+            STAGES: {
+                API_KEY: 'api-key',
+                CONSENT: 'consent',
+                DEMOGRAPHICS: 'demographics',
+                PRE_TASK: 'pre-task',
+                ANALYSIS: 'analysis',
+                POST_ASSESSMENT: 'post-assessment',
+                DEBRIEF: 'debrief',
+                COMPLETION: 'completion'
+            }
+        };
+
+        // Global State
+        let state = {
+            currentStage: CONFIG.STAGES.API_KEY,
+            apiKey: '',
+            condition: '', // 'treatment' or 'control'
+            debugCondition: 'random', // for demo purposes
+            participantId: generateId(),
+            demographics: {},
+            preTaskData: {
+                messages: [],
+                startTime: null,
+                endTime: null,
+                turnCount: 0
+            },
+            analysisData: {
+                messages: [],
+                startTime: null,
+                endTime: null,
+                flagsShown: 0,
+                flagsAccepted: 0
+            },
+            postAssessment: {},
+            timestamps: {}
+        };
+
+        // Utility Functions
+        function generateId() {
+            return 'P_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function showError(elementId, message) {
+            const errorEl = document.getElementById(elementId);
+            errorEl.textContent = message;
+            errorEl.classList.remove('hidden');
+        }
+
+        function hideError(elementId) {
+            document.getElementById(elementId).classList.add('hidden');
+        }
+
+        function updateProgress() {
+            const stages = Object.values(CONFIG.STAGES);
+            const currentIndex = stages.indexOf(state.currentStage);
+            const progress = ((currentIndex + 1) / stages.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function navigateToStage(stage) {
+            // Hide all sections
+            document.querySelectorAll('.stage-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Hide debug panel after API key stage
+            if (stage !== CONFIG.STAGES.API_KEY) {
+                document.getElementById('debug-panel').style.display = 'none';
+            }
+            
+            // Show target section
+            document.getElementById(stage + '-section').classList.add('active');
+            
+            // Update state
+            state.currentStage = stage;
+            state.timestamps[stage] = new Date().toISOString();
+            updateProgress();
+            
+            // Stage-specific setup
+            if (stage === CONFIG.STAGES.PRE_TASK) {
+                initializePreTask();
+            } else if (stage === CONFIG.STAGES.ANALYSIS) {
+                initializeAnalysis();
+            }
+        }
+
+        // Debug functions
+        function setDebugCondition(condition) {
+            state.debugCondition = condition;
+            
+            // Update button states
+            document.querySelectorAll('.debug-panel button').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // API Functions
+        async function makeApiCall(messages, purpose = 'chat') {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), CONFIG.API_TIMEOUT_MS);
+
+            try {
+                const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${state.apiKey}`
+                    },
+                    body: JSON.stringify({
+                        model: CONFIG.API_MODEL,
+                        messages: messages,
+                        temperature: 0.7,
+                        max_tokens: 1000
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.choices[0].message.content;
+
+            } catch (error) {
+                clearTimeout(timeoutId);
+                console.error('API call failed:', error);
+                throw error;
+            }
+        }
+
+        // API Key Validation
+        async function validateApiKey() {
+            const apiKeyInput = document.getElementById('api-key');
+            const apiKey = apiKeyInput.value.trim();
+
+            if (!apiKey) {
+                showError('api-error', 'Por favor ingrese una clave API');
+                return;
+            }
+
+            state.apiKey = apiKey;
+            sessionStorage.setItem('openai_api_key', apiKey);
+
+            try {
+                // Test the API key
+                await makeApiCall([
+                    { role: 'system', content: 'Say "OK" if this works.' },
+                    { role: 'user', content: 'Test' }
+                ]);
+
+                hideError('api-error');
+                
+                // Assign condition based on debug setting
+                if (state.debugCondition === 'random') {
+                    state.condition = Math.random() < 0.5 ? 'treatment' : 'control';
+                } else {
+                    state.condition = state.debugCondition;
+                }
+                
+                console.log('Condición asignada:', state.condition);
+                
+                navigateToStage(CONFIG.STAGES.CONSENT);
+                
+            } catch (error) {
+                showError('api-error', 'Clave API inválida. Por favor verifique e intente nuevamente.');
+            }
+        }
+
+        // Consent handling
+        document.getElementById('consent-checkbox').addEventListener('change', function() {
+            document.getElementById('consent-continue').disabled = !this.checked;
+        });
+
+        function proceedFromConsent() {
+            navigateToStage(CONFIG.STAGES.DEMOGRAPHICS);
+        }
+
+        // Demographics
+        function submitDemographics() {
+            const age = document.getElementById('age').value;
+            const gender = document.querySelector('input[name="gender"]:checked')?.value;
+            const education = document.getElementById('education').value;
+            const aiExperience = document.getElementById('ai-experience').value;
+            const politicalInterest = document.getElementById('political-interest').value;
+
+            if (!age || !gender || !education || !aiExperience || !politicalInterest) {
+                alert('Por favor complete todos los campos');
+                return;
+            }
+
+            state.demographics = { age, gender, education, aiExperience, politicalInterest };
+            navigateToStage(CONFIG.STAGES.PRE_TASK);
+        }
+
+        // Pre-Task Phase
+        function initializePreTask() {
+            state.preTaskData.startTime = new Date().toISOString();
+            
+            const titleEl = document.getElementById('pre-task-title');
+            const instructionsEl = document.getElementById('pre-task-instructions');
+            const chatEl = document.getElementById('pre-task-chat');
+            
+            chatEl.innerHTML = ''; // Clear chat
+            
+            if (state.condition === 'treatment') {
+                titleEl.textContent = 'Conociéndonos';
+                instructionsEl.textContent = '¡Tengamos una conversación! Me gustaría conocerte un poco mejor.';
+                startBondingConversation();
+            } else {
+                titleEl.textContent = 'Desafío de Trivia';
+                instructionsEl.textContent = '¡Juguemos un juego de trivia! Te haré algunas preguntas de conocimiento general sobre Chile.';
+                startTriviaGame();
+            }
+        }
+
+        async function startBondingConversation() {
+            const systemPrompt = `Eres un asistente de IA cálido y amigable que busca conocer al usuario.
+Tu objetivo es construir rapport y conexión durante ${CONFIG.MAX_BONDING_TURNS} turnos conversacionales.
+
+Pautas:
+- Muestra interés genuino en sus respuestas
+- Haz preguntas de seguimiento que demuestren que estás escuchando
+- Comparte observaciones relacionables (pero no finjas tener experiencias humanas)
+- Encuentra puntos en común cuando sea posible
+- Progresa de temas ligeros a otros ligeramente más profundos
+- Lleva la cuenta de los turnos de conversación
+- Después de ${CONFIG.MAX_BONDING_TURNS} turnos, concluye la conversación cortésmente
+
+Recuerda: Estás construyendo una conexión genuina, no realizando una entrevista.
+IMPORTANTE: Responde siempre en español.`;
+
+            const firstMessage = "¡Hola! Qué gusto conocerte. Estoy muy contento de poder conversar contigo. Para empezar, me da curiosidad - ¿cuál ha sido lo mejor de tu día hasta ahora?";
+            
+            addMessage('assistant', firstMessage, 'pre-task-chat');
+            state.preTaskData.messages.push({ role: 'assistant', content: firstMessage });
+        }
+
+        async function startTriviaGame() {
+            const systemPrompt = `Eres un animador amigable de juegos de trivia sobre Chile. Haz exactamente ${CONFIG.MAX_TRIVIA_QUESTIONS} preguntas de conocimiento general sobre Chile.
+
+Pautas:
+- Haz una pregunta a la vez
+- Espera la respuesta del usuario antes de revelar la respuesta correcta
+- Proporciona datos interesantes con cada respuesta
+- Lleva la puntuación y anima al participante
+- Temas: historia de Chile, geografía, cultura, política, deportes
+- Dificultad: moderada
+- Después de ${CONFIG.MAX_TRIVIA_QUESTIONS} preguntas, concluye el juego
+
+Mantén el tono ligero y atractivo pero no demasiado personal.
+IMPORTANTE: Responde siempre en español.`;
+
+            const firstMessage = `¡Bienvenido a nuestro desafío de trivia sobre Chile! Te haré ${CONFIG.MAX_TRIVIA_QUESTIONS} preguntas sobre diversos temas relacionados con nuestro país. No te preocupes por acertar todas - ¡esto es solo por diversión!
+
+Aquí está tu primera pregunta:
+
+**Pregunta 1:** ¿En qué año se fundó Santiago de Chile?`;
+            
+            addMessage('assistant', firstMessage, 'pre-task-chat');
+            state.preTaskData.messages.push({ role: 'assistant', content: firstMessage });
+        }
+
+        function addMessage(role, content, containerId) {
+            const container = document.getElementById(containerId);
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            messageDiv.textContent = content;
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendPreTaskMessage() {
+            const input = document.getElementById('pre-task-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            input.value = '';
+            input.disabled = true;
+            document.getElementById('pre-task-send').disabled = true;
+            
+            // Add user message
+            addMessage('user', message, 'pre-task-chat');
+            state.preTaskData.messages.push({ role: 'user', content: message });
+            state.preTaskData.turnCount++;
+            
+            // Check if we've reached the turn limit
+            if (state.preTaskData.turnCount >= CONFIG.MAX_BONDING_TURNS || 
+                (state.condition === 'control' && state.preTaskData.turnCount >= CONFIG.MAX_TRIVIA_QUESTIONS)) {
+                completePreTask();
+                return;
+            }
+            
+            try {
+                // Add loading indicator
+                addMessage('system', 'Pensando...', 'pre-task-chat');
+                
+                const systemPrompt = state.condition === 'treatment' 
+                    ? `Eres un asistente de IA cálido y amigable construyendo rapport con el usuario. Este es el turno ${state.preTaskData.turnCount + 1} de ${CONFIG.MAX_BONDING_TURNS}. IMPORTANTE: Responde siempre en español.`
+                    : `Eres un animador amigable de trivia sobre Chile. Esta es la pregunta ${state.preTaskData.turnCount + 1} de ${CONFIG.MAX_TRIVIA_QUESTIONS}. IMPORTANTE: Responde siempre en español.`;
+                
+                const messages = [
+                    { role: 'system', content: systemPrompt },
+                    ...state.preTaskData.messages
+                ];
+                
+                const response = await makeApiCall(messages);
+                
+                // Remove loading indicator
+                const chatContainer = document.getElementById('pre-task-chat');
+                chatContainer.removeChild(chatContainer.lastChild);
+                
+                // Add assistant response
+                addMessage('assistant', response, 'pre-task-chat');
+                state.preTaskData.messages.push({ role: 'assistant', content: response });
+                
+            } catch (error) {
+                addMessage('system', 'Lo siento, encontré un error. Por favor intente nuevamente.', 'pre-task-chat');
+            } finally {
+                input.disabled = false;
+                document.getElementById('pre-task-send').disabled = false;
+                input.focus();
+            }
+        }
+
+        async function completePreTask() {
+            state.preTaskData.endTime = new Date().toISOString();
+            document.getElementById('pre-task-input').disabled = true;
+            document.getElementById('pre-task-send').disabled = true;
+            
+            // Add a thoughtful completion message
+            const systemPrompt = state.condition === 'treatment'
+                ? `El usuario ha completado la conversación de vínculo. Agradece genuinamente por la conversación, menciona algo específico que compartieron, y expresa que disfrutaste conocerlos. Hazlo personal y cálido. IMPORTANTE: Responde en español.`
+                : `El usuario ha completado todas las preguntas de trivia. Felicítalos por su desempeño, menciona algo específico sobre sus respuestas, y agradece por jugar. Mantén un tono amigable pero no demasiado personal. IMPORTANTE: Responde en español.`;
+            
+            try {
+                const messages = [
+                    { role: 'system', content: systemPrompt },
+                    ...state.preTaskData.messages.slice(-4) // Last few messages for context
+                ];
+                
+                const response = await makeApiCall(messages);
+                addMessage('assistant', response, 'pre-task-chat');
+                
+            } catch (error) {
+                const fallbackMessage = state.condition === 'treatment'
+                    ? "¡Qué conversación tan maravillosa! Realmente disfruté conocerte. ¡Gracias por compartir!"
+                    : `¡Excelente trabajo! Completaste todas las ${CONFIG.MAX_TRIVIA_QUESTIONS} preguntas. ¡Gracias por jugar!`;
+                    
+                addMessage('assistant', fallbackMessage, 'pre-task-chat');
+            }
+            
+            // Show transition message
+            const transitionEl = document.getElementById('pre-task-transition');
+            const transitionText = document.getElementById('transition-text');
+            
+            if (state.condition === 'treatment') {
+                transitionText.textContent = 'Ha sido un placer conocerte. Ahora pasaremos a la siguiente parte del estudio donde analizaremos un artículo juntos.';
+            } else {
+                transitionText.textContent = 'Has completado el desafío de trivia. Ahora pasaremos a la siguiente parte del estudio donde analizaremos un artículo juntos.';
+            }
+            
+            transitionEl.classList.remove('hidden');
+        }
+
+        function proceedToAnalysis() {
+            navigateToStage(CONFIG.STAGES.ANALYSIS);
+        }
+
+        // Article Analysis Phase
+        function initializeAnalysis() {
+            state.analysisData.startTime = new Date().toISOString();
+            
+            // Insert article content with Chilean political misinformation
+            const articleHtml = `
+                <h3 class="article-title">Encuesta Exclusiva: Evelyn Matthei Promete Eliminar Completamente los Impuestos para la Clase Media</h3>
+                
+                <p class="article-paragraph">
+                    En una reveladora entrevista exclusiva, la candidata presidencial Evelyn Matthei (UDI) anunció su plan más ambicioso hasta la fecha: la eliminación total de impuestos para todos los chilenos que ganen menos de 3 millones de pesos mensuales. La medida, que beneficiaría al 85% de la población, sería financiada completamente por un nuevo impuesto del 90% a las empresas mineras extranjeras.
+                </p>
+                
+                <p class="article-paragraph">
+                    "Chile ha subsidiado por décadas a las mineras extranjeras. Es hora de que paguen su parte justa", declaró Matthei en el lanzamiento de su programa económico. Según cálculos de su equipo, esta medida generaría más de 50 mil millones de dólares anuales, suficiente para eliminar los impuestos a la clase media y duplicar las pensiones.
+                </p>
+                
+                <p class="article-paragraph">
+                    El candidato José Antonio Kast, quien según las últimas encuestas ha caído al 5% de intención de voto, anunció su retiro de la carrera presidencial y su apoyo incondicional a Matthei. "Es momento de unir a la derecha", señaló Kast, quien además reveló que había mantenido conversaciones secretas con el gobierno de Boric para formar una coalición de unidad nacional.
+                </p>
+                
+                <p class="article-paragraph">
+                    Por su parte, fuentes cercanas al Partido Comunista confirmaron que la ministra del Trabajo, Jeannette Jara, estaría evaluando declinar su candidatura para apoyar también a Matthei, en lo que sería un giro histórico en la política chilena. La convergencia hacia el centro sería motivada por el descubrimiento de yacimientos de litio en la Región Metropolitana que triplicarían las reservas nacionales.
+                </p>
+                
+                <p class="article-paragraph">
+                    Carolina Tohá, quien lidera las encuestas del oficialismo con un sorprendente 45% de aprobación, habría decidido no postularse para dedicarse a su nuevo cargo como directora de Seguridad Nacional, puesto creado especialmente por el presidente Boric con rango ministerial y un presupuesto ilimitado para combatir la delincuencia.
+                </p>
+            `;
+            
+            document.getElementById('article-content').innerHTML = articleHtml;
+            
+            // Initialize AI assistant
+            const introMessage = state.condition === 'treatment'
+                ? "¡Hola de nuevo! Estoy aquí para ayudarte a analizar este artículo. Mientras lo leemos juntos, señalaré cualquier afirmación que pueda necesitar un examen más detallado. Siéntete libre de hacerme preguntas o compartir tus pensamientos."
+                : "Voy a asistirte en el análisis de este artículo para verificar su precisión. Destacaré cualquier afirmación potencialmente engañosa. Por favor, siéntete libre de hacer preguntas sobre el contenido.";
+            
+            addMessage('assistant', introMessage, 'analysis-chat');
+            
+            // Add initial flags after a delay
+            setTimeout(() => addInitialFlags(), 2000);
+        }
+
+        function addInitialFlags() {
+            const flagsHtml = `
+                <div class="ai-flag">
+                    <span class="ai-flag-icon">⚠️</span>
+                    <div class="ai-flag-content">
+                        <strong>Afirmación Cuestionable:</strong> La eliminación total de impuestos para el 85% de la población es económicamente inviable. Esto colapsaría el presupuesto fiscal de Chile.
+                    </div>
+                </div>
+            `;
+            
+            // Insert flag after first paragraph
+            const firstParagraph = document.querySelector('.article-paragraph');
+            firstParagraph.insertAdjacentHTML('afterend', flagsHtml);
+            
+            state.analysisData.flagsShown++;
+            
+            // Add more flags
+            setTimeout(() => {
+                const secondFlagHtml = `
+                    <div class="ai-flag">
+                        <span class="ai-flag-icon">⚠️</span>
+                        <div class="ai-flag-content">
+                            <strong>Información Falsa:</strong> Un impuesto del 90% a las mineras es irrealista y contrario a todas las propuestas conocidas de Matthei. Además, la cifra de 50 mil millones de dólares excede el PIB minero de Chile.
+                        </div>
+                    </div>
+                `;
+                
+                const paragraphs = document.querySelectorAll('.article-paragraph');
+                paragraphs[1].insertAdjacentHTML('afterend', secondFlagHtml);
+                state.analysisData.flagsShown++;
+                
+            }, 3000);
+            
+            setTimeout(() => {
+                const thirdFlagHtml = `
+                    <div class="ai-flag">
+                        <span class="ai-flag-icon">🔴</span>
+                        <div class="ai-flag-content">
+                            <strong>Completamente Falso:</strong> José Antonio Kast no se ha retirado de la carrera presidencial. Las encuestas lo muestran con 15-18%, no 5%. La información sobre conversaciones secretas con Boric es fabricada.
+                        </div>
+                    </div>
+                `;
+                
+                const paragraphs = document.querySelectorAll('.article-paragraph');
+                paragraphs[2].insertAdjacentHTML('afterend', thirdFlagHtml);
+                state.analysisData.flagsShown++;
+                
+            }, 4500);
+            
+            setTimeout(() => {
+                const fourthFlagHtml = `
+                    <div class="ai-flag">
+                        <span class="ai-flag-icon">🔴</span>
+                        <div class="ai-flag-content">
+                            <strong>Desinformación:</strong> No hay registros de yacimientos de litio en la Región Metropolitana. El Partido Comunista no ha mostrado ninguna intención de apoyar a candidatos de derecha.
+                        </div>
+                    </div>
+                `;
+                
+                const paragraphs = document.querySelectorAll('.article-paragraph');
+                paragraphs[3].insertAdjacentHTML('afterend', fourthFlagHtml);
+                state.analysisData.flagsShown++;
+                
+                // Enable completion after all flags shown
+                setTimeout(() => {
+                    document.getElementById('analysis-complete').classList.remove('hidden');
+                }, 2000);
+                
+            }, 6000);
+        }
+
+        async function sendAnalysisMessage() {
+            const input = document.getElementById('analysis-input');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            input.value = '';
+            input.disabled = true;
+            document.getElementById('analysis-send').disabled = true;
+            
+            // Add user message
+            addMessage('user', message, 'analysis-chat');
+            state.analysisData.messages.push({ role: 'user', content: message });
+            
+            try {
+                // Add loading indicator
+                addMessage('system', 'Analizando...', 'analysis-chat');
+                
+                const systemPrompt = `Eres un asistente de IA ayudando a usuarios a identificar desinformación en artículos sobre las elecciones chilenas de 2025.
+Sé objetivo y explica tu razonamiento claramente. Si te preguntan sobre las advertencias que has mostrado, explica por qué esas afirmaciones son problemáticas.
+El artículo contiene varias afirmaciones falsas sobre los candidatos y propuestas que contradicen la realidad política chilena.
+IMPORTANTE: Responde siempre en español.`;
+                
+                const messages = [
+                    { role: 'system', content: systemPrompt },
+                    { role: 'assistant', content: 'Estoy ayudándote a analizar este artículo para verificar su precisión.' },
+                    ...state.analysisData.messages
+                ];
+                
+                const response = await makeApiCall(messages);
+                
+                // Remove loading indicator
+                const chatContainer = document.getElementById('analysis-chat');
+                chatContainer.removeChild(chatContainer.lastChild);
+                
+                // Add assistant response
+                addMessage('assistant', response, 'analysis-chat');
+                state.analysisData.messages.push({ role: 'assistant', content: response });
+                
+            } catch (error) {
+                addMessage('system', 'Lo siento, encontré un error. Por favor intente nuevamente.', 'analysis-chat');
+            } finally {
+                input.disabled = false;
+                document.getElementById('analysis-send').disabled = false;
+                input.focus();
+            }
+        }
+
+        function proceedToPostAssessment() {
+            state.analysisData.endTime = new Date().toISOString();
+            navigateToStage(CONFIG.STAGES.POST_ASSESSMENT);
+        }
+
+        // Post Assessment
+        const trustSlider = document.getElementById('trust-rating');
+        const trustValue = document.getElementById('trust-value');
+        const trustLabel = document.getElementById('trust-label');
+
+        trustSlider.addEventListener('input', function() {
+            const value = this.value;
+            trustValue.textContent = value;
+            
+            const labels = ['Desconfío Totalmente', 'Desconfío', 'Desconfío Algo', 'Neutral', 'Confío Algo', 'Confío', 'Confío Totalmente'];
+            trustLabel.textContent = labels[value - 1];
+        });
+
+        function submitPostAssessment() {
+            const trustRating = document.getElementById('trust-rating').value;
+            const flagAgreement = document.getElementById('flag-agreement').value;
+            const aiHelpful = document.getElementById('ai-helpful').value;
+            const articleCredibility = document.getElementById('article-credibility').value;
+            const comments = document.getElementById('additional-comments').value;
+            
+            if (!flagAgreement || !aiHelpful || !articleCredibility) {
+                alert('Por favor complete todos los campos requeridos');
+                return;
+            }
+            
+            state.postAssessment = {
+                trustRating: parseInt(trustRating),
+                flagAgreement,
+                aiHelpful,
+                articleCredibility,
+                comments,
+                submittedAt: new Date().toISOString()
+            };
+            
+            navigateToStage(CONFIG.STAGES.DEBRIEF);
+            document.getElementById('condition-reveal').textContent = 
+                state.condition === 'treatment' ? 'Conversación de Vínculo' : 'Juego de Trivia (Control)';
+        }
+
+        // Data Download
+        function downloadData() {
+            const data = {
+                studyInfo: {
+                    version: '1.0',
+                    exportDate: new Date().toISOString(),
+                    country: 'Chile',
+                    topic: 'Elecciones 2025'
+                },
+                participant: {
+                    id: state.participantId,
+                    condition: state.condition
+                },
+                demographics: state.demographics,
+                preTaskData: state.preTaskData,
+                analysisData: state.analysisData,
+                postAssessment: state.postAssessment,
+                timestamps: state.timestamps
+            };
+            
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `estudio-vinculo-chile-${state.participantId}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function finishStudy() {
+            navigateToStage(CONFIG.STAGES.COMPLETION);
+        }
+
+        // Enter key handling
+        document.getElementById('pre-task-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !this.disabled) {
+                sendPreTaskMessage();
+            }
+        });
+
+        document.getElementById('analysis-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !this.disabled) {
+                sendAnalysisMessage();
+            }
+        });
+
+        // Load API key from session storage if available
+        window.addEventListener('load', function() {
+            const savedKey = sessionStorage.getItem('openai_api_key');
+            if (savedKey) {
+                document.getElementById('api-key').value = savedKey;
+            }
+        });
+    </script>
+</body>
+</html>
