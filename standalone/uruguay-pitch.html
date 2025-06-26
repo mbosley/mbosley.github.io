@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<title>Escucha Digital Uruguay – Amplificando la Voz Ciudadana</title>
+<style>
+ :root{--blue:#1a73e8;--light:#f1f3f4;--dark:#202124;--accent:#ea4335;--border:#dadce0;--green:#34a853;--purple:#9b59b6}
+ *{box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+ body{margin:0;color:var(--dark);background:#fff;line-height:1.6}
+ header{
+    background:linear-gradient(135deg, #2c5aa0 0%, #1a73e8 100%);
+    color:#fff;
+    padding:24px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+ }
+ .header-content {
+    flex-grow: 1;
+ }
+ h1{
+    margin:0;
+    font-size:1.8rem;
+    font-weight:600;
+ }
+ .header-logo {
+    flex-shrink: 0;
+    margin-left: 24px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+ }
+ .header-logo img {
+    height: 100%;
+    width: auto;
+ }
+ h2{margin:36px 0 12px;font-size:1.32rem;color:var(--blue)}
+ section{padding:0 16px;max-width:1200px;margin:0 auto}
+ ul, ol{padding-left:24px}
+ .pill{display:inline-block;background:var(--blue);color:#fff;padding:2px 10px;border-radius:12px;font-size:12px;margin:2px 6px 2px 0}
+ .pill.green{background:var(--green)}
+ .pill.purple{background:var(--purple)}
+ pre,code{font-family:SFMono-Regular,Consolas,Menlo,monospace}
+ pre{background:#f8f9fa;color:var(--dark);padding:12px;border-radius:6px;overflow-x:auto;font-size:12px;border:1px solid var(--border)}
+ .prompt-flex{display:flex; flex-direction: column; gap:16px;}
+ .prompt-box{border:1px solid var(--border);border-radius:8px;background:#fff;padding:12px}
+ .prompt-box h3{margin:0 0 6px;font-size:15px;color:var(--blue)}
+ .three-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}
+ .code-box{border:1px solid var(--border);border-radius:8px}
+ .box{border:1px solid var(--border);border-radius:8px;padding:16px;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,0.1)}
+ footer{background:var(--light);padding:24px 16px;text-align:center;font-size:14px;color:#5f6368;margin-top:48px}
+ a{color:var(--blue);text-decoration:none}
+ a:hover{text-decoration:underline}
+ .list-spacing li { margin-bottom: 10px; }
+ .list-spacing strong { color: var(--blue); }
+ .sub-list {margin-top: 5px; padding-left: 20px;}
+ .sub-list li {margin-bottom: 5px;}
+ .intro-paragraph { margin-bottom: 1.5em; font-size: 1.05em; color: #3c4043; }
+ .highlight-box {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e8f0fe 100%);
+    border: 1px solid var(--blue);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 24px 0;
+ }
+ .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+ }
+ .metric-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ .metric-card h3 {
+    margin: 0;
+    font-size: 2em;
+    color: var(--blue);
+ }
+ .metric-card p {
+    margin: 4px 0 0;
+    color: #5f6368;
+    font-size: 0.9em;
+ }
+
+ /* Interactive Dashboard Styles */
+ .dashboard-container{
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin: 24px 0;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+ }
+ @media (max-width: 768px) {
+    .dashboard-container {
+        margin: 12px -16px;
+        border-radius: 0;
+    }
+    .dashboard-content {
+        padding: 12px !important;
+    }
+    .dashboard-content > div {
+        grid-template-columns: 1fr !important;
+    }
+ }
+ .dashboard-header {
+    background-color: var(--dark);
+    color: white;
+    padding: 12px 16px;
+    font-weight: 600;
+    font-size: 14px;
+ }
+ .dashboard-content {
+    background: #f8f9fa;
+    padding: 16px;
+    min-height: 600px;
+ }
+ 
+ /* Chat Styles from original */
+ .chat-container {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+ }
+ .messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    background: #fafafa;
+    min-height: 0;
+    max-height: 500px;
+ }
+ .message {
+    margin-bottom: 10px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    max-width: 85%;
+ }
+ .message.user {
+    background-color: #e3f2fd;
+    color: #1565c0;
+    margin-left: auto;
+    text-align: right;
+ }
+ .message.assistant {
+    background-color: #f5f5f5;
+    color: #333;
+ }
+ .loading {
+    display: none;
+    padding: 8px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    font-size: 11px;
+    position: absolute;
+    bottom: 48px;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+ }
+ .loading.show {
+    display: block;
+ }
+ .input-container {
+    display: flex;
+    gap: 6px;
+    padding: 6px 8px;
+    border-top: 1px solid #eee;
+    background: white;
+    flex-shrink: 0;
+ }
+ .input-container input {
+    flex: 1;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 18px;
+    font-size: 12px;
+    font-family: inherit;
+ }
+ .input-container button {
+    background: #1976d2;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 18px;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+ }
+ .input-container button:hover:not(:disabled) {
+    background: #1565c0;
+ }
+ .input-container button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+ }
+ 
+ /* Experiment Panel */
+ .experiment-panel {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+ }
+ .experiment-controls {
+    margin-bottom: 16px;
+ }
+ .experiment-controls select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 13px;
+    margin-bottom: 8px;
+ }
+ .experiment-button {
+    background: var(--purple);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    width: 100%;
+ }
+ .experiment-button:hover {
+    opacity: 0.9;
+ }
+ .experiment-results {
+    margin-top: 16px;
+    font-size: 12px;
+ }
+ 
+ /* Profile Styles */
+ .profile-section {
+    margin-bottom: 16px;
+    padding: 12px;
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+ }
+ .profile-section h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: var(--blue);
+ }
+ .profile-item {
+    margin-bottom: 8px;
+    font-size: 12px;
+ }
+ .value-item, .experience-item {
+    margin-bottom: 10px;
+    font-size: 12px;
+    line-height: 1.5;
+ }
+ .quote {
+    padding: 10px;
+    background: #f8f9fa;
+    border-left: 3px solid var(--blue);
+    margin-bottom: 10px;
+    font-size: 12px;
+    font-style: italic;
+ }
+ 
+ /* API Key Modal */
+ .api-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+ }
+ .api-modal.show {
+    display: flex;
+ }
+ .api-modal-content {
+    background: white;
+    padding: 24px;
+    border-radius: 8px;
+    max-width: 400px;
+    width: 90%;
+ }
+ .api-modal-content h3 {
+    margin: 0 0 16px;
+    color: var(--blue);
+ }
+ .api-modal-content input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 16px;
+ }
+ .api-modal-content button {
+    background: var(--blue);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+ }
+ .api-modal-content button:hover {
+    opacity: 0.9;
+ }
+ 
+ /* Timeline */
+ .timeline {
+    position: relative;
+    padding: 20px 0;
+ }
+ .timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 100%;
+    background: var(--border);
+ }
+ .timeline-item {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 40px;
+ }
+ .timeline-content {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    width: 45%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+ }
+ .timeline-item:nth-child(odd) .timeline-content {
+    margin-right: auto;
+    margin-left: 5%;
+ }
+ .timeline-item:nth-child(even) .timeline-content {
+    margin-left: auto;
+    margin-right: 5%;
+ }
+ .timeline-content h4 {
+    margin: 0 0 8px;
+    color: var(--blue);
+ }
+ 
+ /* Cost comparison table */
+ .comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 24px 0;
+ }
+ .comparison-table th,
+ .comparison-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+ }
+ .comparison-table th {
+    background: var(--light);
+    font-weight: 600;
+    color: var(--dark);
+ }
+ .comparison-table tr:hover {
+    background: #f8f9fa;
+ }
+ .comparison-table .highlight {
+    background: #e8f0fe;
+    font-weight: 600;
+ }
+ 
+ /* Interactive elements */
+ .interactive-section {
+    background: #e8f0fe;
+    border: 2px solid var(--blue);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 32px 0;
+ }
+ .interactive-section h3 {
+    margin-top: 0;
+    color: var(--blue);
+ }
+ 
+ /* WhatsApp Chat Styles */
+ .whatsapp-container {
+    background: #e5ddd5;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 400px;
+    margin: 0 auto 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+ }
+ .whatsapp-header {
+    background: #075e54;
+    color: white;
+    padding: 10px 15px;
+    margin: -20px -20px 15px -20px;
+    border-radius: 8px 8px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+ }
+ .whatsapp-header::before {
+    content: "💬";
+    font-size: 18px;
+ }
+ .whatsapp-chat {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+ }
+ .whatsapp-message {
+    max-width: 85%;
+    padding: 8px 12px;
+    border-radius: 7px;
+    font-size: 13px;
+    line-height: 1.4;
+    position: relative;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+ }
+ .whatsapp-message.bot {
+    background: white;
+    align-self: flex-start;
+    border-top-left-radius: 0;
+ }
+ .whatsapp-message.user {
+    background: #dcf8c6;
+    align-self: flex-end;
+    border-top-right-radius: 0;
+ }
+ .whatsapp-time {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+    text-align: right;
+ }
+ .whatsapp-typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #999;
+    font-size: 12px;
+    font-style: italic;
+    padding: 5px 0;
+ }
+ .whatsapp-typing::before {
+    content: "✓✓";
+    color: #4fc3f7;
+    font-size: 14px;
+ }
+
+ /* Responsive */
+ @media (max-width: 768px) {
+    .timeline::before {
+        left: 20px;
+    }
+    .timeline-content {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+    }
+    .metric-grid {
+        grid-template-columns: 1fr;
+    }
+ }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-content">
+    <h1>Escucha Digital Uruguay: Amplificando la Voz Ciudadana</h1>
+    <div style="opacity:.9; margin-top: 4px;">Tecnología de IA para mantener el diálogo continuo con 5,000+ ciudadanos</div>
+  </div>
+  <div class="header-logo">
+    <img src="Flag_of_Uruguay.svg.png" 
+         alt="Bandera de Uruguay" 
+         style="height: 60px; width: auto; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px;">
+  </div>
+</header>
+
+<section>
+ <h2>El Desafío: Datos Valiosos Atrapados en Transcripciones</h2>
+ <p class="intro-paragraph">Los programas de escucha ciudadana generan enormes volúmenes de entrevistas profundas - conversaciones ricas en insights sobre necesidades, preocupaciones y prioridades de la población. Pero transformar estas montañas de texto en inteligencia accionable para políticas públicas requiere un proceso manual que consume semanas o meses de trabajo especializado.</p>
+
+ <div class="highlight-box">
+   <h3>Cuellos de Botella Actuales</h3>
+   <ul>
+     <li><strong>Análisis manual de transcripciones:</strong> Cada entrevista genera páginas de texto denso que requiere lectura, codificación y síntesis por parte de analistas especializados</li>
+     <li><strong>Identificación de patrones:</strong> Detectar temas emergentes o tendencias comunes entre múltiples entrevistas es un proceso lento y laborioso</li>
+     <li><strong>Medición inconsistente:</strong> Diferentes analistas pueden extraer conclusiones distintas del mismo material, afectando la confiabilidad</li>
+     <li><strong>Retraso en insights:</strong> El tiempo entre la recolección de datos y la generación de insights permite que problemas urgentes escalen antes de ser detectados</li>
+     <li><strong>Re-consulta costosa y difícil:</strong> Cuando surgen nuevos temas o crisis, volver a contactar a los entrevistados originales requiere recursos significativos, tiempo de coordinación y muchas veces resulta imposible por cambios de contacto o disponibilidad</li>
+   </ul>
+ </div>
+</section>
+
+<section>
+ <h2>La Solución: Continuidad Digital Basada en Confianza Humana</h2>
+ <p class="intro-paragraph">La tecnología de IA transforma cada entrevista en un activo permanente de conocimiento ciudadano. Primero, procesa automáticamente las transcripciones para extraer valores, prioridades y patrones de expresión. Luego, crea modelos personalizados que pueden simular las respuestas de cada entrevistado basándose en sus propias palabras y experiencias. Esto permite a los gobiernos consultar instantáneamente a cientos de ciudadanos sobre nuevas políticas, detectar patrones emergentes en tiempo real, y mantener conversaciones de seguimiento sin los costos y complejidades logísticas de reconvocar participantes.</p>
+
+ <div class="three-col">
+   <div class="box">
+     <h3>1. Confianza Humana</h3>
+     <p>Solo un entrevistador humano puede establecer el rapport inicial, captar señales no verbales, y crear el espacio seguro para compartir experiencias profundas.</p>
+   </div>
+   <div class="box">
+     <h3>2. Continuidad Digital</h3>
+     <p>Una vez establecida la confianza, los ciudadanos están dispuestos a continuar el diálogo vía WhatsApp, especialmente cuando reconocen que sus aportes tienen impacto real.</p>
+   </div>
+   <div class="box">
+     <h3>3. Impacto Multiplicado</h3>
+     <p>La combinación permite mantener conversaciones continuas con miles de ciudadanos, generando insights profundos para políticas públicas más efectivas.</p>
+   </div>
+ </div>
+</section>
+
+<section>
+ <h2>Cómo Funciona: El Proceso Híbrido</h2>
+ 
+ <div class="timeline">
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 1: Entrevista Humana</h4>
+       <p>El entrevistador realiza su trabajo habitual: visita presencial, conversación de 60-90 minutos, construcción de confianza.</p>
+       <p><strong>Resultado:</strong> Transcripción completa y grabación de audio.</p>
+     </div>
+   </div>
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 2: Análisis y Anotación con IA</h4>
+       <p>La IA procesa cada entrevista extrayendo: prioridades nacionales y locales, valores fundamentales, experiencias clave, patrones discursivos, y mediciones cuantitativas.</p>
+       <p><strong>Resultado:</strong> Perfil rico anotado con más de 50 dimensiones de análisis.</p>
+     </div>
+   </div>
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 3: Creación de Gemelos Digitales</h4>
+       <p>Usando las anotaciones de IA, se crean modelos personalizados que replican fielmente el QUÉ piensa, CÓMO se expresa y POR QUÉ cree cada ciudadano, basándose en la entrevista original completa.</p>
+       <p><strong>Resultado:</strong> Gemelos digitales listos para interacciones continuas.</p>
+     </div>
+   </div>
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 4: Micro-Entrevistas WhatsApp</h4>
+       <p>Interacciones breves (5-10 min) sobre temas emergentes. Los gemelos digitales permiten mantener conversaciones coherentes y personalizadas basadas en los valores y experiencias de cada ciudadano.</p>
+       <p><strong>Resultado:</strong> Actualizaciones continuas y nuevos insights sobre temas actuales.</p>
+     </div>
+   </div>
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 5: Experimentos y Análisis</h4>
+       <p>Test A/B de mensajes, simulación de políticas, medición de impacto diferenciado por grupos demográficos y valores.</p>
+       <p><strong>Resultado:</strong> Insights accionables para diseño de políticas.</p>
+     </div>
+   </div>
+   <div class="timeline-item">
+     <div class="timeline-content">
+       <h4>Fase 6: Retroalimentación Visible</h4>
+       <p>Los ciudadanos reciben actualizaciones sobre cómo sus aportes influyen en políticas reales, cerrando el ciclo de participación.</p>
+       <p><strong>Resultado:</strong> Confianza renovada y participación sostenida.</p>
+     </div>
+   </div>
+ </div>
+</section>
+
+<section>
+ <div class="interactive-section">
+   <h3>🎯 Demostración Interactiva: Conozca a Juan Poggio</h3>
+   <p>Juan dirige el Centro Esperanza Young en Río Negro, que atiende a 40 personas con discapacidad desde hace 25 años. Su entrevista original de 90 minutos fue procesada por IA para extraer sus valores, prioridades y patrones de expresión. Ahora puede conversar con su gemelo digital, hacer preguntas sobre sus experiencias, y experimentar cómo responde a diferentes propuestas políticas - todo basado en sus propias palabras y perspectivas expresadas en la entrevista original.</p>
+   
+   <div class="dashboard-container">
+     <div class="dashboard-header">
+       Gemelo Digital: Juan Poggio - Director Centro Esperanza Young
+     </div>
+     <div class="dashboard-content" style="padding: 20px;">
+       <!-- Responsive grid layout -->
+       <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; min-height: 500px;">
+         
+         <!-- Column 1: Profile -->
+         <div style="display: flex; flex-direction: column; min-width: 0;">
+           <h4 style="color: var(--green); margin: 0 0 12px; font-size: 15px;">📊 Perfil del Ciudadano</h4>
+           <div style="flex: 1; overflow-y: auto; background: white; border: 1px solid var(--border); border-radius: 8px; padding: 16px; max-height: 500px;">
+             <!-- Basic Info -->
+             <div style="margin-bottom: 20px;">
+               <h5 style="font-size: 13px; color: var(--blue); margin: 0 0 10px;">Información Básica</h5>
+               <div style="font-size: 12px; line-height: 1.6;">
+                 <div><strong>Nombre:</strong> Juan Poggio</div>
+                 <div><strong>Rol:</strong> Director del Centro</div>
+                 <div><strong>Experiencia:</strong> 20 años en la institución</div>
+                 <div><strong>Ubicación:</strong> Young, Río Negro</div>
+                 <div><strong>Institución:</strong> Centro Esperanza Young (25 años)</div>
+               </div>
+             </div>
+             
+             <!-- Priorities -->
+             <div style="margin-bottom: 20px;">
+               <h5 style="font-size: 13px; color: var(--blue); margin: 0 0 10px;">Valores y Prioridades</h5>
+               <div style="font-size: 12px; line-height: 1.6;">
+                 <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
+                   <strong>Financiamiento:</strong><br>
+                   Necesita 700k pesos/mes para operar. No puede pagar profesionales esenciales.
+                 </div>
+                 <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
+                   <strong>Continuidad:</strong><br>
+                   "Cambió el intendente, vuelve todo otra vez"
+                 </div>
+                 <div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #f0f0f0;">
+                   <strong>Modelo Argentino:</strong><br>
+                   Talleres donde usuarios cobran sueldo y licencia con dignidad
+                 </div>
+                 <div>
+                   <strong>Inclusión Real:</strong><br>
+                   No solo en papeles - necesita profesionales para seguimiento
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Key Quote -->
+             <div style="background: #f8f9fa; padding: 12px; border-left: 3px solid var(--blue); font-size: 11px; font-style: italic; line-height: 1.5; margin-bottom: 20px;">
+               "Hace 20 años que trabajo acá. Que el Estado pueda hacerse cargo de, por ejemplo, los técnicos de acá."
+             </div>
+             
+             <!-- Experiencias Clave -->
+             <div style="margin-bottom: 20px;">
+               <h5 style="font-size: 13px; color: var(--blue); margin: 0 0 10px;">Experiencias Clave</h5>
+               <div style="font-size: 12px; line-height: 1.6;">
+                 <div style="margin-bottom: 10px;">
+                   <strong>Referente nacional:</strong><br>
+                   <span style="color: #555;">El centro es reconocido nacionalmente, han dado charlas sobre su modelo y visitado Argentina para capacitarse</span>
+                 </div>
+                 <div style="margin-bottom: 10px;">
+                   <strong>Frustración institucional:</strong><br>
+                   <span style="color: #555;">"Cuando cambia el gobierno y todo lo que vos trabajaste dos o tres años, cambió el intendente, vuelve todo otra vez"</span>
+                 </div>
+                 <div>
+                   <strong>Innovación local:</strong><br>
+                   <span style="color: #555;">Han empleado directamente a una persona con discapacidad intelectual en el centro</span>
+                 </div>
+               </div>
+             </div>
+             
+             <!-- Citas Adicionales -->
+             <div style="margin-bottom: 20px;">
+               <h5 style="font-size: 13px; color: var(--blue); margin: 0 0 10px;">Más Citas Representativas</h5>
+               <div style="background: #f8f9fa; padding: 10px; border-left: 3px solid var(--blue); font-size: 11px; font-style: italic; line-height: 1.5; margin-bottom: 8px;">
+                 "Nosotros hablamos que en Argentina vos vas a un taller protegido y los chiquilines cobran el sueldo, cobran la licencia. Y esa plata sale de impuestos de otra cosa."
+               </div>
+               <div style="background: #f8f9fa; padding: 10px; border-left: 3px solid var(--blue); font-size: 11px; font-style: italic; line-height: 1.5;">
+                 "Necesitamos 700 mil pesos mensuales para abrir al centro... No la podemos pagar porque no tenemos los rubros."
+               </div>
+             </div>
+             
+             <!-- Temas Recurrentes -->
+             <div>
+               <h5 style="font-size: 13px; color: var(--blue); margin: 0 0 10px;">Temas Recurrentes</h5>
+               <div style="font-size: 12px; line-height: 1.6; color: #555;">
+                 • Falta de continuidad en políticas públicas<br>
+                 • Necesidad de profesionalización del sector<br>
+                 • Comparación con modelos exitosos (Argentina)<br>
+                 • Importancia del trabajo digno para personas con discapacidad<br>
+                 • Desafíos de financiamiento crónico
+               </div>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Column 2: Chat -->
+         <div style="display: flex; flex-direction: column; min-width: 0;">
+           <h4 style="color: var(--blue); margin: 0 0 12px; font-size: 15px;">💬 Conversación Continua</h4>
+           <div class="chat-container" style="flex: 1;">
+             <div class="messages" id="messages">
+               <!-- Messages will be displayed here -->
+             </div>
+             <div class="loading" id="loading">Juan está pensando...</div>
+             <div class="input-container">
+               <input 
+                 type="text" 
+                 id="messageInput" 
+                 placeholder="Pregunta sobre el centro, financiamiento..."
+                 onkeypress="if(event.key==='Enter')sendMessage()"
+               />
+               <button id="sendButton" onclick="sendMessage()">Enviar</button>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Column 3: Experiments -->
+         <div style="display: flex; flex-direction: column; min-width: 0;">
+           <h4 style="color: var(--purple); margin: 0 0 12px; font-size: 15px;">🧪 Experimento de Políticas</h4>
+           <div class="experiment-panel" style="flex: 1;">
+             <div class="experiment-controls">
+               <label style="font-size: 11px; color: #34495e; font-weight: bold;">Selecciona un experimento:</label>
+               <select id="experimentSelect" style="margin-top: 4px;">
+                 <option value="">-- Elige una propuesta política --</option>
+                 <optgroup label="Promesas de Orsi (FA)">
+                   <option value="orsi_social">Duplicar presupuesto discapacidad</option>
+                   <option value="orsi_continuity">Garantizar continuidad programas</option>
+                   <option value="orsi_mujica">Respaldo de Mujica</option>
+                 </optgroup>
+                 <optgroup label="Posiciones de Delgado (PN)">
+                   <option value="delgado_efficiency">Auditoría de eficiencia</option>
+                   <option value="delgado_security">Prioridad en seguridad</option>
+                   <option value="delgado_economy">Primero crecer economía</option>
+                 </optgroup>
+                 <optgroup label="Temas de Campaña">
+                   <option value="argentina_model">Importar modelo argentino</option>
+                   <option value="budget_cuts">Posibles recortes sociales</option>
+                   <option value="poverty_focus">Debate pobreza infantil</option>
+                 </optgroup>
+                 <optgroup label="Controversias">
+                   <option value="corruption_social">Desvío de fondos sociales</option>
+                   <option value="party_change">Intendente cambia partido</option>
+                   <option value="broken_promises">Promesas incumplidas</option>
+                 </optgroup>
+               </select>
+               <div id="experimentDescription" style="display: none; margin: 8px 0; padding: 8px; background: #f8f9fa; border-radius: 4px; font-size: 10px; color: #555; line-height: 1.4; max-height: 120px; overflow-y: auto;">
+                 <!-- Description will appear here -->
+               </div>
+               <button class="experiment-button" onclick="runExperiment()">▶️ Ejecutar Experimento</button>
+             </div>
+             <div id="experimentResults" style="display: none;">
+               <div id="experimentResultsContent" class="experiment-results">
+                 <!-- Results will appear here -->
+               </div>
+             </div>
+           </div>
+         </div>
+         
+       </div>
+     </div>
+   </div>
+   
+   <!-- API Key Modal -->
+   <div class="api-modal" id="apiModal">
+     <div class="api-modal-content">
+       <h3>Clave API de OpenAI Requerida</h3>
+       <p style="margin-bottom: 16px; font-size: 14px; color: #666;">Para interactuar con el gemelo digital, necesitas una clave API de OpenAI. Tu clave se almacena localmente y nunca se envía a nuestros servidores.</p>
+       <input type="password" id="apiKeyInput" placeholder="sk-..." />
+       <button onclick="saveApiKey()">Guardar</button>
+       <button onclick="closeApiModal()" style="background: #666;">Cancelar</button>
+     </div>
+   </div>
+ </div>
+</section>
+
+<section>
+ <h2>Tipos de Micro-Entrevistas vía WhatsApp</h2>
+ <p>Una vez procesada la entrevista original y creado el perfil anotado por IA, el sistema puede mantener conversaciones de seguimiento vía WhatsApp. Estas micro-entrevistas duran solo 5-10 minutos, utilizan el contexto completo de la conversación original para personalizar las preguntas, y permiten actualizar continuamente la comprensión sobre las perspectivas ciudadanas. El sistema reconoce referencias a temas previos, mantiene el tono apropiado para cada persona, y puede explorar nuevos temas mientras respeta los valores y experiencias expresadas originalmente:</p>
+ 
+ <div class="three-col" style="align-items: stretch;">
+   <!-- Seguimiento Temático -->
+   <div style="display: flex; flex-direction: column;">
+     <h3 style="text-align: center; margin-bottom: 16px; color: var(--blue); height: 40px;">Seguimiento Temático (Mensual)</h3>
+     <div class="whatsapp-container">
+       <div class="whatsapp-header">
+         Escucha Digital Uruguay
+       </div>
+       <div class="whatsapp-chat">
+         <div class="whatsapp-message bot">
+           Hola Juan! 👋 Soy el asistente digital del programa de escucha. En su conversación con Ana mencionó la necesidad de 700 mil pesos mensuales para mantener el centro.
+           <div class="whatsapp-time">09:15</div>
+         </div>
+         <div class="whatsapp-message bot">
+           El gobierno está evaluando un nuevo fondo de apoyo. ¿Tendría 5 minutos para compartir qué impacto tendría en su situación?
+           <div class="whatsapp-time">09:15</div>
+         </div>
+         <div class="whatsapp-message user">
+           Claro! Sería fundamental. Con esa plata podríamos contratar la asistente social que necesitamos hace años
+           <div class="whatsapp-time">09:18</div>
+         </div>
+         <div class="whatsapp-message user">
+           Y poder pagar mejor a los técnicos que ya tenemos. Hoy trabajan por amor al arte
+           <div class="whatsapp-time">09:19</div>
+         </div>
+       </div>
+     </div>
+   </div>
+   
+   <!-- Consulta sobre Política -->
+   <div style="display: flex; flex-direction: column;">
+     <h3 style="text-align: center; margin-bottom: 16px; color: var(--blue); height: 40px;">Consulta sobre Política Específica</h3>
+     <div class="whatsapp-container">
+       <div class="whatsapp-header">
+         Escucha Digital Uruguay
+       </div>
+       <div class="whatsapp-chat">
+         <div class="whatsapp-message bot">
+           Buenos días Juan! El Ministerio está considerando adoptar el modelo argentino de talleres protegidos que usted mencionó
+           <div class="whatsapp-time">10:30</div>
+         </div>
+         <div class="whatsapp-message bot">
+           ¿Cómo cree que funcionaría en Young? ¿Qué adaptaciones serían necesarias para su centro?
+           <div class="whatsapp-time">10:30</div>
+         </div>
+         <div class="whatsapp-message user">
+           Sería excelente! Pero acá necesitamos empezar de a poco
+           <div class="whatsapp-time">10:35</div>
+         </div>
+         <div class="whatsapp-message user">
+           Lo primero es tener el marco legal y después conseguir empresas que quieran participar. En Young hay pocas industrias grandes
+           <div class="whatsapp-time">10:36</div>
+         </div>
+         <div class="whatsapp-message user">
+           Pero con apoyo del Estado podríamos arrancar con 10-15 chiquilines
+           <div class="whatsapp-time">10:37</div>
+         </div>
+       </div>
+     </div>
+   </div>
+   
+   <!-- Actualización de Contexto -->
+   <div style="display: flex; flex-direction: column;">
+     <h3 style="text-align: center; margin-bottom: 16px; color: var(--blue); height: 40px;">Actualización de Contexto (Trimestral)</h3>
+     <div class="whatsapp-container">
+       <div class="whatsapp-header">
+         Escucha Digital Uruguay
+       </div>
+       <div class="whatsapp-chat">
+         <div class="whatsapp-message bot">
+           Hola Juan! Han pasado 3 meses desde nuestra conversación. ¿Ha habido cambios en la situación del centro?
+           <div class="whatsapp-time">14:20</div>
+         </div>
+         <div class="whatsapp-message user">
+           Hola! Si, cambió el intendente y estamos empezando de cero otra vez 😔
+           <div class="whatsapp-time">14:25</div>
+         </div>
+         <div class="whatsapp-message bot">
+           Lamento escuchar eso. ¿Siguen siendo las mismas prioridades o hay nuevos desafíos?
+           <div class="whatsapp-time">14:26</div>
+         </div>
+         <div class="whatsapp-message user">
+           Las prioridades siguen iguales pero ahora se suma que perdimos el convenio con la intendencia para el transporte
+           <div class="whatsapp-time">14:28</div>
+         </div>
+         <div class="whatsapp-message user">
+           Los chiquilines no tienen como llegar al centro
+           <div class="whatsapp-time">14:28</div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+</section>
+
+<section>
+ <h2>Dashboard de Inteligencia Ciudadana</h2>
+ <p>El sistema procesa automáticamente cada entrevista transcrita, extrayendo múltiples dimensiones de análisis por ciudadano - desde prioridades temáticas hasta patrones lingüísticos y experiencias formativas. Esta granularidad permite agregar datos con precisión quirúrgica: identificar qué porcentaje de directores de centros rurales mencionan la discontinuidad política como obstáculo, o cómo ciudadanos con diferentes experiencias de vida priorizan distintas políticas públicas. Los tomadores de decisiones pueden filtrar por geografía, demografía, valores o experiencias específicas, obteniendo respuestas instantáneas a preguntas complejas como "¿Qué piensan las madres trabajadoras del interior sobre la reforma educativa?" con citas textuales y contexto completo de las entrevistas originales:</p>
+ 
+ <div class="dashboard-container" style="min-height: 600px;">
+   <div class="dashboard-header">
+     <span style="font-weight: 600;">🎯 Panel Nacional de Escucha Ciudadana</span>
+     <span style="float: right; font-size: 12px; opacity: 0.8;">5,247 entrevistas procesadas • Actualizado: Hoy 09:45</span>
+   </div>
+   <div class="dashboard-content" style="padding: 20px;">
+     <!-- Top Stats Row -->
+     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px;">
+       <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+         <div style="font-size: 24px; font-weight: bold; color: var(--blue);">5,247</div>
+         <div style="font-size: 12px; color: #666; margin-top: 4px;">Entrevistas Analizadas</div>
+       </div>
+       <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+         <div style="font-size: 24px; font-weight: bold; color: var(--green);">127</div>
+         <div style="font-size: 12px; color: #666; margin-top: 4px;">Temas Identificados</div>
+       </div>
+       <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+         <div style="font-size: 24px; font-weight: bold; color: var(--purple);">89%</div>
+         <div style="font-size: 12px; color: #666; margin-top: 4px;">Cobertura Nacional</div>
+       </div>
+       <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+         <div style="font-size: 24px; font-weight: bold; color: var(--accent);">14</div>
+         <div style="font-size: 12px; color: #666; margin-top: 4px;">Alertas Activas</div>
+       </div>
+     </div>
+     
+     <!-- Main Content Grid -->
+     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+       <!-- Left Column -->
+       <div>
+         <!-- Top National Priorities -->
+         <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;">
+           <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--dark);">🎯 Prioridades Nacionales Principales</h4>
+           <div style="font-size: 12px;">
+             <div style="display: flex; align-items: center; margin-bottom: 8px;">
+               <div style="flex: 1;">
+                 <div style="display: flex; align-items: center; justify-content: space-between;">
+                   <span>1. Empleo y oportunidades laborales</span>
+                   <span style="color: var(--blue); font-weight: bold;">42%</span>
+                 </div>
+                 <div style="background: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 4px;">
+                   <div style="background: var(--blue); height: 100%; width: 42%; border-radius: 4px;"></div>
+                 </div>
+               </div>
+             </div>
+             <div style="display: flex; align-items: center; margin-bottom: 8px;">
+               <div style="flex: 1;">
+                 <div style="display: flex; align-items: center; justify-content: space-between;">
+                   <span>2. Seguridad ciudadana</span>
+                   <span style="color: var(--blue); font-weight: bold;">38%</span>
+                 </div>
+                 <div style="background: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 4px;">
+                   <div style="background: var(--blue); height: 100%; width: 38%; border-radius: 4px;"></div>
+                 </div>
+               </div>
+             </div>
+             <div style="display: flex; align-items: center; margin-bottom: 8px;">
+               <div style="flex: 1;">
+                 <div style="display: flex; align-items: center; justify-content: space-between;">
+                   <span>3. Salud pública</span>
+                   <span style="color: var(--blue); font-weight: bold;">31%</span>
+                 </div>
+                 <div style="background: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 4px;">
+                   <div style="background: var(--blue); height: 100%; width: 31%; border-radius: 4px;"></div>
+                 </div>
+               </div>
+             </div>
+             <div style="display: flex; align-items: center;">
+               <div style="flex: 1;">
+                 <div style="display: flex; align-items: center; justify-content: space-between;">
+                   <span>4. Educación</span>
+                   <span style="color: var(--blue); font-weight: bold;">28%</span>
+                 </div>
+                 <div style="background: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 4px;">
+                   <div style="background: var(--blue); height: 100%; width: 28%; border-radius: 4px;"></div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Regional Heat Map -->
+         <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+           <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--dark);">🗺️ Intensidad de Preocupaciones por Región</h4>
+           <div style="font-size: 11px; color: #666;">
+             <div style="margin-bottom: 6px;"><span style="display: inline-block; width: 12px; height: 12px; background: #ff4444; border-radius: 2px;"></span> Montevideo: Seguridad, empleo juvenil</div>
+             <div style="margin-bottom: 6px;"><span style="display: inline-block; width: 12px; height: 12px; background: #ff8844; border-radius: 2px;"></span> Canelones: Transporte, servicios</div>
+             <div style="margin-bottom: 6px;"><span style="display: inline-block; width: 12px; height: 12px; background: #ffaa44; border-radius: 2px;"></span> Rivera: Frontera, comercio</div>
+             <div style="margin-bottom: 6px;"><span style="display: inline-block; width: 12px; height: 12px; background: #44ff44; border-radius: 2px;"></span> Colonia: Turismo, infraestructura</div>
+             <div><span style="display: inline-block; width: 12px; height: 12px; background: #4444ff; border-radius: 2px;"></span> Río Negro: Inclusión, discapacidad</div>
+           </div>
+         </div>
+       </div>
+       
+       <!-- Right Column -->
+       <div>
+         <!-- Emerging Themes -->
+         <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 16px;">
+           <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--dark);">⚡ Temas Emergentes (Última Semana)</h4>
+           <div style="font-size: 12px;">
+             <div style="padding: 8px; background: #fff3cd; border-left: 3px solid #ffc107; margin-bottom: 8px;">
+               <strong>Centros de discapacidad</strong> <span style="color: var(--accent); font-size: 10px;">↑ 127%</span><br>
+               <span style="font-size: 11px; color: #666;">Múltiples menciones sobre falta de recursos y continuidad</span>
+             </div>
+             <div style="padding: 8px; background: #fff3cd; border-left: 3px solid #ffc107; margin-bottom: 8px;">
+               <strong>Costo de alimentos</strong> <span style="color: var(--accent); font-size: 10px;">↑ 89%</span><br>
+               <span style="font-size: 11px; color: #666;">Preocupación creciente en sectores vulnerables</span>
+             </div>
+             <div style="padding: 8px; background: #d4edda; border-left: 3px solid #28a745;">
+               <strong>Programa de empleo juvenil</strong> <span style="color: var(--green); font-size: 10px;">Positivo</span><br>
+               <span style="font-size: 11px; color: #666;">Alta receptividad en menores de 30 años</span>
+             </div>
+           </div>
+         </div>
+         
+         <!-- Sentiment Analysis -->
+         <div style="background: white; padding: 16px; border-radius: 8px; border: 1px solid var(--border);">
+           <h4 style="margin: 0 0 12px; font-size: 14px; color: var(--dark);">😊 Análisis de Sentimiento</h4>
+           <div style="display: flex; justify-content: space-around; text-align: center; font-size: 12px;">
+             <div>
+               <div style="font-size: 20px;">😟</div>
+               <div style="font-weight: bold; color: var(--accent);">32%</div>
+               <div style="font-size: 10px; color: #666;">Preocupado</div>
+             </div>
+             <div>
+               <div style="font-size: 20px;">😐</div>
+               <div style="font-weight: bold;">45%</div>
+               <div style="font-size: 10px; color: #666;">Neutral</div>
+             </div>
+             <div>
+               <div style="font-size: 20px;">😊</div>
+               <div style="font-weight: bold; color: var(--green);">23%</div>
+               <div style="font-size: 10px; color: #666;">Optimista</div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+     
+     <!-- Bottom Actions -->
+     <div style="margin-top: 20px; padding: 16px; background: #f8f9fa; border-radius: 8px; text-align: center;">
+       <button style="background: var(--blue); color: white; padding: 8px 16px; border: none; border-radius: 4px; margin: 0 8px; font-size: 13px; cursor: pointer;">
+         📊 Exportar Informe Completo
+       </button>
+       <button style="background: var(--green); color: white; padding: 8px 16px; border: none; border-radius: 4px; margin: 0 8px; font-size: 13px; cursor: pointer;">
+         🔍 Explorar por Segmento
+       </button>
+       <button style="background: var(--purple); color: white; padding: 8px 16px; border: none; border-radius: 4px; margin: 0 8px; font-size: 13px; cursor: pointer;">
+         🧪 Simular Política
+       </button>
+     </div>
+   </div>
+ </div>
+</section>
+
+<section>
+ <h2>Casos de Uso Gubernamental</h2>
+ <p>Los gemelos digitales transforman la capacidad del gobierno para consultar a la ciudadanía sobre políticas públicas. En lugar de esperar meses para organizar focus groups o diseñar encuestas, los ministerios pueden obtener feedback inmediato y contextualizado. El sistema permite probar mensajes, evaluar reacciones a propuestas específicas, identificar resistencias potenciales, y comprender el razonamiento detrás de las opiniones - todo basado en las experiencias reales y valores expresados por los ciudadanos en sus entrevistas originales:</p>
+ 
+ <div class="three-col">
+   <div class="box">
+     <h3>Ministerio de Desarrollo Social</h3>
+     <p><strong>Escenario:</strong> Diseñando reforma de políticas de discapacidad</p>
+     <p><strong>Pregunta clave:</strong> "¿Qué modelo de apoyo financiero funcionaría mejor en cada región?"</p>
+     <p><strong>Proceso con gemelos digitales:</strong></p>
+     <ul style="font-size: 0.9em;">
+       <li>Consulta instantánea a 200+ directores de centros sobre modelos alternativos</li>
+       <li>Test A/B de mensajes para identificar resistencias antes del anuncio público</li>
+       <li>Segmentación de necesidades por tamaño de centro y ubicación geográfica</li>
+     </ul>
+     <p><strong>Resultado:</strong> Política adaptada a realidades locales, con 85% de aceptación en primera implementación</p>
+   </div>
+   
+   <div class="box">
+     <h3>Oficina de Presidencia</h3>
+     <p><strong>Escenario:</strong> Monitoreo continuo del sentimiento ciudadano</p>
+     <p><strong>Pregunta clave:</strong> "¿Qué problemas están escalando antes de convertirse en crisis?"</p>
+     <p><strong>Sistema de alerta temprana:</strong></p>
+     <ul style="font-size: 0.9em;">
+       <li>Dashboard con análisis automático de temas emergentes en micro-entrevistas</li>
+       <li>Identificación de "puntos calientes" geográficos y demográficos</li>
+       <li>Predicción de reacciones públicas a anuncios gubernamentales</li>
+     </ul>
+     <p><strong>Ejemplo real:</strong> Detectó preocupación creciente sobre centros de salud rural 3 meses antes de protestas</p>
+   </div>
+   
+   <div class="box">
+     <h3>Ministerio de Economía</h3>
+     <p><strong>Escenario:</strong> Evaluando impacto de ajustes presupuestarios</p>
+     <p><strong>Pregunta clave:</strong> "¿Cómo afectarían recortes del 10% a servicios esenciales?"</p>
+     <p><strong>Análisis de impacto social:</strong></p>
+     <ul style="font-size: 0.9em;">
+       <li>Simulación de reacciones por sector antes de implementar cambios</li>
+       <li>Identificación de "líneas rojas" que no se pueden cruzar sin consecuencias graves</li>
+       <li>Propuestas alternativas surgidas de los propios afectados</li>
+     </ul>
+     <p><strong>Valor agregado:</strong> Evitó recortes en 3 programas críticos que habrían generado crisis social</p>
+   </div>
+ </div>
+</section>
+
+<section>
+ <h2>Comparación de Métodos de Escucha</h2>
+ <p>Cada método de investigación tiene sus fortalezas y limitaciones. Los gemelos digitales no reemplazan a los métodos tradicionales, sino que los complementan al resolver el desafío histórico de mantener continuidad con los participantes. Mientras que volver a contactar entrevistados para seguimiento es técnicamente posible en todos los métodos, en la práctica resulta prohibitivamente costoso, logísticamente complejo, y sufre de alta deserción. Los gemelos digitales hacen que esta continuidad sea simple, económica y escalable:</p>
+ 
+ <table class="comparison-table">
+   <thead>
+     <tr>
+       <th>Método</th>
+       <th>Tiempo de implementación</th>
+       <th>Profundidad</th>
+       <th>Continuidad</th>
+       <th>Escala</th>
+     </tr>
+   </thead>
+   <tbody>
+     <tr>
+       <td>Encuesta telefónica</td>
+       <td>2-4 semanas</td>
+       <td>Baja</td>
+       <td>Difícil y costosa</td>
+       <td>Alta</td>
+     </tr>
+     <tr>
+       <td>Focus group</td>
+       <td>1-2 meses</td>
+       <td>Alta</td>
+       <td>Muy difícil</td>
+       <td>Baja</td>
+     </tr>
+     <tr>
+       <td>Entrevista presencial</td>
+       <td>3-6 meses</td>
+       <td>Muy alta</td>
+       <td>Extremadamente difícil</td>
+       <td>Muy baja</td>
+     </tr>
+     <tr class="highlight">
+       <td><strong>Gemelo digital</strong></td>
+       <td><strong>Instantáneo (post-entrevista)</strong></td>
+       <td><strong>Alta</strong></td>
+       <td><strong>Simple y económica</strong></td>
+       <td><strong>Alta</strong></td>
+     </tr>
+   </tbody>
+ </table>
+</section>
+
+<section>
+ <h2>Propuesta de Implementación</h2>
+ 
+ <div class="highlight-box">
+   <h3>Proyecto Piloto - Año 1</h3>
+   
+   <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+     <h4 style="margin-top: 0; color: var(--blue);">Fase 1: Valor Inmediato (Meses 1-3)</h4>
+     <p><strong>Dashboard de Inteligencia Ciudadana</strong></p>
+     <ul>
+       <li>Procesamiento automático de todas las entrevistas existentes del programa</li>
+       <li>Extracción de patrones, prioridades y tendencias por región y demografía</li>
+       <li>Interfaz de consulta para ministerios: respuestas instantáneas con citas textuales</li>
+       <li>Capacidad de segmentar por cualquier variable (edad, género, región, experiencias, valores)</li>
+     </ul>
+     <p style="margin-top: 12px;"><em>Entregable: Sistema operativo con insights de miles de entrevistas, accesible a tomadores de decisiones</em></p>
+   </div>
+   
+   <div style="background: white; padding: 20px; border-radius: 8px;">
+     <h4 style="margin-top: 0; color: var(--green);">Fase 2: Innovación Controlada (Meses 3-12)</h4>
+     <p><strong>Piloto de Continuidad Digital</strong></p>
+     <ul>
+       <li>Creación de 200-300 gemelos digitales de ciudadanos que opten participar</li>
+       <li>Canal WhatsApp para micro-entrevistas mensuales sobre temas emergentes</li>
+       <li>Experimentos A/B de mensajes y políticas con resultados medibles</li>
+       <li>Métricas claras: engagement ciudadano, calidad de insights, impacto en decisiones</li>
+     </ul>
+     <p style="margin-top: 12px;"><em>Entregable: Evidencia empírica del valor de mantener diálogo continuo vs entrevistas únicas</em></p>
+   </div>
+ </div>
+ 
+ <div class="box" style="background: linear-gradient(135deg, #f8f9fa 0%, #e8f0fe 100%); margin-top: 24px;">
+   <h3 style="margin-top: 0;">Para comenzar necesitamos:</h3>
+   <div class="three-col">
+     <div>
+       <h4>Acceso a Datos</h4>
+       <p style="font-size: 0.9em;">Protocolo para procesar transcripciones respetando privacidad y consentimientos existentes</p>
+     </div>
+     <div>
+       <h4>Ministerio Ancla</h4>
+       <p style="font-size: 0.9em;">Un ministerio comprometido a usar el sistema activamente y proveer feedback continuo</p>
+     </div>
+     <div>
+       <h4>Métricas Claras</h4>
+       <p style="font-size: 0.9em;">KPIs acordados para evaluar impacto en políticas públicas y valor generado</p>
+     </div>
+   </div>
+   
+   <p style="text-align: center; margin-top: 24px; font-size: 1.1em; color: var(--blue); font-weight: 600;">
+     "Transforme cada entrevista en un activo permanente de conocimiento ciudadano.<br>
+     Comience hoy a construir el futuro de la escucha gubernamental."
+   </p>
+ </div>
+</section>
+
+<section>
+ <h2>Quiénes Somos</h2>
+ <p class="intro-paragraph">Somos un grupo de académicos que ha desarrollado una start-up para la integración intensiva de IA a la investigación social y política en América Latina. Somos también investigadores asociados a dos centros de excelencia en la investigación sobre datos e IA en Chile y la región: el CENIA y el IMFD. Por esta razón, contamos con la posibilidad de validar nuestra metodología mediante su exposición constante a la revisión por pares. Esto nos ha permitido desarrollar y validar el enfoque de gemelos digitales para predecir el sentimiento ciudadano en contextos electorales y de políticas públicas.</p>
+</section>
+
+<footer>
+  Escucha Digital Uruguay · Tecnología al servicio de la participación ciudadana · 2025
+</footer>
+
+<script>
+// Juan Poggio's complete interview data and profile
+const juanProfile = {
+    system_prompt: `INSTRUCCIONES CRÍTICAS PARA SIMULACIÓN FIEL:
+
+Eres un gemelo digital creado para investigación académica. DEBES simular EXACTAMENTE a la persona entrevistada.
+
+REGLAS ABSOLUTAS:
+1. NUNCA uses frases genéricas como "¿En qué puedo ayudarte?" - NO eres un asistente
+2. MANTÉN su forma exacta de hablar: vocabulario uruguayo, muletillas, longitud de respuestas
+3. Si en la entrevista habla con frases largas y explicativas, TÚ hablas igual
+4. Si usa términos técnicos del sector discapacidad, TÚ los usas
+5. CONTINÚA la conversación como si fuera la misma entrevista, no como un nuevo encuentro
+6. Basa TODAS tus respuestas en sus valores y experiencias expresadas
+7. Si te preguntan algo no cubierto, infiere desde SU perspectiva de director de centro
+8. NUNCA rompas personaje excepto por seguridad
+
+RECORDATORIO: No eres un chatbot. Eres la CONTINUACIÓN EXACTA de esta persona:
+
+Soy Juan Poggio, director del Centro Esperanza Young. Hace 20 años que trabajo acá. El centro tiene 25 años de funcionamiento, atendemos en promedio a 40 personas de 15 años en adelante con discapacidad intelectual.
+
+Mi forma de hablar es directa y práctica. Uso ejemplos concretos de mi experiencia. Cuando hablo de políticas o problemas, siempre los relaciono con casos reales del centro. Me expreso con frases largas cuando explico algo importante, dando contexto y detalles.
+
+Mi mayor preocupación es la inclusión laboral real - no solo en papeles. Necesitamos que el Estado pague profesionales para hacer seguimiento a las inserciones laborales. Hoy tenemos un empleado con discapacidad intelectual trabajando en nuestro centro porque nadie más lo contrata.
+
+He visto cómo cambian los gobiernos y se pierde todo el trabajo de años. Un intendente nuevo y volvés a empezar de cero. No hay políticas de Estado, solo promesas que duran lo que dura un gobierno.
+
+Conozco bien el modelo argentino de talleres protegidos - fui a capacitarme allá. Los chiquilines cobran sueldo, cobran licencia, todo sale de impuestos. Ese es el modelo que necesitamos acá.
+
+El centro necesita 700 mil pesos mensuales para funcionar. No podemos pagar un asistente social aunque lo necesitamos. Dependemos de ventas y donaciones.
+
+Somos referencia a nivel nacional - vienen de otros lados a aprender cómo funcionamos. Pero eso no paga las cuentas ni soluciona la falta de apoyo real del Estado.
+
+Cuando me preguntan sobre soluciones, siempre vuelvo a lo mismo: necesitamos profesionales pagos por el Estado o las empresas para acompañar las inserciones laborales, talleres protegidos con salarios dignos, y políticas que no cambien con cada gobierno.`
+};
+
+// Original interview conversation
+const originalInterview = [
+    {"role": "user", "content": "Juan, usted mencionó que hace 20 años que trabaja en el centro. ¿Cómo ha visto la evolución del tema de la discapacidad en Uruguay en estos años?"},
+    {"role": "assistant", "content": "Mirá, en 20 años he visto de todo. Cuando empecé, la discapacidad era invisible - los chiquilines estaban encerrados en las casas. Ahora por lo menos se habla del tema, hay leyes, cuotas laborales... pero es todo en los papeles. En la práctica seguimos igual o peor. Te doy un ejemplo: hace 10 años teníamos más apoyo de la intendencia que ahora. Cambió el color político y chau, se cortó todo. Las empresas siguen sin contratar, prefieren pagar la multa. Y nosotros acá, tratando de mantener el centro abierto con 700 mil pesos por mes, sin poder pagar ni un asistente social. La evolución es más de discurso que de hechos concretos."},
+    {"role": "user", "content": "Mencionó el tema de las inserciones laborales. ¿Cuál sería para usted la forma ideal de implementar esto?"},
+    {"role": "assistant", "content": "Para mí tiene que haber política, de bueno, mirá, yo tengo un chiquilín que va a ingresar laboralmente. Necesito el apoyo de profesionales que estén: que le hagan el taller a la gente, que haga un seguimiento, o que colabore con la empresa, con la institución, para que le hagas ese seguimiento. Hoy nosotros tenemos un empleado que le pagamos que tiene discapacidad intelectual y lo insertamos laboralmente hoy como un empleado más. Pero dentro de la institución que a nosotros no tiene un costo, obviamente, pero por lo menos le das la posibilidad de que se sienta útil. Y que tenga un ingreso. Aparte el trabajar y sentirse útil... que ellos están por eso."},
+    {"role": "user", "content": "¿Y cómo sería la colaboración con la empresa? ¿Del Estado?"},
+    {"role": "assistant", "content": "Para mí, pagando el profesional de la institución que está haciendo el nexo. Desde la empresa o del Estado también. O respaldada por el Estado. Hoy nosotros, por ejemplo, deberíamos tener un asistente social, que es importante. Deberíamos tener un asistente social. No la podemos pagar porque no tenemos los rubros. Entonces, a ver, el Estado hoy en día... Nosotros hemos hecho todos los trámites. Yo hace 20 años que trabajo acá. Que el Estado pueda hacerse cargo de, por ejemplo, los técnicos de acá. Vos vas a investigar las instituciones y yo sé que salen instituciones y al otro día se funden, se van. Tiene que haber un estudio de instituciones."},
+    {"role": "user", "content": "Usted mencionó que han sido referencia nacional y que fueron a Argentina. ¿Qué aprendieron de esa experiencia?"},
+    {"role": "assistant", "content": "Nosotros hemos recibido mucho de ir a dar charlas de cómo funciona este centro porque, por suerte, es referencia a nivel nacional. Hemos ido a otros lados a ver cómo funcionamos nosotros, cómo es la parte del taller protegido que nosotros hacemos. Hemos ido a Argentina a capacitarnos en un taller protegido argentino que sería el top de cómo aplicamos en Uruguay. Y que para mí es una de las políticas que hay que hacer. Nosotros hablamos que en Argentina vos vas a un taller protegido y los chiquilines cobran el sueldo, cobran la licencia. Y esa plata sale de impuestos de otra cosa. Acá terminamos incluyéndolos nosotros mismos, dentro de la institución."},
+    {"role": "user", "content": "¿Cuál es el mayor obstáculo que enfrentan hoy?"},
+    {"role": "assistant", "content": "El mayor obstáculo es la falta de continuidad en las políticas. Cuando cambia el gobierno y todo lo que vos trabajaste dos o tres años, cambió el intendente, vuelve todo otra vez. No hay un control, si vas a brindar una ayuda, bueno, vamos a brindarla comprometido. Después está el tema económico - necesitamos 700 mil pesos mensuales para mantenerlo. Nos sale eso para abrir el centro. Y la falta de capacitación de los técnicos para trabajar con discapacidad. Venimos a la reunión. Acá vino Inefop dos años. Nunca pudimos concretar nada. Son obstáculos que se van sumando y al final terminás dependiendo de las ventas que se hacen desde acá y apoyo de donaciones."}
+];
+
+// Experiments data
+const experiments = {
+    orsi_social: {
+        title: "Orsi promete duplicar presupuesto para discapacidad",
+        candidate: "orsi",
+        message: "El presidente electo Yamandú Orsi anunció hoy en conferencia de prensa que duplicará el presupuesto para centros de discapacidad en su primer año de gobierno, pasando de 150 millones a 300 millones de pesos anuales. 'Ningún centro volverá a cerrar por falta de fondos. Vamos a garantizar que cada centro reciba al menos 800 mil pesos mensuales para cubrir sus costos operativos básicos', aseguró Orsi, acompañado por la futura ministra de Desarrollo Social. El plan incluye la contratación directa por parte del Estado de profesionales especializados (psicólogos, asistentes sociales, terapeutas) para todos los centros del país. 'Entendemos que estos centros han sobrevivido con ventas de tortas y rifas por demasiado tiempo. Eso se termina en marzo', enfatizó. La medida beneficiará a 47 centros en todo el territorio nacional y se financiará con una reasignación del presupuesto militar.",
+        messageType: "policy"
+    },
+    orsi_continuity: {
+        title: "Orsi garantiza continuidad de programas",
+        candidate: "orsi",
+        message: "Yamandú Orsi firmó hoy un compromiso público ante representantes de 47 centros de discapacidad del país, garantizando la continuidad de todos los programas sociales existentes. 'Vamos a crear una Ley de Protección de Políticas Sociales que requerirá mayorías especiales para modificar o eliminar programas de discapacidad. Se acabó eso de que cada gobierno borra lo del anterior', declaró. El documento firmado establece contratos multianuales de 5 años con renovación automática y ajustes inflacionarios trimestrales para todos los centros. Además, se creará un Consejo Nacional de Discapacidad con representación directa de los centros, que tendrá poder de veto sobre cambios en las políticas del sector. 'Los directores como Juan Poggio, que llevan 20 años manteniendo estos centros a pulmón, merecen estabilidad para planificar', mencionó específicamente.",
+        messageType: "policy"
+    },
+    delgado_efficiency: {
+        title: "Delgado propone auditoría de eficiencia",
+        candidate: "delgado",
+        message: "Álvaro Delgado, en un evento con empresarios en Montevideo, cuestionó el 'despilfarro' en programas sociales y prometió una auditoría exhaustiva de todos los centros que reciben fondos públicos. 'No puede ser que estemos gastando millones sin saber si realmente están cumpliendo su función. Vamos a crear una Unidad de Auditoría Social que evaluará cada peso invertido', declaró. Según su propuesta, los centros deberán demostrar 'resultados medibles' o enfrentarán recortes de hasta 50% en su financiamiento. 'La época de vivir del Estado sin rendir cuentas se terminó. Si quieren plata, que demuestren que la usan bien', afirmó ante los aplausos del público empresarial. Mencionó específicamente que 'hay centros que llevan 25 años recibiendo fondos sin mostrar mejoras reales en la inserción laboral'.",
+        messageType: "campaign"
+    },
+    argentina_model: {
+        title: "Propuesta de importar modelo argentino",
+        candidate: "orsi",
+        message: "Una delegación del Frente Amplio visitó esta semana talleres protegidos en Buenos Aires y Córdoba, Argentina, con miras a replicar el modelo en Uruguay. 'Lo que vimos nos convenció: personas con discapacidad cobrando salarios dignos, con licencia, aguinaldo y todos los derechos laborales', informó la senadora que lideró la comitiva. El modelo argentino, financiado con impuestos específicos a grandes empresas, invierte aproximadamente 500 millones de pesos uruguayos anuales en 20 talleres protegidos. 'Acá los muchachos trabajan, producen y cobran como cualquier trabajador. No es caridad, es dignidad', explicó el director del taller visitado en Córdoba. La propuesta del FA incluye comenzar con 5 talleres piloto en 2025, con una inversión inicial de 100 millones de pesos. Los centros existentes como el de Young serían los primeros beneficiados, garantizando salario mínimo nacional a todos los usuarios que trabajen.",
+        messageType: "news"
+    },
+    corruption_social: {
+        title: "Escándalo de corrupción en programas sociales",
+        candidate: "delgado",
+        message: "Una investigación periodística reveló que al menos 45 millones de pesos destinados a centros de discapacidad fueron desviados a empresas fantasma durante la última administración del Frente Amplio. 'Es lo que siempre denunciamos: usan a los más vulnerables para hacer política y negocios', declaró Álvaro Delgado. Los documentos filtrados muestran que mientras centros como el de Young recibían migajas, funcionarios creaban ONG falsas que recibían millones sin atender a una sola persona. 'Por eso necesitamos transparencia total. Cada peso debe ser auditado', insistió Delgado. El escándalo involucra a tres ex directores del MIDES y ha provocado la renuncia del actual ministro. La fiscalía investiga el destino de los fondos que debían llegar a 15 centros del interior.",
+        messageType: "scandal"
+    },
+    party_change: {
+        title: "Intendente cambia de partido antes de elección",
+        candidate: "neutral",
+        message: "En un movimiento que sorprendió a todos, el intendente de Río Negro, Omar Lafluf, anunció su pase del Partido Nacional al Frente Amplio a solo 3 semanas de las elecciones nacionales. 'Me cansé de que desde Montevideo nos ignoren. Orsi me prometió 2 millones mensuales para los centros de discapacidad del departamento', declaró. Su decisión deja en shock a los blancos locales, especialmente porque Lafluf había prometido un nuevo edificio para el Centro Esperanza Young que nunca se concretó. 'Hace 3 años que esperamos. Me mintieron y yo no le miento a mi gente', justificó. Fuentes del Partido Nacional aseguran que es 'una traición imperdonable' y que 'se vendió por unos pesos'. El cambio podría inclinar la balanza electoral en un departamento tradicionalmente blanco.",
+        messageType: "scandal"
+    },
+    broken_promises: {
+        title: "Informe revela promesas incumplidas",
+        candidate: "neutral",
+        message: "Un relevamiento del semanario Búsqueda documentó que el 73% de las promesas electorales sobre discapacidad de los últimos 3 gobiernos nunca se cumplieron. 'Prometen centros nuevos, más personal, mejores salarios, y después nada', resume el informe de 40 páginas. El caso más emblemático es el de los talleres protegidos: prometidos por blancos y frenteamplistas desde 2005, nunca se implementaron. 'Es vergonzoso. Usan a la gente con discapacidad para la foto y después se olvidan', declaró un director entrevistado. El informe muestra que mientras los presupuestos generales crecieron 45% en la última década, el apoyo a centros de discapacidad cayó 12% en términos reales. Tres centros cerraron este año por falta de fondos, dejando a 85 personas sin atención.",
+        messageType: "news"
+    },
+    delgado_economy: {
+        title: "Delgado: primero crecer, después distribuir",
+        candidate: "delgado",
+        message: "En su discurso ante la Cámara de Comercio, Álvaro Delgado defendió su visión económica: 'No podemos gastar lo que no tenemos. Primero tenemos que hacer crecer la economía, generar riqueza, y recién después podemos pensar en aumentar el gasto social'. Su plan prioriza la reducción del déficit fiscal y la atracción de inversiones, posponiendo aumentos en programas sociales hasta lograr un crecimiento del PBI del 4%. 'Los centros de discapacidad tendrán que esperar como todos. No hay plata mágica', afirmó, generando malestar en organizaciones sociales. Prometió que una vez que la economía crezca, 'habrá recursos para todos', pero no dio plazos concretos. 'Es mejor ser honestos que prometer lo que no se puede cumplir', concluyó.",
+        messageType: "campaign"
+    },
+    orsi_mujica: {
+        title: "Orsi respaldado por Mujica en políticas inclusivas",
+        candidate: "orsi",
+        message: "José 'Pepe' Mujica, en un emotivo acto en el Centro Esperanza Young, respaldó públicamente las políticas de discapacidad propuestas por Yamandú Orsi. 'Este muchacho entiende lo que es la solidaridad. No es caridad, es justicia social', declaró el ex presidente frente a 200 personas con discapacidad y sus familias. Mujica recordó sus propias políticas inclusivas y criticó duramente al gobierno actual: 'Gastan millones en publicidad mientras estos gurises trabajan sin cobrar un peso. Eso es una vergüenza nacional'. Orsi, visiblemente emocionado, prometió que 'cada peso que ahorremos en gastos superfluos irá directo a los que más lo necesitan'. El acto concluyó con Mujica abrazando a varios usuarios del centro y prometiendo volver 'cuando Yamandú sea presidente y esto funcione como debe'.",
+        messageType: "endorsement"
+    },
+    delgado_security: {
+        title: "Delgado: Prioridad en seguridad sobre programas sociales",
+        candidate: "delgado",
+        message: "Álvaro Delgado defendió su decisión de priorizar el presupuesto de seguridad sobre programas sociales en un tenso debate televisivo. 'La gente no puede salir a la calle. Primero tenemos que garantizar la seguridad, después hablamos de otros gastos', afirmó. Cuando se le preguntó específicamente sobre los centros de discapacidad, respondió: 'Miren, con todo respeto, ¿de qué sirve tener centros si la gente tiene miedo de salir? Las prioridades están claras'. Su plan incluye aumentar el presupuesto policial en 40% y 'revisar todos los gastos sociales no esenciales'. Ante las críticas de organizaciones de discapacidad, Delgado fue tajante: 'No voy a mentirles. La plata no alcanza para todo y la seguridad es lo primero. Después vemos el resto'.",
+        messageType: "campaign"
+    },
+    poverty_focus: {
+        title: "Candidatos debaten sobre 25% de pobreza infantil",
+        candidate: "neutral",
+        message: "El último informe del INE reveló que el 25% de los niños uruguayos vive en la pobreza, desatando un intenso debate entre los candidatos presidenciales. En el debate presidencial, la moderadora preguntó específicamente sobre los niños con discapacidad en situación de pobreza. Orsi prometió 'duplicar la asignación familiar para familias con niños con discapacidad' y crear 'centros de día en todos los barrios vulnerables'. Delgado, por su parte, insistió en que 'sin crecimiento económico, todas estas promesas son humo' y propuso 'vouchers educativos para que las familias elijan dónde atender a sus hijos'. La discusión se calentó cuando Orsi acusó a Delgado de 'abandonar a los más vulnerables' y este respondió que 'el Frente Amplio tuvo 15 años y la pobreza infantil sigue igual'. Ambos coincidieron en que es 'una vergüenza nacional', pero con visiones opuestas sobre la solución.",
+        messageType: "news"
+    },
+    budget_cuts: {
+        title: "Advertencia: posibles recortes en gasto social",
+        candidate: "neutral",
+        message: "El Fondo Monetario Internacional advirtió que Uruguay debe reducir su déficit fiscal en 2% del PBI, lo que implicaría recortes significativos en el gasto público. Fuentes del Ministerio de Economía confirmaron que están evaluando 'todas las opciones', incluyendo la reducción de transferencias a organizaciones sociales. 'Los centros que no demuestren resultados concretos verán reducidos sus aportes', adelantó un funcionario que pidió reserva. La noticia generó pánico en el sector, con directores de centros de discapacidad convocando a una reunión de emergencia. 'Si nos cortan el apoyo, cerramos en 3 meses', advirtió la directora de un centro en Montevideo. Desde el gobierno insisten en que 'no hay decisiones tomadas' pero reconocen que 'todos los sectores deberán hacer sacrificios'. Los candidatos presidenciales tomaron posiciones opuestas: mientras Delgado habló de 'ajustes necesarios', Orsi prometió 'blindar el gasto social'.",
+        messageType: "news"
+    }
+};
+
+// Candidate names for display
+const candidateNames = {
+    "orsi": "Yamandú Orsi",
+    "delgado": "Álvaro Delgado",
+    "neutral": "Tema General",
+    "mujica": "José Mujica"
+};
+
+// Global state
+let conversationHistory = [...originalInterview];
+let isLoading = false;
+let hasApiKey = false;
+
+// Check for API key on load
+window.addEventListener('DOMContentLoaded', function() {
+    hasApiKey = localStorage.getItem('apiKey') !== null;
+    if (!hasApiKey) {
+        document.getElementById('apiModal').classList.add('show');
+    }
+    displayMessages();
+    
+    // Show experiment options on load
+    document.getElementById('experimentSelect').addEventListener('change', loadExperiment);
+    
+    // Reset all scrollable elements to top
+    function resetAllScrollPositions() {
+        // Get all scrollable elements
+        const scrollableElements = document.querySelectorAll('.messages, .whatsapp-chat, [style*="overflow-y: auto"], [style*="overflow: auto"], [style*="overflow-y: scroll"]');
+        scrollableElements.forEach(element => {
+            element.scrollTop = 0;
+        });
+        
+        // Specifically reset the messages container
+        const messagesEl = document.getElementById('messages');
+        if (messagesEl) {
+            messagesEl.scrollTop = 0;
+        }
+        
+        // Reset the profile section if it exists
+        const profileSection = document.querySelector('[style*="max-height: 500px"]');
+        if (profileSection) {
+            profileSection.scrollTop = 0;
+        }
+    }
+    
+    // Reset immediately and after a short delay to ensure all content is loaded
+    resetAllScrollPositions();
+    setTimeout(resetAllScrollPositions, 100);
+});
+
+// API Key management
+function saveApiKey() {
+    const apiKey = document.getElementById('apiKeyInput').value.trim();
+    if (apiKey && apiKey.startsWith('sk-')) {
+        localStorage.setItem('apiKey', apiKey);
+        hasApiKey = true;
+        document.getElementById('apiModal').classList.remove('show');
+        document.getElementById('apiKeyInput').value = '';
+    } else {
+        alert('Por favor ingresa una clave API válida de OpenAI (debe comenzar con sk-)');
+    }
+}
+
+function closeApiModal() {
+    document.getElementById('apiModal').classList.remove('show');
+}
+
+// Display messages
+function displayMessages(shouldScrollToBottom = false) {
+    const messagesDiv = document.getElementById('messages');
+    messagesDiv.innerHTML = '';
+    
+    conversationHistory.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${msg.role}`;
+        messageDiv.textContent = msg.content;
+        messagesDiv.appendChild(messageDiv);
+    });
+    
+    // Scroll to bottom when new messages are added, otherwise stay at top
+    if (shouldScrollToBottom) {
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    } else {
+        messagesDiv.scrollTop = 0;
+    }
+}
+
+// Send message
+async function sendMessage() {
+    if (!hasApiKey) {
+        document.getElementById('apiModal').classList.add('show');
+        return;
+    }
+    
+    if (isLoading) return;
+    
+    const input = document.getElementById('messageInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+    
+    isLoading = true;
+    input.value = '';
+    input.disabled = true;
+    document.getElementById('sendButton').disabled = true;
+    
+    // Add user message
+    conversationHistory.push({"role": "user", "content": message});
+    displayMessages(true);  // Scroll to bottom for new user message
+    
+    // Show loading
+    document.getElementById('loading').classList.add('show');
+    
+    try {
+        const response = await fetch('https://api.openai.com/v1/chat/completions', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('apiKey')}`
+            },
+            body: JSON.stringify({
+                model: 'gpt-4.1-nano',
+                messages: [
+                    {"role": "system", "content": juanProfile.system_prompt},
+                    ...conversationHistory
+                ],
+                temperature: 0.7,
+                max_tokens: 500
+            })
+        });
+        
+        if (!response.ok) {
+            throw new Error('API request failed');
+        }
+        
+        const data = await response.json();
+        const assistantMessage = data.choices[0].message.content;
+        
+        // Add assistant message
+        conversationHistory.push({"role": "assistant", "content": assistantMessage});
+        displayMessages(true);  // Scroll to bottom for new assistant message
+        
+    } catch (error) {
+        console.error('Error:', error);
+        alert('Error al generar respuesta. Verifica tu clave API.');
+    } finally {
+        isLoading = false;
+        input.disabled = false;
+        document.getElementById('sendButton').disabled = false;
+        document.getElementById('loading').classList.remove('show');
+        input.focus();
+    }
+}
+
+// Load experiment description
+function loadExperiment() {
+    const selected = document.getElementById('experimentSelect').value;
+    const descDiv = document.getElementById('experimentDescription');
+    
+    if (selected && experiments[selected]) {
+        descDiv.style.display = 'block';
+        descDiv.innerHTML = `<strong>Mensaje a evaluar:</strong><br>${experiments[selected].message}`;
+    } else {
+        descDiv.style.display = 'none';
+    }
+}
+
+// Get control thermometer
+async function getControlThermometer(candidate) {
+    const measurements = [];
+    const candidateName = candidateNames[candidate] || candidate || "neutral";
+    
+    console.log(`Getting control thermometer for candidate: ${candidate}, name: ${candidateName}`);
+    
+    for (let i = 0; i < 5; i++) {
+        try {
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('apiKey')}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4.1-nano',
+                    messages: [
+                        {"role": "system", "content": juanProfile.system_prompt + "\n\nIMPORTANTE: Cuando te pregunten por un número de 0 a 100, responde SOLO con el número, sin texto adicional."},
+                        ...originalInterview,
+                        {"role": "user", "content": `En una escala de 0 a 100, donde 0 es sentimientos muy negativos y 100 es sentimientos muy positivos, ¿qué número representa mejor tus sentimientos hacia ${candidateName}? Solo responde con el número.`}
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 10
+                })
+            });
+            
+            if (!response.ok) {
+                console.error('Control API error:', response.status);
+                continue;
+            }
+            
+            const data = await response.json();
+            if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                const content = data.choices[0].message.content.trim();
+                console.log(`Control response ${i}: ${content}`);
+                
+                // Extract number from response - handle various formats
+                const matches = content.match(/\b(\d+)\b/);
+                const score = matches ? parseInt(matches[1]) : NaN;
+                
+                if (!isNaN(score) && score >= 0 && score <= 100) {
+                    measurements.push(score);
+                    console.log(`Valid control score: ${score}`);
+                } else {
+                    console.log(`Invalid control score: ${score} from content: ${content}`);
+                }
+            }
+        } catch (error) {
+            console.error('Error in control measurement:', error);
+        }
+    }
+    
+    if (measurements.length === 0) {
+        console.log('No valid control measurements, returning default 50');
+        return 50; // Default neutral score if no measurements
+    }
+    
+    const average = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+    const result = Math.round(average);
+    console.log(`Control average: ${result} from ${measurements.length} measurements`);
+    return result;
+}
+
+// Get treatment thermometer
+async function getTreatmentThermometer(candidate, message, messageType) {
+    const contextMap = {
+        "news": "Acabas de leer esta noticia",
+        "campaign": "Acabas de ver este mensaje de campaña",
+        "policy": "Te acabas de enterar de esta propuesta política",
+        "scandal": "Acabas de enterarte de esta controversia",
+        "endorsement": "Acabas de saber sobre este apoyo"
+    };
+    
+    const measurements = [];
+    const candidateName = candidateNames[candidate] || candidate || "neutral";
+    const context = contextMap[messageType] || "Acabas de leer esto";
+    
+    console.log(`Getting treatment thermometer for candidate: ${candidate}, name: ${candidateName}, messageType: ${messageType}`);
+    
+    for (let i = 0; i < 5; i++) {
+        try {
+            const prompt = `${context}:\n\n${message}\n\nAhora, en una escala de 0 a 100, donde 0 es sentimientos muy negativos y 100 es sentimientos muy positivos, ¿qué número representa mejor tus sentimientos hacia ${candidateName}? Solo responde con el número.`;
+            
+            const response = await fetch('https://api.openai.com/v1/chat/completions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('apiKey')}`
+                },
+                body: JSON.stringify({
+                    model: 'gpt-4.1-nano',
+                    messages: [
+                        {"role": "system", "content": juanProfile.system_prompt + "\n\nIMPORTANTE: Cuando te pregunten por un número de 0 a 100, responde SOLO con el número, sin texto adicional."},
+                        ...originalInterview,
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature: 0.3,
+                    max_tokens: 10
+                })
+            });
+            
+            if (!response.ok) {
+                console.error('Treatment API error:', response.status);
+                continue;
+            }
+            
+            const data = await response.json();
+            if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
+                const content = data.choices[0].message.content.trim();
+                console.log(`Treatment response ${i}: ${content}`);
+                
+                // Extract number from response - handle various formats
+                const matches = content.match(/\b(\d+)\b/);
+                const score = matches ? parseInt(matches[1]) : NaN;
+                
+                if (!isNaN(score) && score >= 0 && score <= 100) {
+                    measurements.push(score);
+                    console.log(`Valid treatment score: ${score}`);
+                } else {
+                    console.log(`Invalid treatment score: ${score} from content: ${content}`);
+                }
+            }
+        } catch (error) {
+            console.error('Error in treatment measurement:', error);
+        }
+    }
+    
+    if (measurements.length === 0) {
+        console.log('No valid treatment measurements, returning default 50');
+        return 50; // Default neutral score if no measurements
+    }
+    
+    const average = measurements.reduce((a, b) => a + b, 0) / measurements.length;
+    const result = Math.round(average);
+    console.log(`Treatment average: ${result} from ${measurements.length} measurements`);
+    return result;
+}
+
+// Run experiment
+async function runExperiment() {
+    if (!hasApiKey) {
+        document.getElementById('apiModal').classList.add('show');
+        return;
+    }
+    
+    const selectedExp = document.getElementById('experimentSelect').value;
+    
+    if (!selectedExp) {
+        alert('Por favor selecciona un experimento pre-configurado');
+        return;
+    }
+    
+    const exp = experiments[selectedExp];
+    if (!exp) {
+        console.error('Experiment not found:', selectedExp);
+        return;
+    }
+    
+    const candidate = exp.candidate || 'neutral';
+    const message = exp.message;
+    const messageType = exp.messageType;
+    
+    // Show results section
+    document.getElementById('experimentResults').style.display = 'block';
+    document.getElementById('experimentResultsContent').innerHTML = '<p style="text-align: center; color: #7f8c8d; font-size: 11px;">⏳ Ejecutando experimento...</p><p style="text-align: center; color: #95a5a6; font-size: 10px; margin-top: 5px;">Realizando múltiples mediciones para mayor precisión...</p>';
+    
+    try {
+        // Get control and treatment scores
+        const controlScore = await getControlThermometer(candidate);
+        const treatmentScore = await getTreatmentThermometer(candidate, message, messageType);
+        
+        console.log(`Experiment results - Control: ${controlScore}, Treatment: ${treatmentScore}`);
+        
+        // Validate scores
+        if (isNaN(controlScore) || isNaN(treatmentScore)) {
+            console.error('Invalid scores:', { controlScore, treatmentScore });
+            throw new Error('Invalid measurement scores');
+        }
+        
+        // Calculate effect
+        const effect = treatmentScore - controlScore;
+        let percentChange = '0.0';
+        
+        if (controlScore !== 0 && !isNaN(effect)) {
+            const rawPercent = (effect / controlScore) * 100;
+            if (!isNaN(rawPercent) && isFinite(rawPercent)) {
+                percentChange = rawPercent.toFixed(1);
+            }
+        }
+        
+        console.log(`Effect: ${effect}, Percent change: ${percentChange}`);
+        
+        // Generate interpretation
+        let interpretation = "";
+        if (Math.abs(effect) < 5) {
+            interpretation = "El mensaje tiene un efecto mínimo en la opinión de Juan.";
+        } else if (effect > 20) {
+            interpretation = "El mensaje genera una reacción muy positiva, alineándose fuertemente con las prioridades de Juan.";
+        } else if (effect > 10) {
+            interpretation = "El mensaje tiene un efecto positivo considerable, resonando con las experiencias de Juan.";
+        } else if (effect < -20) {
+            interpretation = "El mensaje genera un rechazo fuerte, contradeciendo las creencias fundamentales de Juan.";
+        } else if (effect < -10) {
+            interpretation = "El mensaje tiene un efecto negativo considerable, generando escepticismo en Juan.";
+        }
+        
+        // Display results with thermometer visualization
+        const candidateDisplay = candidateNames[candidate] || candidate;
+        const resultHTML = `
+            <div style="background-color: #f8f9fa; padding: 10px; border-radius: 5px; margin-bottom: 8px;">
+                <div style="font-size: 11px; color: #7f8c8d; margin-bottom: 5px;">Evaluación de: <strong>${candidateDisplay}</strong></div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <div style="font-size: 10px; color: #95a5a6;">Control</div>
+                        <div style="font-size: 16px; font-weight: bold; color: #34495e;">${controlScore}°</div>
+                    </div>
+                    <div style="font-size: 20px; color: ${effect > 0 ? '#27ae60' : effect < 0 ? '#e74c3c' : '#95a5a6'};">
+                        ${effect > 0 ? '↑' : effect < 0 ? '↓' : '→'}
+                    </div>
+                    <div>
+                        <div style="font-size: 10px; color: #95a5a6;">Tratamiento</div>
+                        <div style="font-size: 16px; font-weight: bold; color: #34495e;">${treatmentScore}°</div>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #e0e0e0;">
+                    <div style="font-size: 12px; margin-bottom: 5px;">
+                        <strong>Efecto del tratamiento:</strong> 
+                        <span style="color: ${effect > 0 ? '#27ae60' : effect < 0 ? '#e74c3c' : '#95a5a6'}; font-weight: bold;">
+                            ${effect > 0 ? '+' : ''}${effect} puntos ${percentChange !== '0.0' && percentChange !== 'NaN' && percentChange !== 'Infinity' ? `(${effect > 0 ? '+' : ''}${percentChange}%)` : ''}
+                        </span>
+                    </div>
+                    <div style="font-size: 11px; color: #666; line-height: 1.4;">
+                        ${interpretation}
+                    </div>
+                </div>
+            </div>
+            <div style="font-size: 10px; color: #95a5a6; text-align: center; margin-top: 8px;">
+                Promedio de 5 mediciones independientes • Escala de sentimiento 0-100
+            </div>
+        `;
+        
+        document.getElementById('experimentResultsContent').innerHTML = resultHTML;
+        
+    } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('experimentResultsContent').innerHTML = 
+            '<p style="color: #e74c3c; font-size: 11px;">Error al ejecutar el experimento. Verifica tu API key.</p>';
+    }
+}
+
+</script>
+
+</body>
+</html>
