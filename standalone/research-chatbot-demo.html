@@ -715,7 +715,11 @@
 
             try {
                 // Use the same server as the streaming endpoint
-                const response = await fetch(`${API_URL}/interviews/${interviewId}/turns/${turnId}`);
+                const response = await fetch(`${API_URL}/interviews/${interviewId}/turns/${turnId}`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
                 if (!response.ok) throw new Error('Failed to fetch');
                 
                 const data = await response.json();
@@ -874,6 +878,7 @@
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'ngrok-skip-browser-warning': 'true'
                     },
                     body: JSON.stringify({
                         question: question,
