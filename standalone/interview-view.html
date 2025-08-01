@@ -258,7 +258,11 @@
         async function loadInterview(id) {
             try {
                 // Fetch full interview data
-                const response = await fetch(`${API_URL}/interviews/${id}/full`);
+                const response = await fetch(`${API_URL}/interviews/${id}/full`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
                 if (!response.ok) {
                     // Fallback: try to load summary and some turns
                     await loadInterviewParts(id);
@@ -277,7 +281,11 @@
         async function loadInterviewParts(id) {
             try {
                 // Load summary
-                const summaryResponse = await fetch(`${API_URL}/interviews/${id}/turns/summary`);
+                const summaryResponse = await fetch(`${API_URL}/interviews/${id}/turns/summary`, {
+                    headers: {
+                        'ngrok-skip-browser-warning': 'true'
+                    }
+                });
                 const summaryData = await summaryResponse.json();
                 
                 // For now, just show what we have
