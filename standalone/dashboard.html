@@ -1,0 +1,1452 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SERVIU — Auditoría IA</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg0: #fafbfd;
+        --bg1: #f0f3f9;
+        --bg2: #e8ecf4;
+        --ink: #0c1222;
+        --ink2: #1e293b;
+        --muted: #5b6b82;
+        --faint: #8896ab;
+        --card: rgba(255,255,255,0.82);
+        --card-solid: #ffffff;
+        --border: rgba(15,23,42,0.09);
+        --border-strong: rgba(15,23,42,0.16);
+        --shadow-sm: 0 1px 3px rgba(15,23,42,0.06);
+        --shadow: 0 8px 32px rgba(15,23,42,0.08);
+        --shadow-lg: 0 20px 50px rgba(15,23,42,0.12);
+        --accent: #0d6e64;
+        --accent-light: #e6f5f3;
+        --accent-mid: rgba(13,110,100,0.12);
+        --warn: #b45309;
+        --warn-light: #fef3c7;
+        --warn-mid: rgba(180,83,9,0.10);
+        --bad: #b91c1c;
+        --bad-light: #fee2e2;
+        --bad-mid: rgba(185,28,28,0.08);
+        --ok: #0f7b3d;
+        --ok-light: #dcfce7;
+        --ok-mid: rgba(15,123,61,0.08);
+        --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+        --serif: 'DM Serif Display', ui-serif, Georgia, serif;
+        --sans: 'Source Sans 3', system-ui, -apple-system, sans-serif;
+        --radius: 12px;
+        --radius-lg: 16px;
+      }
+      * { box-sizing: border-box; margin: 0; }
+      html { height: 100%; -webkit-font-smoothing: antialiased; }
+      body {
+        min-height: 100%;
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 14px;
+        line-height: 1.55;
+        background:
+          radial-gradient(ellipse 1100px 500px at 10% 0%, #eef3ff, transparent 60%),
+          radial-gradient(ellipse 800px 400px at 95% 5%, #ecfdf5, transparent 55%),
+          linear-gradient(175deg, var(--bg0) 0%, #ffffff 50%, var(--bg1) 100%);
+        background-attachment: fixed;
+      }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+
+      /* ── Layout ── */
+      .wrap {
+        max-width: 1260px;
+        margin: 0 auto;
+        padding: 28px 20px 48px;
+      }
+      .header { margin-bottom: 20px; }
+      .kicker {
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--accent);
+        margin-bottom: 6px;
+      }
+      h1 {
+        font-family: var(--serif);
+        font-size: 30px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        line-height: 1.15;
+        margin-bottom: 6px;
+      }
+      .sub {
+        color: var(--muted);
+        font-size: 14px;
+        line-height: 1.5;
+        max-width: 80ch;
+      }
+
+      /* ── Case Overview Card ── */
+      .case-overview {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+        padding: 20px 22px;
+        margin-bottom: 14px;
+        animation: fadeIn 0.4s ease-out;
+      }
+      .case-overview-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 18px;
+        flex-wrap: wrap;
+      }
+      .case-overview-main { flex: 1 1 380px; }
+      .case-overview-main h2 {
+        font-family: var(--serif);
+        font-size: 20px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        margin-bottom: 8px;
+        color: var(--ink);
+      }
+      .case-overview-main p {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink2);
+        margin-bottom: 6px;
+      }
+      .case-overview-main p:last-child { margin-bottom: 0; }
+      .case-meta-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 8px;
+        flex: 1 1 320px;
+      }
+      .case-meta-item {
+        padding: 10px 12px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.55);
+      }
+      .case-meta-item .cmi-label {
+        font-size: 10px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: var(--faint);
+        margin-bottom: 2px;
+      }
+      .case-meta-item .cmi-value {
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--ink);
+        line-height: 1.35;
+      }
+      .case-meta-item .cmi-value code {
+        font-family: var(--mono);
+        font-size: 12px;
+        background: var(--bg2);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+      .doc-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card-solid);
+        color: var(--ink2);
+      }
+      .doc-badge .db-count {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--accent);
+        background: var(--accent-light);
+        padding: 1px 6px;
+        border-radius: 5px;
+      }
+      .doc-badge-total {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+        padding: 4px 0;
+        margin-left: auto;
+      }
+      .case-mode-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 6px;
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1px solid rgba(13,110,100,0.20);
+        margin-top: 8px;
+      }
+
+      /* ── Document Explorer ── */
+      .doc-explorer {
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+      }
+      .doc-explorer-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--accent);
+        cursor: pointer;
+        user-select: none;
+        padding: 4px 0;
+        background: none;
+        border: none;
+        font-family: var(--sans);
+      }
+      .doc-explorer-toggle:hover { text-decoration: underline; }
+      .doc-explorer-toggle svg {
+        transition: transform 0.2s ease;
+      }
+      .doc-explorer-toggle.open svg {
+        transform: rotate(90deg);
+      }
+      .doc-explorer-badge-row {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .doc-explorer-panel {
+        margin-top: 10px;
+        display: none;
+        animation: fadeIn 0.25s ease-out;
+      }
+      .doc-explorer-panel.open { display: block; }
+      .doc-cat-section {
+        margin-bottom: 12px;
+      }
+      .doc-cat-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--ink2);
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .doc-cat-icon {
+        width: 20px;
+        height: 20px;
+        border-radius: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 11px;
+        font-weight: 700;
+        font-family: var(--mono);
+      }
+      .doc-cat-icon.admin { background: #ede9fe; color: #7c3aed; }
+      .doc-cat-icon.econ { background: #fef3c7; color: #b45309; }
+      .doc-cat-icon.tech { background: #dbeafe; color: #2563eb; }
+      .doc-cat-icon.rule { background: var(--accent-light); color: var(--accent); }
+      .doc-file-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        padding-left: 28px;
+      }
+      .doc-file-row {
+        display: grid;
+        grid-template-columns: 1fr 52px;
+        gap: 8px;
+        align-items: center;
+        font-size: 13px;
+        padding: 7px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.55);
+        transition: background 0.12s;
+      }
+      .doc-file-row:hover { background: rgba(255,255,255,0.95); }
+      .doc-file-name {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--ink2);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .doc-file-name .dfn-id {
+        font-size: 10px;
+        color: var(--faint);
+        margin-left: 6px;
+      }
+      .doc-file-pages {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--muted);
+        text-align: right;
+        white-space: nowrap;
+      }
+      .doc-file-pages span {
+        font-size: 10px;
+        color: var(--faint);
+      }
+
+      /* ── Executive Summary ── */
+      .executive {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+        padding: 18px 20px;
+        margin-bottom: 16px;
+      }
+      .exec-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .exec-narrative {
+        flex: 1 1 400px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink2);
+      }
+      .exec-narrative strong { color: var(--ink); }
+      .exec-stats {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        flex: 0 0 auto;
+      }
+      .exec-stat {
+        padding: 10px 14px;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.6);
+        min-width: 90px;
+        text-align: center;
+      }
+      .exec-stat .label {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--muted);
+        margin-bottom: 2px;
+      }
+      .exec-stat .value {
+        font-family: var(--mono);
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+      }
+      .exec-stat.ok .value { color: var(--ok); }
+      .exec-stat.warn .value { color: var(--warn); }
+      .exec-stat.bad .value { color: var(--bad); }
+
+      /* ── Score heatmap ── */
+      .heatmap {
+        margin-top: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .hm-row {
+        display: grid;
+        grid-template-columns: 200px 1fr 48px;
+        gap: 8px;
+        align-items: center;
+        font-size: 12px;
+      }
+      .hm-label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        color: var(--ink2);
+        font-weight: 500;
+      }
+      .hm-bar-track {
+        height: 22px;
+        background: var(--bg2);
+        border-radius: 6px;
+        overflow: hidden;
+        position: relative;
+      }
+      .hm-bar-fill {
+        height: 100%;
+        border-radius: 6px;
+        transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        position: relative;
+      }
+      .hm-bar-fill.ok { background: linear-gradient(90deg, #86efac, #22c55e); }
+      .hm-bar-fill.warn { background: linear-gradient(90deg, #fde68a, #f59e0b); }
+      .hm-bar-fill.bad { background: linear-gradient(90deg, #fca5a5, #ef4444); }
+      .hm-score {
+        font-family: var(--mono);
+        font-weight: 600;
+        font-size: 12px;
+        text-align: right;
+        color: var(--ink2);
+      }
+      .hm-confidence {
+        position: absolute;
+        right: 6px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-family: var(--mono);
+        font-size: 10px;
+        color: rgba(0,0,0,0.45);
+        pointer-events: none;
+      }
+
+      /* ── Grid ── */
+      .grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 14px;
+        align-items: start;
+      }
+      @media (max-width: 980px) {
+        .grid { grid-template-columns: 1fr; }
+        .sidebar { max-height: 50vh; }
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 16px;
+      }
+      .sidebar .pad { padding: 14px 14px 10px; }
+      .filters {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      select, input[type="text"] {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid var(--border-strong);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.85);
+        color: var(--ink);
+        font-family: var(--sans);
+        font-size: 13px;
+        outline: none;
+        transition: border-color 0.15s;
+      }
+      select:focus, input[type="text"]:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(13,110,100,0.10);
+      }
+      .filters > * { flex: 1 1 120px; }
+      .list {
+        flex: 1;
+        overflow: auto;
+        max-height: 62vh;
+        border-top: 1px solid var(--border);
+      }
+      .row {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--border);
+        cursor: pointer;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 8px;
+        align-items: start;
+        transition: background 0.12s;
+      }
+      .row:hover { background: rgba(13,110,100,0.04); }
+      .row.active {
+        background: var(--accent-light);
+        border-left: 3px solid var(--accent);
+        padding-left: 11px;
+      }
+      .row:focus-visible {
+        outline: 2px solid var(--accent);
+        outline-offset: -2px;
+      }
+      .row .t {
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.3;
+        color: var(--ink);
+        margin-bottom: 1px;
+      }
+      .row .m {
+        font-size: 11px;
+        font-family: var(--mono);
+        color: var(--faint);
+      }
+      .row .gap-hint {
+        margin-top: 4px;
+        font-size: 12px;
+        color: var(--warn);
+        line-height: 1.35;
+      }
+      .row .practical {
+        margin-top: 3px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.35;
+      }
+      .row-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 4px;
+      }
+      .pill {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: rgba(255,255,255,0.65);
+        white-space: nowrap;
+      }
+      .pill.pass { border-color: rgba(15,123,61,0.35); color: var(--ok); background: var(--ok-mid); }
+      .pill.review { border-color: rgba(180,83,9,0.35); color: var(--warn); background: var(--warn-mid); }
+      .pill.fail { border-color: rgba(185,28,28,0.35); color: var(--bad); background: var(--bad-mid); }
+      .conf-badge {
+        font-family: var(--mono);
+        font-size: 10px;
+        color: var(--faint);
+      }
+
+      /* ── Detail ── */
+      .detail-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(12px);
+      }
+      .detail-card .pad { padding: 18px 20px; }
+      .detail-card h2 {
+        font-family: var(--serif);
+        font-size: 22px;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        margin: 0 0 4px;
+      }
+      .meta-row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        color: var(--muted);
+        font-size: 13px;
+        margin-bottom: 14px;
+      }
+      .meta-row code {
+        font-family: var(--mono);
+        font-size: 12px;
+        color: var(--ink2);
+      }
+
+      /* ── Checklist Summary (inline) ── */
+      .ck-summary {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-bottom: 14px;
+        padding: 10px 12px;
+        background: var(--bg1);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+      }
+      .ck-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 500;
+        padding: 4px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card-solid);
+      }
+      .ck-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .ck-dot.ok { background: var(--ok); }
+      .ck-dot.partial { background: var(--warn); }
+      .ck-dot.missing { background: var(--bad); }
+      .ck-chip .ck-label { color: var(--ink2); }
+      .ck-chip.partial { border-color: rgba(180,83,9,0.25); background: var(--warn-light); }
+      .ck-chip.missing { border-color: rgba(185,28,28,0.25); background: var(--bad-light); }
+
+      /* ── Tabs ── */
+      .tabs {
+        display: flex;
+        gap: 4px;
+        margin-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 0;
+      }
+      .tab {
+        padding: 8px 14px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        user-select: none;
+        border-bottom: 2px solid transparent;
+        color: var(--muted);
+        transition: all 0.15s;
+        border-radius: 8px 8px 0 0;
+      }
+      .tab:hover { color: var(--ink); background: rgba(13,110,100,0.04); }
+      .tab.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        background: var(--accent-mid);
+      }
+
+      /* ── Casebox ── */
+      .casebox {
+        border: 1px solid rgba(13,110,100,0.20);
+        background: rgba(240,253,250,0.5);
+        border-radius: var(--radius);
+        padding: 14px;
+        margin-bottom: 14px;
+      }
+      .casebox h3 {
+        font-family: var(--serif);
+        font-size: 15px;
+        font-weight: 400;
+        color: var(--accent);
+        margin-bottom: 10px;
+      }
+      .casegrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      @media (max-width: 980px) {
+        .casegrid { grid-template-columns: 1fr; }
+      }
+      .kv {
+        display: grid;
+        grid-template-columns: 130px 1fr;
+        gap: 4px 10px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+      .kv .k { color: var(--muted); font-weight: 500; }
+      .kv .v code { font-family: var(--mono); font-size: 12px; }
+      details summary {
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--accent);
+        margin-top: 10px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        margin-top: 8px;
+        background: rgba(255,255,255,0.55);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      th, td {
+        text-align: left;
+        padding: 7px 10px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      th {
+        font-weight: 600;
+        background: var(--bg1);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: var(--muted);
+      }
+
+      /* ── Checklist+Results interleaved ── */
+      .ck-detail-list { display: flex; flex-direction: column; gap: 8px; }
+      .ck-detail-item {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        background: var(--card-solid);
+      }
+      .ck-detail-item.partial { border-left: 3px solid var(--warn); }
+      .ck-detail-item.ok { border-left: 3px solid var(--ok); }
+      .ck-detail-item.missing { border-left: 3px solid var(--bad); }
+      .ck-detail-header {
+        padding: 10px 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      .ck-detail-status {
+        font-family: var(--mono);
+        font-size: 11px;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 6px;
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+      .ck-detail-status.ok { background: var(--ok-light); color: var(--ok); }
+      .ck-detail-status.partial { background: var(--warn-light); color: var(--warn); }
+      .ck-detail-status.missing { background: var(--bad-light); color: var(--bad); }
+      .ck-detail-text { font-size: 13px; line-height: 1.45; color: var(--ink2); }
+      .ck-detail-evidence {
+        padding: 0 12px 10px 12px;
+        font-size: 12px;
+        color: var(--muted);
+        line-height: 1.4;
+      }
+      .ck-detail-evidence code {
+        font-family: var(--mono);
+        font-size: 11px;
+        background: var(--bg1);
+        padding: 1px 5px;
+        border-radius: 4px;
+      }
+
+      /* ── Markdown report ── */
+      .md {
+        font-size: 14px;
+        line-height: 1.6;
+        color: var(--ink2);
+      }
+      .md h1, .md h2, .md h3, .md h4 {
+        font-family: var(--serif);
+        letter-spacing: -0.01em;
+        color: var(--ink);
+        font-weight: 400;
+      }
+      .md h1 { font-size: 20px; margin: 20px 0 8px; }
+      .md h2 { font-size: 17px; margin: 18px 0 6px; color: var(--accent); }
+      .md h3 { font-size: 15px; margin: 14px 0 4px; color: var(--accent); }
+      .md p { margin: 8px 0; max-width: 88ch; }
+      .md ul, .md ol { margin: 8px 0 10px 20px; }
+      .md li { margin: 5px 0; line-height: 1.5; }
+      .md strong { font-weight: 700; color: var(--ink); }
+      .md em { font-style: italic; }
+      .md pre {
+        font-family: var(--mono);
+        font-size: 12px;
+        line-height: 1.5;
+        padding: 14px;
+        background: #0f172a;
+        color: #e2e8f0;
+        border-radius: var(--radius);
+        overflow: auto;
+        border: 1px solid rgba(226,232,240,0.12);
+        margin: 10px 0;
+      }
+      .md code {
+        font-family: var(--mono);
+        font-size: 12px;
+        background: var(--bg2);
+        padding: 1px 6px;
+        border-radius: 5px;
+      }
+      .md pre code { background: none; padding: 0; }
+
+      /* ── Footer ── */
+      .footer {
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        color: var(--faint);
+        font-size: 12px;
+      }
+
+      /* ── Copy button ── */
+      .copy-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 6px 12px;
+        border: 1px solid var(--border-strong);
+        border-radius: 8px;
+        background: var(--card-solid);
+        color: var(--muted);
+        font-family: var(--sans);
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.15s;
+        margin-bottom: 12px;
+      }
+      .copy-btn:hover { background: var(--bg1); color: var(--ink); }
+      .copy-btn svg { width: 14px; height: 14px; }
+
+      /* ── Keyboard hint ── */
+      .kbd-hint {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 10px;
+        font-size: 11px;
+        color: var(--faint);
+        border-top: 1px solid var(--border);
+      }
+      kbd {
+        font-family: var(--mono);
+        font-size: 10px;
+        padding: 2px 5px;
+        border: 1px solid var(--border-strong);
+        border-radius: 4px;
+        background: var(--bg1);
+      }
+
+      /* ── Animations ── */
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(6px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .executive { animation: fadeIn 0.4s ease-out; }
+      .sidebar { animation: fadeIn 0.4s ease-out 0.05s both; }
+      .detail-card { animation: fadeIn 0.4s ease-out 0.1s both; }
+      .hm-row { animation: fadeIn 0.3s ease-out both; }
+      .hm-row:nth-child(1) { animation-delay: 0.1s; }
+      .hm-row:nth-child(2) { animation-delay: 0.15s; }
+      .hm-row:nth-child(3) { animation-delay: 0.2s; }
+      .hm-row:nth-child(4) { animation-delay: 0.25s; }
+      .hm-row:nth-child(5) { animation-delay: 0.3s; }
+      .hm-row:nth-child(6) { animation-delay: 0.35s; }
+      .hm-row:nth-child(7) { animation-delay: 0.4s; }
+    </style>
+  </head>
+  <body>
+    <script id="bundle-data" type="application/json">{
+  "bundle_id": "20260216T182902Z",
+  "generated_at": "2026-02-16T18:29:02Z",
+  "runs_included": [
+    "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/experiments/coarse-demo-real-3853/serviu_slice_seq_20260216T150140Z/linea3_76.432.182-0/20260216T150152Z_codex_agentic",
+    "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/experiments/coarse-demo-real-3853/serviu_slice_seq_20260216T150140Z/linea3_76.432.182-0/20260216T150608Z_codex_agentic",
+    "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/experiments/coarse-demo-real-3853/serviu_slice_seq_20260216T123100Z/linea3_76.432.182-0/20260216T153906Z_codex_agentic",
+    "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/experiments/coarse-demo-real-3853/serviu_slice_seq_20260216T124700Z/linea3_76.432.182-0/20260216T154527Z_codex_agentic",
+    "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/experiments/coarse-demo-real-3853/serviu_slice_seq_20260216T125900Z/linea3_76.432.182-0/20260216T155126Z_codex_agentic"
+  ],
+  "models": [
+    "gpt-5.3-codex"
+  ],
+  "cases_total": 1,
+  "dimensions_total": 7,
+  "workspaces": {
+    "REAL-3853-5-LQ25__76.432.182-0_Jaime": {
+      "workspace_dir": "/Users/mitchellbosley/projects/serviu-rm-procurement-ai/testbeds/serviu-agentic-tl4-testbed/results/blind_workspaces/prejudgment_single_offer/REAL-3853-5-LQ25/76.432.182-0_Jaime",
+      "workspace_scope": "workspace_scope.json",
+      "workspace_scope_payload": {
+        "scope_kind": "single_offer_party",
+        "case_id": "REAL-3853-5-LQ25",
+        "licitation_id": "3853-5-LQ25",
+        "offer_party": "76.432.182-0_Jaime",
+        "scope_note": "Revisión focalizada del paquete del proveedor (Línea 3).",
+        "policy": "Treat absence of other offer parties as out-of-scope for this workspace. Do not fail completeness/admissibility based on missing other parties."
+      },
+      "document_index_csv": "document_index.csv",
+      "document_index_rows": [
+        { "doc_id": "doc_f6b120fd4b9b", "source_path": "offers/76.432.182-0_Jaime/administrative/02_Garantia_linea_libreria_computacion_y_otros001.pdf", "doc_category": "offer_administrative", "pages": 1 },
+        { "doc_id": "doc_66335e266915", "source_path": "offers/76.432.182-0_Jaime/administrative/03_ANEXO_2.pdf", "doc_category": "offer_administrative", "pages": 1 },
+        { "doc_id": "doc_b70591decfab", "source_path": "offers/76.432.182-0_Jaime/administrative/04_ANEXO_1.pdf", "doc_category": "offer_administrative", "pages": 1 },
+        { "doc_id": "doc_d1823b60720b", "source_path": "offers/76.432.182-0_Jaime/economic/02_ANEXO_3.pdf", "doc_category": "offer_economic", "pages": 1 },
+        { "doc_id": "doc_9a5cacd02e01", "source_path": "offers/76.432.182-0_Jaime/technical/02_3853-303-SE17.pdf", "doc_category": "offer_technical", "pages": 1 },
+        { "doc_id": "doc_93ed05cab106", "source_path": "offers/76.432.182-0_Jaime/technical/03_3853-264-SE17.pdf", "doc_category": "offer_technical", "pages": 2 },
+        { "doc_id": "doc_643700cb8e6e", "source_path": "offers/76.432.182-0_Jaime/technical/04_3853-224-SE17.pdf", "doc_category": "offer_technical", "pages": 1 },
+        { "doc_id": "doc_a2400395cd23", "source_path": "offers/76.432.182-0_Jaime/technical/05_3853-131-SE17.pdf", "doc_category": "offer_technical", "pages": 2 },
+        { "doc_id": "doc_b4fd6542df73", "source_path": "offers/76.432.182-0_Jaime/technical/06_3853-40-SE17.pdf", "doc_category": "offer_technical", "pages": 1 },
+        { "doc_id": "doc_9f10ff6a2bf1", "source_path": "antecedents/page_02/02_Bases_Administrativas_Tecnicas_y_anexos_2025.pdf", "doc_category": "rulebook", "pages": 23 }
+      ],
+      "doc_index_summary": "10 docs (offer_administrative:3, offer_economic:1, offer_technical:5, rulebook:1)",
+      "doc_index_counts": { "offer_administrative": 3, "offer_economic": 1, "offer_technical": 5, "rulebook": 1 },
+      "blind_kind": "offers_plus_rulebook_single_offer_scope_v1",
+      "prejudgment_notes": "El expediente incluye Bases/antecedentes y el paquete de un oferente. Documentos de adjudicación se excluyen para evitar filtración de respuestas."
+    }
+  },
+  "results": [
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "dimension_title": "Completitud de antecedentes requeridos", "model": "gpt-5.3-codex", "verdict": "pass", "score": "1.0", "score_model": "0.9", "confidence": "0.85", "citations_ok": true, "citations_joined": "", "notes": "La evidencia citada respalda el criterio evaluado para este oferente.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Completitud de antecedentes requeridos: Cumple (puntaje 1.0).", "card_bullet_1": "Se evaluó Completitud de antecedentes requeridos (E1).", "card_bullet_2": "Resultado: Cumple (puntaje 1.0).", "card_evidence": "Índice, Bases, Anexo 1, Anexo 2", "source_run_dir": "20260216T150152Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E2", "dimension_id": "e2_admisibilidad", "dimension_title": "Admisibilidad y requisitos obligatorios", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.8333", "score_model": "0.57", "confidence": "0.74", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Admisibilidad y requisitos obligatorios: Revisar (puntaje 0.8333).", "card_bullet_1": "Se evaluó Admisibilidad y requisitos obligatorios (E2).", "card_bullet_2": "Resultado: Revisar (puntaje 0.8333). Motivo: evidencia parcial (C2).", "card_evidence": "Alcance, Índice, Bases", "source_run_dir": "20260216T150608Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_dimension_scoring", "dimension_title": "Aplicación de pauta y cálculo de puntajes", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.6667", "score_model": "0.56", "confidence": "0.86", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Aplicación de pauta y cálculo de puntajes: Revisar (puntaje 0.6667).", "card_bullet_1": "Se evaluó Aplicación de pauta y cálculo de puntajes (E3).", "card_bullet_2": "Resultado: Revisar (puntaje 0.6667). Motivo: evidencia parcial (C2, C3).", "card_evidence": "Bases, Anexo 3", "source_run_dir": "20260216T153906Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_evidence_quality", "dimension_title": "Calidad del sustento y trazabilidad", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.8333", "score_model": "0.66", "confidence": "0.79", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Calidad del sustento y trazabilidad: Revisar (puntaje 0.8333).", "card_bullet_1": "Se evaluó Calidad del sustento y trazabilidad (E3).", "card_bullet_2": "Resultado: Revisar (puntaje 0.8333). Motivo: evidencia parcial (C2).", "card_evidence": "Bases, Anexo 2, Anexo 1, OCR, Anexo 3, Índice", "source_run_dir": "20260216T153906Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_consistency", "dimension_title": "Consistencia entre documentos (campos clave)", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.75", "score_model": "0.67", "confidence": "0.67", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Consistencia entre documentos (campos clave): Revisar (puntaje 0.75).", "card_bullet_1": "Se evaluó Consistencia entre documentos (campos clave) (E4).", "card_bullet_2": "Resultado: Revisar (puntaje 0.75). Motivo: evidencia parcial (C2).", "card_evidence": "Bases, Anexo 2, Anexo 1, Índice, Garantía, Anexo 3", "source_run_dir": "20260216T154527Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_risk_flags", "dimension_title": "Señales de riesgo e integridad", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.5", "score_model": "0.58", "confidence": "0.82", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Señales de riesgo e integridad: Revisar (puntaje 0.5).", "card_bullet_1": "Se evaluó Señales de riesgo e integridad (E4).", "card_bullet_2": "Resultado: Revisar (puntaje 0.5). Motivo: evidencia parcial (C1, C2).", "card_evidence": "Alcance, Índice, Anexo 2, Anexo 1, OCR, Bases", "source_run_dir": "20260216T154527Z_codex_agentic" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E5", "dimension_id": "e5_contract_readiness", "dimension_title": "Preparación para contratación", "model": "gpt-5.3-codex", "verdict": "review", "score": "0.75", "score_model": "0.57", "confidence": "0.78", "citations_ok": true, "citations_joined": "", "notes": "La evidencia disponible respalda parcialmente el criterio; se recomienda revisión humana focalizada.", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "card_summary": "Preparación para contratación: Revisar (puntaje 0.75).", "card_bullet_1": "Se evaluó Preparación para contratación (E5).", "card_bullet_2": "Resultado: Revisar (puntaje 0.75). Motivo: evidencia parcial (C1).", "card_evidence": "Alcance, Índice, Bases, Anexo 2", "source_run_dir": "20260216T155126Z_codex_agentic" }
+  ],
+  "checklist_rows": [
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "check_id": "C1", "item": "Ubicar el/los documentos que definen los antecedentes exigidos (Bases/TDR/anexos). Si no aparecen, declararlo explícitamente.", "status": "OK", "weight": "1", "evidence_joined": "ingestion_manifest.json:305; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0003.txt:30; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0005.txt:1", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "check_id": "C2", "item": "Identificar el/los oferentes presentes en el paquete (carpetas/identificadores).", "status": "OK", "weight": "1", "evidence_joined": "workspace_scope.json:5; ingestion_manifest.json:19; ingestion_manifest.json:708", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "check_id": "C3", "item": "Para el oferente en revisión, verificar la presencia de antecedentes clave (administrativos, técnicos, económicos) con citas.", "status": "OK", "weight": "1", "evidence_joined": "ingestion_manifest.json:19; ingestion_manifest.json:47; ingestion_manifest.json:75; ingestion_manifest.json:103; ingestion_manifest.json:131; pages_text/04_ANEXO_1_5c5dc11f/p0001.txt:1; pages_text/03_ANEXO_2_b0df4a99/p0001.txt:1; pages_text/04_3853-224-SE17_b0d05833/p0001.txt:9", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "check_id": "C4", "item": "Si falta algo, listar qué falta y dónde se buscó.", "status": "OK", "weight": "1", "evidence_joined": "ingestion_manifest.json:19; ingestion_manifest.json:305; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0005.txt:35", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E2", "dimension_id": "e2_admisibilidad", "check_id": "C1", "item": "Ubicar en Bases/TDR los requisitos obligatorios (antecedentes, firmas, garantías, mínimos técnicos).", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0005.txt:6; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0017.txt:5", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E2", "dimension_id": "e2_admisibilidad", "check_id": "C2", "item": "Verificar cada requisito obligatorio en el expediente del oferente y registrar faltantes/no cumplimiento con citas.", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/04_ANEXO_1_5c5dc11f/p0001.txt:1; pages_text/03_ANEXO_2_b0df4a99/p0001.txt:1; pages_text/02_ANEXO_3_dfd1234a/p0001.txt:33; pages_text/02_Garantia_linea_libreria_computacion_y_otros001_f2760254/p0001.txt:3", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E2", "dimension_id": "e2_admisibilidad", "check_id": "C3", "item": "Si existe subsanación, distinguir qué es subsanable y qué no lo es.", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0004.txt:6; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0006.txt:35; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0017.txt:15; pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0019.txt:10", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_dimension_scoring", "check_id": "C1", "item": "Ubicar la pauta de evaluación en Bases/TDR (criterios, ponderaciones, fórmulas).", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0010.txt:1", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_dimension_scoring", "check_id": "C2", "item": "Para cada criterio, ubicar evidencia necesaria en la oferta (anexos económicos, certificados, experiencia).", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0003.txt:34; pages_text/02_ANEXO_3_dfd1234a/p0001.txt:33", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_dimension_scoring", "check_id": "C3", "item": "Cuando sea computable, calcular valores intermedios y citar fuentes.", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/06_3853-40-SE17_60f51541/p0001.txt:5", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_evidence_quality", "check_id": "C1", "item": "Usar múltiples documentos independientes cuando sea posible.", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0010.txt:1; pages_text/03_ANEXO_2_b0df4a99/p0001.txt:10", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_evidence_quality", "check_id": "C2", "item": "Preferir extractos directos cuando el OCR sea ruidoso.", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/02_ANEXO_3_dfd1234a/p0001.txt:33", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_evidence_quality", "check_id": "C3", "item": "Si la evidencia citada es de baja calidad (OCR), declararlo y bajar confianza.", "status": "OK", "weight": "1", "evidence_joined": "ingestion_manifest.json:13", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_consistency", "check_id": "C1", "item": "Identificar campos clave (ID licitación, fechas, actores, RUT) y corroborarlos en múltiples documentos.", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0001.txt:9; pages_text/03_ANEXO_2_b0df4a99/p0001.txt:5", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_consistency", "check_id": "C2", "item": "Marcar contradicciones; si un artefacto es OCR pobre, corroborar con otro.", "status": "Parcial", "weight": "1", "evidence_joined": "table_extracts/02_ANEXO_3_dfd1234a/p0001.json:4", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_risk_flags", "check_id": "C1", "item": "Buscar declaraciones de conflicto/integridad y observaciones explícitas de riesgo.", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/03_ANEXO_2_b0df4a99/p0001.txt:2", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_risk_flags", "check_id": "C2", "item": "Señalar faltantes o banderas rojas con citas.", "status": "Parcial", "weight": "1", "evidence_joined": "pages_text/04_ANEXO_1_5c5dc11f/p0001.txt:1", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E5", "dimension_id": "e5_contract_readiness", "check_id": "C1", "item": "Identificar si existen artefactos de decisión/autorización requeridos (resoluciones, decretos) y si son legibles.", "status": "Parcial", "weight": "1", "evidence_joined": "ingestion_manifest.json:708", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E5", "dimension_id": "e5_contract_readiness", "check_id": "C2", "item": "Verificar que los 'siguientes pasos' para contratar estén respaldados por evidencia en el expediente.", "status": "OK", "weight": "1", "evidence_joined": "pages_text/02_Bases_Administrativas_Tecnicas_y_anexos_2025_cece4100/p0010.txt:26", "notes": "", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime" }
+  ],
+  "reports": [
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E1", "dimension_id": "e1_completeness", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E1/e1_completeness.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E2", "dimension_id": "e2_admisibilidad", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E2/e2_admisibilidad.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_dimension_scoring", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E3/e3_dimension_scoring.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E3", "dimension_id": "e3_evidence_quality", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E3/e3_evidence_quality.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_consistency", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E4/e4_consistency.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E4", "dimension_id": "e4_risk_flags", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E4/e4_risk_flags.md" },
+    { "case_id": "REAL-3853-5-LQ25", "stage_id": "E5", "dimension_id": "e5_contract_readiness", "model": "gpt-5.3-codex", "workspace_id": "REAL-3853-5-LQ25__76.432.182-0_Jaime", "report_md": "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E5/e5_contract_readiness.md" }
+  ],
+  "tasks": {
+    "e1_completeness": { "title": "Completitud de antecedentes requeridos", "intent": "Confirmar si el paquete de oferta contiene los antecedentes administrativos, técnicos y económicos requeridos.", "checklist": ["Ubicar el/los documentos que definen los antecedentes exigidos (Bases/TDR/anexos). Si no aparecen, declararlo explícitamente.", "Identificar el/los oferentes presentes en el paquete (carpetas/identificadores).", "Para el oferente en revisión, verificar la presencia de antecedentes clave (administrativos, técnicos, económicos) con citas.", "Si falta algo, listar qué falta y dónde se buscó."], "pass": "Los antecedentes requeridos están presentes y son trazables para el oferente bajo revisión.", "review": "Hay presencia parcial o ambigüedad por faltantes o por OCR poco claro; requiere confirmación humana.", "fail": "Faltan antecedentes críticos exigidos por Bases/TDR." },
+    "e2_admisibilidad": { "title": "Admisibilidad y requisitos obligatorios", "intent": "Determinar si la oferta cumple requisitos obligatorios de admisibilidad.", "checklist": ["Ubicar en Bases/TDR los requisitos obligatorios (antecedentes, firmas, garantías, mínimos técnicos).", "Verificar cada requisito obligatorio en el expediente del oferente y registrar faltantes/no cumplimiento con citas.", "Si existe subsanación, distinguir qué es subsanable y qué no lo es."], "pass": "Los requisitos obligatorios parecen cumplirse con evidencia trazable.", "review": "Evidencia parcial o requisitos no localizables; requiere confirmación humana.", "fail": "Incumplimiento claro de requisitos obligatorios no subsanables." },
+    "e3_dimension_scoring": { "title": "Aplicación de pauta y cálculo de puntajes", "intent": "Verificar si se puede aplicar la pauta de evaluación (criterios, ponderaciones, fórmulas) con evidencia trazable.", "checklist": ["Ubicar la pauta de evaluación en Bases/TDR (criterios, ponderaciones, fórmulas).", "Para cada criterio, ubicar evidencia necesaria en la oferta (anexos económicos, certificados, experiencia).", "Cuando sea computable, calcular valores intermedios y citar fuentes."], "pass": "Pauta y evidencia están presentes; el puntaje se puede calcular o justificar.", "review": "Falta parte de la pauta o evidencia clave; la factibilidad de puntuar es incierta.", "fail": "Pauta existe pero falta evidencia requerida o hay contradicciones relevantes." },
+    "e3_evidence_quality": { "title": "Calidad del sustento y trazabilidad", "intent": "Evaluar la calidad del sustento: si las afirmaciones están respaldadas por citas concretas.", "checklist": ["Usar múltiples documentos independientes cuando sea posible.", "Preferir extractos directos cuando el OCR sea ruidoso.", "Si la evidencia citada es de baja calidad (OCR), declararlo y bajar confianza."], "pass": "Las citas son concretas y suficientes para sustentar el veredicto.", "review": "Hay citas, pero son débiles/ambiguas o dependen de OCR ruidoso.", "fail": "El veredicto no está sustentado por evidencia inspeccionada." },
+    "e4_consistency": { "title": "Consistencia entre documentos (campos clave)", "intent": "Verificar consistencia entre documentos en campos clave (IDs, fechas, actores) y detectar contradicciones.", "checklist": ["Identificar campos clave (ID licitación, fechas, actores, RUT) y corroborarlos en múltiples documentos.", "Marcar contradicciones; si un artefacto es OCR pobre, corroborar con otro."], "pass": "Campos clave consistentes; no se detectan contradicciones relevantes.", "review": "Corroboración parcial por vacíos de OCR; sin contradicciones claras.", "fail": "Contradicciones en campos clave que afectan materialmente el caso." },
+    "e4_risk_flags": { "title": "Señales de riesgo e integridad", "intent": "Identificar señales de conflicto de interés e integridad relevantes para la evaluación.", "checklist": ["Buscar declaraciones de conflicto/integridad y observaciones explícitas de riesgo.", "Señalar faltantes o banderas rojas con citas."], "pass": "Controles presentes y sin banderas rojas no resueltas en la evidencia inspeccionada.", "review": "Controles parcialmente evidenciados; requiere confirmación humana.", "fail": "Conflictos no resueltos o señales claras de integridad que bloquean." },
+    "e5_contract_readiness": { "title": "Preparación para contratación", "intent": "Evaluar si el expediente tiene lo necesario para avanzar hacia contratación.", "checklist": ["Identificar si existen artefactos de decisión/autorización requeridos (resoluciones, decretos) y si son legibles.", "Verificar que los 'siguientes pasos' para contratar estén respaldados por evidencia en el expediente."], "pass": "Elementos críticos para contratación están presentes y trazables.", "review": "El paquete está mayormente presente, pero hay elementos críticos faltantes/ilegibles.", "fail": "Faltan elementos críticos para preparación de contrato." }
+  },
+  "notes": "Este paquete contiene salidas auditables (con citas a evidencia OCR) de un agente de evaluación en modo pre-evaluación."
+}</script>
+    <script id="reports-data" type="application/json">{
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E1/e1_completeness.md": "## Resumen\nEn la etapa `E1` se evaluó **Completitud de antecedentes requeridos** para el caso `REAL-3853-5-LQ25`, usando un expediente de alcance `single_offer_party` (oferente en foco: `76.432.182-0_Jaime`).\n\nEl veredicto fue **Cumple** con puntaje `1.0` (derivado del checklist aplicado).\n\nNota de alcance: Revisión focalizada del paquete del proveedor (Línea 3).\n\n## Qué se evaluó\nConfirmar si el paquete de oferta contiene los antecedentes administrativos, técnicos y económicos requeridos.\n\n## Lectura práctica del resultado\nCon la evidencia disponible en el expediente, el criterio se considera satisfecho. Esto no reemplaza el juicio institucional, pero sugiere que, para este punto, no se requeriría una revisión extensa salvo validaciones de rutina.\n\n## Hallazgos clave\n- `C1` · **OK** — Ubicar documentos que definen antecedentes exigidos.\n- `C2` · **OK** — Identificar oferentes presentes en el paquete.\n- `C3` · **OK** — Verificar presencia de antecedentes clave con citas.\n- `C4` · **OK** — Listar faltantes y dónde se buscó.\n\n## Evidencia principal\n- Bases (p0003): Los oferentes deberán presentar la totalidad de la documentación.\n- Anexo 1 (p0001): FORMULARIO DE IDENTIFICACION\n- Anexo 2 (p0001): Declaración jurada de conocimiento y aceptación de bases.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E2/e2_admisibilidad.md": "## Resumen\nEn la etapa `E2` se evaluó **Admisibilidad y requisitos obligatorios** para el caso `REAL-3853-5-LQ25`.\n\nEl veredicto fue **Revisar** con puntaje `0.8333`.\n\nMotivo principal: 1 ítem parcial (C2).\n\n## Qué se evaluó\nDeterminar si la oferta cumple requisitos obligatorios de admisibilidad.\n\n## Lectura práctica del resultado\nLa evidencia disponible respalda el criterio solo parcialmente. El sistema pudo orientar dónde mirar, pero aún falta información suficiente para cerrar el punto sin revisión humana.\n\n## Hallazgos clave\n- `C1` · **OK** — Requisitos obligatorios ubicados en Bases.\n- `C2` · **Parcial** — Verificación de requisitos: evidencia parcial en Anexos 1, 2, 3 y Garantía.\n- `C3` · **OK** — Subsanación distinguida correctamente.\n\n## Qué falta\n- `C2`: La verificación individual de cada requisito obligatorio quedó incompleta. Se recomienda revisión focalizada de firmas y garantías.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E3/e3_dimension_scoring.md": "## Resumen\nEn la etapa `E3` se evaluó **Aplicación de pauta y cálculo de puntajes**.\n\nEl veredicto fue **Revisar** con puntaje `0.6667`.\n\nMotivo principal: 2 ítems parciales (C2, C3).\n\n## Qué se evaluó\nVerificar si se puede aplicar la pauta de evaluación con evidencia trazable.\n\n## Lectura práctica del resultado\nLa pauta de evaluación fue localizada (Precio 40%, Experiencia 15%, Plazo 35%, Antecedentes 10%), pero la evidencia para calcular puntajes está incompleta — particularmente la extracción tabular del Anexo 3 (OCR ruidoso).\n\n## Hallazgos clave\n- `C1` · **OK** — Pauta de evaluación ubicada en Bases (p0010).\n- `C2` · **Parcial** — Evidencia parcial para criterios económicos y de experiencia.\n- `C3` · **Parcial** — Cálculos intermedios no completados por tablas ilegibles.\n\n## Qué falta\n- `C2`: Certificados de experiencia y detalle de precios unitarios.\n- `C3`: La extracción automática del Anexo 3 no recuperó filas completas.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E3/e3_evidence_quality.md": "## Resumen\nEn la etapa `E3` se evaluó **Calidad del sustento y trazabilidad**.\n\nEl veredicto fue **Revisar** con puntaje `0.8333`.\n\n## Lectura práctica del resultado\nHay citas, pero algunas dependen de OCR ruidoso (particularmente Anexo 3 y Garantía).\n\n## Hallazgos clave\n- `C1` · **OK** — Múltiples documentos independientes usados.\n- `C2` · **Parcial** — Algunos extractos del Anexo 3 contienen artefactos de OCR.\n- `C3` · **OK** — La baja calidad del OCR fue declarada apropiadamente.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E4/e4_consistency.md": "## Resumen\nEn la etapa `E4` se evaluó **Consistencia entre documentos (campos clave)**.\n\nEl veredicto fue **Revisar** con puntaje `0.75`.\n\n## Lectura práctica del resultado\nCampos clave (ID licitación, RUT) son consistentes entre Bases, Anexo 1, Anexo 2. Sin embargo, la corroboración con Anexo 3 es parcial por extracción tabular incompleta.\n\n## Hallazgos clave\n- `C1` · **OK** — ID `3853-5-LQ25` y RUT `76.432.182-0` corroborados en múltiples documentos.\n- `C2` · **Parcial** — La tabla del Anexo 3 no se pudo corroborar completamente.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E4/e4_risk_flags.md": "## Resumen\nEn la etapa `E4` se evaluó **Señales de riesgo e integridad**.\n\nEl veredicto fue **Revisar** con puntaje `0.5`.\n\n## Lectura práctica del resultado\nLa declaración jurada (Anexo 2) está presente pero es genérica. No se encontraron declaraciones específicas de conflicto de interés ni observaciones explícitas de riesgo más allá de las cláusulas estándar de las Bases.\n\n## Hallazgos clave\n- `C1` · **Parcial** — Solo se encontró la declaración jurada genérica (Anexo 2).\n- `C2` · **Parcial** — Sin banderas rojas claras, pero tampoco controles explícitos verificables.\n\n## Qué falta\n- Declaraciones de conflicto de interés específicas.\n- Verificación cruzada con registros de inhabilidades.\n",
+  "reports/REAL-3853-5-LQ25__76.432.182-0_Jaime/REAL-3853-5-LQ25/E5/e5_contract_readiness.md": "## Resumen\nEn la etapa `E5` se evaluó **Preparación para contratación**.\n\nEl veredicto fue **Revisar** con puntaje `0.75`.\n\n## Lectura práctica del resultado\nLas Bases definen el proceso post-adjudicación (Decreto Alcaldicio, garantía de fiel cumplimiento, contrato por 12 meses). Sin embargo, los artefactos de autorización (resoluciones, decretos) no están en el expediente actual.\n\n## Hallazgos clave\n- `C1` · **Parcial** — Las Bases mencionan resolución y decreto, pero estos documentos no están en el workspace.\n- `C2` · **OK** — Los pasos contractuales están respaldados por las Bases.\n\n## Qué falta\n- Resolución de adjudicación y Decreto Alcaldicio (excluidos intencionalmente del workspace de pre-evaluación).\n"
+}</script>
+
+    <div class="wrap">
+      <div class="header">
+        <div class="kicker">Auditoría IA · Prototipo basado en evidencia</div>
+        <h1>Revisión de expediente de licitación</h1>
+        <div class="sub">
+          Resultados de agentes de evaluación con veredictos, puntajes, confianza y citas trazables al workspace.
+        </div>
+      </div>
+
+      <!-- Case Overview -->
+      <div class="case-overview" id="case-overview"></div>
+
+      <!-- Executive Summary -->
+      <div class="executive" id="executive"></div>
+
+      <!-- Main Grid -->
+      <div class="grid">
+        <div class="sidebar">
+          <div class="pad">
+            <div class="filters">
+              <input id="q" type="text" placeholder="Buscar dimensión..." />
+              <select id="stage">
+                <option value="">Etapa</option>
+                <option value="E1">E1</option>
+                <option value="E2">E2</option>
+                <option value="E3">E3</option>
+                <option value="E4">E4</option>
+                <option value="E5">E5</option>
+              </select>
+              <select id="verdict">
+                <option value="">Veredicto</option>
+                <option value="pass">Cumple</option>
+                <option value="review">Revisar</option>
+                <option value="fail">No cumple</option>
+              </select>
+            </div>
+          </div>
+          <div class="list" id="list"></div>
+          <div class="kbd-hint">
+            <kbd>↑</kbd><kbd>↓</kbd> navegar &nbsp; <kbd>Enter</kbd> seleccionar
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <div class="pad">
+            <div id="detail"></div>
+            <div class="footer">
+              Generado automáticamente · prototipo para revisión y feedback de contrapartes.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const bundle = JSON.parse(document.getElementById('bundle-data').textContent);
+      const reports = JSON.parse(document.getElementById('reports-data').textContent);
+
+      /* ── Helpers ── */
+      function verdictLabel(v) {
+        const s = String(v || '').toLowerCase();
+        if (s === 'pass') return 'Cumple';
+        if (s === 'fail') return 'No cumple';
+        return 'Revisar';
+      }
+      function verdictClass(v) {
+        const s = String(v || '').toLowerCase();
+        if (s === 'pass') return 'pass';
+        if (s === 'fail') return 'fail';
+        return 'review';
+      }
+      function esc(s) {
+        return String(s || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      }
+      function pill(verdict) {
+        const cls = verdictClass(verdict);
+        return `<span class="pill ${cls}">${esc(verdictLabel(verdict))}</span>`;
+      }
+      function pct(v) { return Math.round(parseFloat(v) * 100); }
+
+      /* ── Checklist helpers ── */
+      function checklistForDimension(dimId, wsId) {
+        return (bundle.checklist_rows || []).filter(c =>
+          c.dimension_id === dimId && c.workspace_id === wsId
+        );
+      }
+      function statusClass(s) {
+        const st = String(s || '').toLowerCase();
+        if (st === 'ok') return 'ok';
+        if (st === 'parcial' || st === 'partial') return 'partial';
+        return 'missing';
+      }
+      function statusLabel(s) {
+        const st = String(s || '').toLowerCase();
+        if (st === 'ok') return 'OK';
+        if (st === 'parcial' || st === 'partial') return 'Parcial';
+        return 'Sin evidencia';
+      }
+
+      /* ── Gap extraction: find the primary "partial" items ── */
+      function primaryGap(r) {
+        const checks = checklistForDimension(r.dimension_id, r.workspace_id);
+        const partials = checks.filter(c => statusClass(c.status) !== 'ok');
+        if (!partials.length) return null;
+        // Return first partial item, truncated
+        const item = partials[0].item;
+        const id = partials[0].check_id;
+        return `${id}: ${item.length > 80 ? item.slice(0, 78) + '…' : item}`;
+      }
+
+      /* ── Markdown renderer (improved) ── */
+      function mdToHtml(md) {
+        const lines = String(md || '').split(/\r?\n/);
+        let html = '', inCode = false, inUl = false, inOl = false, inP = false;
+        const closeLists = () => { if (inUl) { html += '</ul>'; inUl = false; } if (inOl) { html += '</ol>'; inOl = false; } };
+        const closeP = () => { if (inP) { html += '</p>'; inP = false; } };
+        const openP = () => { if (!inP) { closeLists(); html += '<p>'; inP = true; } };
+        for (const raw of lines) {
+          const line = raw.trimEnd();
+          if (line.startsWith('```')) { closeP(); closeLists(); inCode = !inCode; html += inCode ? '<pre><code>' : '</code></pre>'; continue; }
+          if (inCode) { html += esc(raw) + '\n'; continue; }
+          if (/^\s*#{1,4}\s+/.test(line)) { closeP(); closeLists(); const lv = line.match(/^#+/)[0].length; html += `<h${lv}>${inline(line.replace(/^\s*#{1,4}\s+/, ''))}</h${lv}>`; continue; }
+          if (/^\d+\.\s+/.test(line)) { closeP(); if (!inOl) { closeLists(); html += '<ol>'; inOl = true; } html += `<li>${inline(line.replace(/^\d+\.\s+/, ''))}</li>`; continue; }
+          if (/^[-*]\s+/.test(line)) { closeP(); if (!inUl) { closeLists(); html += '<ul>'; inUl = true; } html += `<li>${inline(line.replace(/^[-*]\s+/, ''))}</li>`; continue; }
+          if (!line.trim()) { closeP(); closeLists(); continue; }
+          openP(); html += inline(line) + ' ';
+        }
+        closeP(); closeLists();
+        return html;
+      }
+      function inline(s) {
+        let out = esc(s);
+        out = out.replace(/`([^`]+)`/g, (_, g) => `<code>${g}</code>`);
+        out = out.replace(/\*\*([^*]+)\*\*/g, (_, g) => `<strong>${g}</strong>`);
+        out = out.replace(/(^|\s)\*([^*]{2,80})\*(?=[\s.,;:!?]|$)/g, (_, pre, g) => `${pre}<em>${g}</em>`);
+        return out;
+      }
+
+      /* ── Case Overview Card ── */
+      function renderCaseCard() {
+        const wsKeys = Object.keys(bundle.workspaces || {});
+        if (!wsKeys.length) return;
+        const ws = bundle.workspaces[wsKeys[0]];
+        const scope = ws.workspace_scope_payload || {};
+        const docCounts = ws.doc_index_counts || {};
+        const docRows = ws.document_index_rows || [];
+        const totalPages = docRows.reduce((s, d) => s + (d.pages || 0), 0);
+
+        const catLabels = {
+          'offer_administrative': 'Administrativos',
+          'offer_economic': 'Económicos',
+          'offer_technical': 'Técnicos',
+          'rulebook': 'Bases / Reglamento',
+        };
+
+        const catIcons = {
+          'offer_administrative': { cls: 'admin', letter: 'A' },
+          'offer_economic': { cls: 'econ', letter: 'E' },
+          'offer_technical': { cls: 'tech', letter: 'T' },
+          'rulebook': { cls: 'rule', letter: 'B' },
+        };
+
+        const docBadges = Object.entries(docCounts).map(([cat, count]) =>
+          `<div class="doc-badge"><span class="db-count">${count}</span>${esc(catLabels[cat] || cat)}</div>`
+        ).join('');
+
+        // Group docs by category
+        const grouped = {};
+        for (const d of docRows) {
+          const cat = d.doc_category || 'other';
+          if (!grouped[cat]) grouped[cat] = [];
+          grouped[cat].push(d);
+        }
+
+        const catSections = Object.entries(grouped).map(([cat, docs]) => {
+          const icon = catIcons[cat] || { cls: 'rule', letter: '?' };
+          const fileRows = docs.map(d => {
+            const fname = String(d.source_path || '').split('/').pop();
+            return `<div class="doc-file-row">
+              <div class="doc-file-name">${esc(fname)}<span class="dfn-id">${esc(d.doc_id || '')}</span></div>
+              <div class="doc-file-pages">${d.pages} <span>pág${d.pages !== 1 ? 's' : ''}</span></div>
+            </div>`;
+          }).join('');
+          return `<div class="doc-cat-section">
+            <div class="doc-cat-header">
+              <div class="doc-cat-icon ${icon.cls}">${icon.letter}</div>
+              ${esc(catLabels[cat] || cat)} (${docs.length})
+            </div>
+            <div class="doc-file-list">${fileRows}</div>
+          </div>`;
+        }).join('');
+
+        const el = document.getElementById('case-overview');
+        el.innerHTML = `
+          <div class="case-overview-top">
+            <div class="case-overview-main">
+              <h2>Licitación ${esc(scope.licitation_id || scope.case_id || '')}</h2>
+              <p>
+                Revisión focalizada del paquete de oferta del proveedor
+                <strong>${esc(scope.offer_party || 'n/a')}</strong> en la
+                <strong>Línea 3</strong> — Convenio de Suministro de Insumos, Artículos de Librería, Computación y Otros.
+              </p>
+              <p style="color:var(--muted);font-size:13px">
+                ${esc(ws.prejudgment_notes || scope.policy || '')}
+              </p>
+              <div class="case-mode-tag">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                Modo pre-evaluación — sin actas de adjudicación como insumo
+              </div>
+            </div>
+            <div class="case-meta-grid">
+              <div class="case-meta-item">
+                <div class="cmi-label">ID Caso</div>
+                <div class="cmi-value"><code>${esc(scope.case_id || '')}</code></div>
+              </div>
+              <div class="case-meta-item">
+                <div class="cmi-label">ID Licitación</div>
+                <div class="cmi-value"><code>${esc(scope.licitation_id || '')}</code></div>
+              </div>
+              <div class="case-meta-item">
+                <div class="cmi-label">Oferente en foco</div>
+                <div class="cmi-value"><code>${esc(scope.offer_party || '')}</code></div>
+              </div>
+              <div class="case-meta-item">
+                <div class="cmi-label">Alcance</div>
+                <div class="cmi-value">${esc(scope.scope_kind || 'n/a')}</div>
+              </div>
+              <div class="case-meta-item">
+                <div class="cmi-label">Modelo</div>
+                <div class="cmi-value"><code>${esc((bundle.models || ['n/a']).join(', '))}</code></div>
+              </div>
+              <div class="case-meta-item">
+                <div class="cmi-label">Generado</div>
+                <div class="cmi-value">${esc(bundle.generated_at ? new Date(bundle.generated_at).toLocaleString('es-CL') : 'n/a')}</div>
+              </div>
+            </div>
+          </div>
+          <div class="doc-explorer">
+            <div class="doc-explorer-badge-row">
+              ${docBadges}
+              <span class="doc-badge-total">${docRows.length} docs · ${totalPages} págs.</span>
+            </div>
+            <button class="doc-explorer-toggle" id="doc-toggle" onclick="toggleDocExplorer()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              Ver detalle de documentos ingeridos
+            </button>
+            <div class="doc-explorer-panel" id="doc-panel">
+              ${catSections}
+            </div>
+          </div>
+        `;
+      }
+
+      function toggleDocExplorer() {
+        const btn = document.getElementById('doc-toggle');
+        const panel = document.getElementById('doc-panel');
+        const isOpen = panel.classList.toggle('open');
+        btn.classList.toggle('open', isOpen);
+        btn.querySelector('svg').style.transform = isOpen ? 'rotate(90deg)' : '';
+        const label = isOpen ? 'Ocultar detalle de documentos' : 'Ver detalle de documentos ingeridos';
+        btn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg> ${label}`;
+        if (isOpen) btn.classList.add('open');
+      }
+
+      /* ── Executive summary ── */
+      function renderExecutive() {
+        const results = bundle.results || [];
+        const total = results.length;
+        const counts = { pass: 0, review: 0, fail: 0 };
+        let lowest = null, lowestScore = 2;
+        for (const r of results) {
+          const v = String(r.verdict || '').toLowerCase();
+          counts[v === 'pass' ? 'pass' : v === 'fail' ? 'fail' : 'review']++;
+          const sc = parseFloat(r.score);
+          if (sc < lowestScore) { lowestScore = sc; lowest = r; }
+        }
+        const avgScore = (results.reduce((s, r) => s + parseFloat(r.score), 0) / total).toFixed(2);
+
+        // Build narrative
+        let narrative = `<strong>${counts.pass} de ${total}</strong> dimensiones cumplen plenamente.`;
+        if (counts.review + counts.fail > 0) {
+          const areas = results.filter(r => r.verdict !== 'pass').sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+          const topConcerns = areas.slice(0, 3).map(r => `${r.dimension_title} (${pct(r.score)}%)`).join(', ');
+          narrative += ` Las áreas que requieren mayor atención son: <strong>${topConcerns}</strong>.`;
+        }
+        narrative += ` Puntaje promedio: <strong>${(avgScore * 100).toFixed(0)}%</strong>.`;
+
+        // Heatmap
+        const sorted = [...results].sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+        const heatRows = sorted.map(r => {
+          const sc = parseFloat(r.score);
+          const conf = parseFloat(r.confidence || 0);
+          const cls = sc >= 0.9 ? 'ok' : sc >= 0.6 ? 'warn' : 'bad';
+          return `<div class="hm-row">
+            <div class="hm-label">${esc(r.dimension_title)}</div>
+            <div class="hm-bar-track">
+              <div class="hm-bar-fill ${cls}" style="width:${pct(r.score)}%">
+                <span class="hm-confidence">conf ${pct(r.confidence)}%</span>
+              </div>
+            </div>
+            <div class="hm-score">${pct(r.score)}%</div>
+          </div>`;
+        }).join('');
+
+        document.getElementById('executive').innerHTML = `
+          <div class="exec-top">
+            <div class="exec-narrative">${narrative}</div>
+            <div class="exec-stats">
+              <div class="exec-stat ok"><div class="label">Cumple</div><div class="value">${counts.pass}</div></div>
+              <div class="exec-stat warn"><div class="label">Revisar</div><div class="value">${counts.review}</div></div>
+              <div class="exec-stat bad"><div class="label">No cumple</div><div class="value">${counts.fail}</div></div>
+            </div>
+          </div>
+          <div class="heatmap">${heatRows}</div>
+        `;
+      }
+
+      /* ── Filtering ── */
+      function filtered() {
+        const q = document.getElementById('q').value.trim().toLowerCase();
+        const stage = document.getElementById('stage').value;
+        const verdict = document.getElementById('verdict').value.toLowerCase();
+        return (bundle.results || []).map(r => ({
+          ...r,
+          key: `${r.workspace_id}|${r.case_id}|${r.stage_id}|${r.dimension_id}`,
+        })).filter(r => {
+          if (stage && r.stage_id !== stage) return false;
+          if (verdict && String(r.verdict || '').toLowerCase() !== verdict) return false;
+          if (!q) return true;
+          return [r.case_id, r.stage_id, r.dimension_id, r.dimension_title, r.verdict, r.card_summary].join(' ').toLowerCase().includes(q);
+        });
+      }
+
+      let activeKey = '';
+      let activeTab = 'checklist';
+
+      /* ── List ── */
+      function renderList() {
+        const items = filtered();
+        const list = document.getElementById('list');
+        list.innerHTML = items.map(r => {
+          const title = r.dimension_title || r.dimension_id;
+          const meta = `${r.stage_id} · ${pct(r.score)}% · conf ${pct(r.confidence)}%`;
+          const gap = primaryGap(r);
+          const cls = (r.key === activeKey) ? 'row active' : 'row';
+          return `<div class="${cls}" data-key="${esc(r.key)}" tabindex="0">
+            <div>
+              <div class="t">${esc(title)}</div>
+              <div class="m">${esc(meta)}</div>
+              ${gap ? `<div class="gap-hint">⚠ ${esc(gap)}</div>` : ''}
+            </div>
+            <div class="row-right">
+              ${pill(r.verdict)}
+            </div>
+          </div>`;
+        }).join('') || '<div style="padding:14px;color:var(--muted)">Sin resultados.</div>';
+
+        for (const el of list.querySelectorAll('.row')) {
+          el.addEventListener('click', () => { activeKey = el.dataset.key; activeTab = 'checklist'; renderList(); renderDetail(); });
+        }
+      }
+
+      /* ── Keyboard navigation ── */
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+        const items = filtered();
+        if (!items.length) return;
+        const idx = items.findIndex(r => r.key === activeKey);
+        if (e.key === 'ArrowDown' || e.key === 'j') {
+          e.preventDefault();
+          const next = Math.min(idx + 1, items.length - 1);
+          activeKey = items[next].key;
+          activeTab = 'checklist';
+          renderList(); renderDetail();
+          document.querySelector('.row.active')?.scrollIntoView({ block: 'nearest' });
+        } else if (e.key === 'ArrowUp' || e.key === 'k') {
+          e.preventDefault();
+          const prev = Math.max(idx - 1, 0);
+          activeKey = items[prev].key;
+          activeTab = 'checklist';
+          renderList(); renderDetail();
+          document.querySelector('.row.active')?.scrollIntoView({ block: 'nearest' });
+        }
+      });
+
+      /* ── Detail ── */
+      function getActive() {
+        const items = filtered();
+        if (!activeKey && items.length) activeKey = items[0].key;
+        return items.find(r => r.key === activeKey) || items[0] || null;
+      }
+
+      function reportKey(r) {
+        const match = (bundle.reports || []).find(x =>
+          x.workspace_id === r.workspace_id && x.case_id === r.case_id &&
+          x.stage_id === r.stage_id && x.dimension_id === r.dimension_id);
+        return match ? match.report_md : '';
+      }
+
+      function renderDetail() {
+        const r = getActive();
+        const detail = document.getElementById('detail');
+        if (!r) { detail.innerHTML = '<div style="color:var(--muted)">Seleccione una dimensión.</div>'; return; }
+
+        const title = r.dimension_title || r.dimension_id;
+        const checks = checklistForDimension(r.dimension_id, r.workspace_id);
+        const tasks = bundle.tasks || {};
+        const task = tasks[r.dimension_id] || {};
+
+        // Checklist summary chips
+        const ckChips = checks.map(c => {
+          const cls = statusClass(c.status);
+          return `<div class="ck-chip ${cls}"><span class="ck-dot ${cls}"></span><span class="ck-label">${esc(c.check_id)} ${esc(statusLabel(c.status))}</span></div>`;
+        }).join('');
+
+        // Tabs
+        const tabs = [['checklist', 'Checklist + resultados'], ['reporte', 'Informe completo']];
+        const tabHtml = tabs.map(([id, label]) =>
+          `<div class="tab ${activeTab === id ? 'active' : ''}" data-tab="${id}">${esc(label)}</div>`
+        ).join('');
+
+        // Tab bodies
+        let body = '';
+        if (activeTab === 'checklist') {
+          // Interleaved checklist + results
+          const ckItems = checks.map(c => {
+            const cls = statusClass(c.status);
+            const evidenceRefs = c.evidence_joined ? c.evidence_joined.split(';').slice(0, 3).map(e => `<code>${esc(e.trim())}</code>`).join(' · ') : '<span style="color:var(--faint)">sin evidencia</span>';
+            return `<div class="ck-detail-item ${cls}">
+              <div class="ck-detail-header">
+                <span class="ck-detail-status ${cls}">${esc(c.check_id)} · ${esc(statusLabel(c.status))}</span>
+                <span class="ck-detail-text">${esc(c.item)}</span>
+              </div>
+              <div class="ck-detail-evidence">Evidencia: ${evidenceRefs}</div>
+            </div>`;
+          }).join('');
+
+          body = `
+            <div class="md" style="margin-bottom:12px">
+              <p style="color:var(--muted);font-size:13px"><strong>Intención:</strong> ${esc(task.intent || '')}</p>
+            </div>
+            <div class="ck-detail-list">${ckItems}</div>
+          `;
+        } else if (activeTab === 'reporte') {
+          const rk = reportKey(r);
+          const md = reports[rk] || '';
+          body = `
+            <button class="copy-btn" onclick="copyReport(this)" data-key="${esc(rk)}">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              Copiar resumen
+            </button>
+            <div class="md">${md ? mdToHtml(md) : '<p style="color:var(--muted)">Reporte no disponible.</p>'}</div>
+          `;
+        }
+
+        detail.innerHTML = `
+          <h2>${esc(title)}</h2>
+          <div class="meta-row">
+            <span>Etapa <code>${esc(r.stage_id)}</code></span>
+            <span>Puntaje <code>${pct(r.score)}%</code></span>
+            <span>Confianza <code>${pct(r.confidence)}%</code></span>
+            <span>${pill(r.verdict)}</span>
+          </div>
+          <div class="ck-summary">${ckChips}</div>
+          <div class="tabs">${tabHtml}</div>
+          ${body}
+        `;
+
+        for (const el of detail.querySelectorAll('.tab')) {
+          el.addEventListener('click', () => { activeTab = el.dataset.tab; renderDetail(); });
+        }
+      }
+
+      /* ── Copy helper ── */
+      function copyReport(btn) {
+        const key = btn.dataset.key;
+        const text = Object.entries(reports).find(([k]) => k === key)?.[1] || '';
+        navigator.clipboard.writeText(text).then(() => {
+          btn.textContent = '✓ Copiado';
+          setTimeout(() => { btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar resumen'; }, 1500);
+        });
+      }
+
+      /* ── Init ── */
+      renderCaseCard();
+      renderExecutive();
+      renderList();
+      renderDetail();
+      for (const id of ['q', 'stage', 'verdict']) {
+        const el = document.getElementById(id);
+        el.addEventListener('input', () => { renderList(); renderDetail(); });
+        el.addEventListener('change', () => { renderList(); renderDetail(); });
+      }
+    </script>
+  </body>
+</html>
