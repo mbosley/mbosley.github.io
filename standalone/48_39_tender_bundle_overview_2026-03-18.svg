@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="744" viewBox="0 0 900 744" role="img" aria-labelledby="title desc">
+  <title id="title">Tender bundle overview for case 48-39-LQ25</title>
+  <desc id="desc">Overview of the public tender bundle used at intake for case 48-39-LQ25, showing award documents and four bidder offer folders, one of which is later selected for the illustrated task branch.</desc>
+  <style>
+    .bg { fill: #f6f0e6; }
+    .panel { fill: #fffdfa; stroke: #3c342d; stroke-width: 2; rx: 20; ry: 20; }
+    .doc { fill: #ffffff; stroke: #84776b; stroke-width: 1.5; rx: 10; ry: 10; }
+    .folder { fill: #f1ddb0; stroke: #8d6a28; stroke-width: 2; rx: 14; ry: 14; }
+    .folder-tab { fill: #e4c57f; stroke: #8d6a28; stroke-width: 2; rx: 8; ry: 8; }
+    .chip { fill: #efe6d7; stroke: #c8b79d; stroke-width: 1.2; rx: 999; ry: 999; }
+    .selected { fill: #f8e9bf; stroke: #9d7b2e; stroke-width: 2.6; }
+    .title { font: 700 26px 'Helvetica Neue', Arial, sans-serif; fill: #2d2621; }
+    .subtitle { font: 400 15px 'Helvetica Neue', Arial, sans-serif; fill: #64584d; }
+    .section { font: 700 17px 'Helvetica Neue', Arial, sans-serif; fill: #2d2621; }
+    .section-note { font: 400 13px 'Helvetica Neue', Arial, sans-serif; fill: #64584d; }
+    .role { font: 700 11px 'Helvetica Neue', Arial, sans-serif; fill: #8a6c32; text-transform: uppercase; letter-spacing: .04em; }
+    .label { font: 700 14px 'Helvetica Neue', Arial, sans-serif; fill: #2d2621; }
+    .folder-text { font: 700 15px 'Helvetica Neue', Arial, sans-serif; fill: #3d2e16; }
+    .count { font: 700 12px 'Helvetica Neue', Arial, sans-serif; fill: #5d4720; }
+    .status { font: 700 12px 'Helvetica Neue', Arial, sans-serif; fill: #6a5525; }
+    .note { font: 600 12px 'Helvetica Neue', Arial, sans-serif; fill: #7a612b; }
+  </style>
+
+  <rect class="bg" x="0" y="0" width="900" height="744"/>
+
+  <text class="title" x="34" y="44">Public tender bundle received by the agent</text>
+  <text class="subtitle" x="34" y="72">Case 48-39-LQ25. The intake bundle contains the public award record and four bidder offer folders.</text>
+
+  <rect class="chip" x="34" y="94" width="120" height="32"/>
+  <text class="count" x="57" y="115">45 public files</text>
+  <rect class="chip" x="164" y="94" width="146" height="32"/>
+  <text class="count" x="188" y="115">4 bidder folders</text>
+  <rect class="chip" x="320" y="94" width="166" height="32"/>
+  <text class="count" x="343" y="115">3 award documents</text>
+
+  <rect class="panel" x="34" y="148" width="832" height="170"/>
+  <text class="section" x="58" y="182">Award record</text>
+  <text class="section-note" x="58" y="204">The agent reads these files to discover the tasks inside the tender.</text>
+
+  <rect class="doc" x="58" y="236" width="238" height="56"/>
+  <text class="role" x="76" y="257">evaluation acta</text>
+  <text class="label" x="76" y="277">Acta de evaluacion</text>
+
+  <rect class="doc" x="331" y="236" width="238" height="56"/>
+  <text class="role" x="349" y="257">award resolution</text>
+  <text class="label" x="349" y="277">Resolucion de adjudicacion</text>
+
+  <rect class="doc" x="604" y="236" width="224" height="56"/>
+  <text class="role" x="622" y="257">committee declarations</text>
+  <text class="label" x="622" y="277">Declaraciones del comite</text>
+
+  <rect class="panel" x="34" y="342" width="832" height="372"/>
+  <text class="section" x="58" y="376">Bidder offer folders</text>
+  <text class="section-note" x="58" y="398">Each bidder folder becomes a possible review path. The rest of the page follows the selected bidder only.</text>
+
+  <rect class="folder-tab" x="58" y="426" width="110" height="20"/>
+  <rect class="folder selected" x="58" y="442" width="350" height="106"/>
+  <text class="folder-text" x="80" y="476">HH Ingenieria Ltda</text>
+  <rect class="chip" x="80" y="492" width="58" height="22"/><text class="count" x="96" y="507">adm 4</text>
+  <rect class="chip" x="148" y="492" width="58" height="22"/><text class="count" x="164" y="507">tec 6</text>
+  <rect class="chip" x="216" y="492" width="46" height="22"/><text class="count" x="227" y="507">eco 1</text>
+  <rect class="chip" x="286" y="454" width="100" height="24"/><text class="status" x="309" y="471">selected</text>
+  <text class="note" x="80" y="534">Example files: Anexo 7, API matrix</text>
+
+  <rect class="folder-tab" x="492" y="426" width="110" height="20"/>
+  <rect class="folder" x="492" y="442" width="350" height="106"/>
+  <text class="folder-text" x="514" y="476">De La Rivera Ltda</text>
+  <rect class="chip" x="514" y="492" width="58" height="22"/><text class="count" x="530" y="507">adm 3</text>
+  <rect class="chip" x="582" y="492" width="58" height="22"/><text class="count" x="598" y="507">tec 6</text>
+  <rect class="chip" x="650" y="492" width="46" height="22"/><text class="count" x="661" y="507">eco 1</text>
+  <rect class="chip" x="720" y="454" width="92" height="24"/><text class="status" x="744" y="471">parallel</text>
+  <text class="note" x="514" y="534">Example files: Anexo 7, API matrix</text>
+
+  <rect class="folder-tab" x="58" y="566" width="110" height="20"/>
+  <rect class="folder" x="58" y="582" width="350" height="106"/>
+  <text class="folder-text" x="80" y="616">Kronos Ltda</text>
+  <rect class="chip" x="80" y="632" width="58" height="22"/><text class="count" x="96" y="647">adm 3</text>
+  <rect class="chip" x="148" y="632" width="58" height="22"/><text class="count" x="164" y="647">tec 6</text>
+  <rect class="chip" x="216" y="632" width="46" height="22"/><text class="count" x="227" y="647">eco 1</text>
+  <rect class="chip" x="286" y="594" width="92" height="24"/><text class="status" x="310" y="611">parallel</text>
+  <text class="note" x="80" y="674">Example files: Anexo 2, API matrix</text>
+
+  <rect class="folder-tab" x="492" y="566" width="110" height="20"/>
+  <rect class="folder" x="492" y="582" width="350" height="106"/>
+  <text class="folder-text" x="514" y="616">Tecnoingenieria SpA</text>
+  <rect class="chip" x="514" y="632" width="58" height="22"/><text class="count" x="530" y="647">adm 4</text>
+  <rect class="chip" x="582" y="632" width="58" height="22"/><text class="count" x="598" y="647">tec 6</text>
+  <rect class="chip" x="650" y="632" width="46" height="22"/><text class="count" x="661" y="647">eco 1</text>
+  <rect class="chip" x="720" y="594" width="92" height="24"/><text class="status" x="744" y="611">parallel</text>
+  <text class="note" x="514" y="674">Example files: Anexo 7, Anexo 6</text>
+</svg>

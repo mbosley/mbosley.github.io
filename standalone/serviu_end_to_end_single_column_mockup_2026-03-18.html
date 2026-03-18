@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SERVIU end-to-end task flow mockup</title>
+  <style>
+    :root {
+      --bg: #f4efe5;
+      --paper: #fffdf8;
+      --panel: #f8f2e7;
+      --ink: #221c17;
+      --muted: #6c6359;
+      --line: #2d241c;
+      --accent: #b88a3b;
+      --accent-soft: #ead8b7;
+      --good: #1b7a52;
+      --serif: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --sans: "Inter", "Helvetica Neue", Arial, sans-serif;
+      --mono: "SFMono-Regular", Menlo, Consolas, monospace;
+      --shadow: 0 16px 34px rgba(0, 0, 0, 0.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(184, 138, 59, 0.12), transparent 26%),
+        radial-gradient(circle at bottom right, rgba(184, 138, 59, 0.08), transparent 30%),
+        var(--bg);
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 20px 48px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(248,242,231,0.98));
+      border: 2px solid var(--line);
+      border-radius: 28px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border: 1.5px solid var(--line);
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.9);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-family: var(--serif);
+      font-size: 48px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 820px;
+      color: var(--muted);
+      font-size: 19px;
+      line-height: 1.42;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .meta-card {
+      border: 1.5px solid rgba(45,36,28,0.75);
+      border-radius: 16px;
+      background: rgba(255,255,255,0.72);
+      padding: 12px 13px;
+    }
+
+    .meta-label {
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      font-size: 15px;
+      line-height: 1.32;
+    }
+
+    .flow {
+      position: relative;
+      margin-top: 22px;
+      padding-left: 58px;
+      display: grid;
+      gap: 18px;
+    }
+
+    .flow::before {
+      content: "";
+      position: absolute;
+      left: 28px;
+      top: 8px;
+      bottom: 8px;
+      width: 3px;
+      border-radius: 999px;
+      background: linear-gradient(to bottom, var(--accent), rgba(184, 138, 59, 0.18));
+    }
+
+    .step {
+      position: relative;
+      background: var(--paper);
+      border: 2px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .step-num {
+      position: absolute;
+      left: -58px;
+      top: 18px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+      font-weight: 800;
+      color: white;
+      background: var(--accent);
+      border: 2px solid var(--paper);
+      box-shadow: 0 0 0 2px var(--line);
+    }
+
+    .step-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px 12px;
+      border-bottom: 2px solid var(--line);
+      background: var(--panel);
+    }
+
+    .step-title {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1.15;
+    }
+
+    .step-tag {
+      flex: none;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(45,36,28,0.78);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      background: white;
+    }
+
+    .step-body {
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .step-intro {
+      font-size: 17px;
+      line-height: 1.45;
+    }
+
+    .step-intro strong {
+      font-weight: 800;
+    }
+
+    .two-up {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .artifact-card,
+    .evidence-card {
+      border: 1.5px solid rgba(45,36,28,0.75);
+      border-radius: 18px;
+      background: white;
+      padding: 12px;
+    }
+
+    .artifact {
+      width: 100%;
+      display: block;
+      border: 1.5px solid rgba(45,36,28,0.2);
+      border-radius: 14px;
+      background: white;
+    }
+
+    .caption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.3;
+    }
+
+    .mini-heading {
+      margin: 0 0 8px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    pre {
+      margin: 0;
+      border: 1.5px solid rgba(45,36,28,0.16);
+      border-radius: 14px;
+      background: #fcf9f2;
+      padding: 12px 13px;
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.34;
+      white-space: pre-wrap;
+      overflow: hidden;
+    }
+
+    .logic {
+      display: grid;
+      gap: 8px;
+    }
+
+    .logic-row {
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 8px 10px;
+      border: 1px solid rgba(45,36,28,0.14);
+      border-radius: 12px;
+      background: #fcf8ef;
+    }
+
+    .logic-index {
+      color: var(--good);
+      font-size: 13px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.1;
+    }
+
+    .logic-text strong {
+      display: block;
+      margin-bottom: 2px;
+      font-size: 12px;
+      line-height: 1.24;
+    }
+
+    .logic-text span {
+      color: var(--muted);
+      font-size: 11.3px;
+      line-height: 1.28;
+    }
+
+    .route-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .route {
+      display: grid;
+      grid-template-columns: 132px 1fr 84px;
+      gap: 10px;
+      align-items: start;
+      padding: 10px 11px;
+      border: 1px solid rgba(45,36,28,0.14);
+      border-radius: 14px;
+      background: #fff;
+    }
+
+    .route-name {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+    }
+
+    .route-reason {
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.3;
+    }
+
+    .route-status {
+      justify-self: end;
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1.5px solid rgba(45,36,28,0.75);
+      background: white;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .route-status.selected {
+      color: var(--good);
+      border-color: rgba(27,122,82,0.35);
+      background: rgba(27,122,82,0.08);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .check {
+      border: 1px solid rgba(45,36,28,0.14);
+      border-radius: 14px;
+      background: #fcf8ef;
+      padding: 10px 11px;
+    }
+
+    .check h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+    }
+
+    .check p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.3;
+    }
+
+    .packet {
+      border: 1.5px solid rgba(45,36,28,0.75);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(27,122,82,0.08), rgba(255,255,255,0.96));
+      padding: 16px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .packet-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .packet-status {
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+      color: var(--good);
+    }
+
+    .packet-score {
+      text-align: right;
+    }
+
+    .packet-score .num {
+      display: block;
+      font-size: 42px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .packet-score .label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .packet-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .packet-box {
+      border: 1px solid rgba(45,36,28,0.14);
+      border-radius: 14px;
+      padding: 10px 11px;
+      background: rgba(255,255,255,0.85);
+    }
+
+    .packet-box h3 {
+      margin: 0 0 6px;
+      font-size: 13px;
+    }
+
+    .packet-box p,
+    .packet-box li {
+      margin: 0;
+      color: var(--muted);
+      font-size: 11.5px;
+      line-height: 1.3;
+    }
+
+    .packet-box ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .meta,
+      .two-up,
+      .check-grid,
+      .packet-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .route {
+        grid-template-columns: 1fr;
+      }
+
+      .route-status {
+        justify-self: start;
+      }
+
+      .flow {
+        padding-left: 48px;
+      }
+
+      .flow::before {
+        left: 23px;
+      }
+
+      .step-num {
+        left: -48px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>How one procurement task moves through the agent</h1>
+      <p>
+        This page shows one real example from case <strong>48-39-LQ25</strong>.
+        The task is to determine whether the bidder accredited digital technical-inspection capability.
+        The flow shows what the agent does at each step: read the public rule,
+        choose a review path, pull the decisive documents, compare them, and
+        write a packet for a human reviewer.
+      </p>
+      <div class="meta">
+        <div class="meta-card">
+          <div class="meta-label">Public buyer</div>
+          <div class="meta-value">SERVIU Metropolitano</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Bidder under review</div>
+          <div class="meta-value">HH Ingeniería Ltda.</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Criterion</div>
+          <div class="meta-value">Digital technical-inspection capability</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-label">Final packet outcome</div>
+          <div class="meta-value"><span style="color: var(--good); font-weight: 800;">Provisional pass</span>, score 100</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow">
+      <article class="step">
+        <div class="step-num">1</div>
+        <div class="step-head">
+          <div class="step-title">Receive the full tender and identify the tasks inside it</div>
+          <div class="step-tag">task discovery</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent starts with the full tender bundle: bases, annexes,
+            bidder files, and the public evaluation record.
+            <strong>Its job in this step is to identify which review tasks exist inside the tender.</strong>
+          </div>
+          <div class="artifact-card">
+            <div class="mini-heading">Input artifact</div>
+            <img class="artifact" src="48_39_tender_bundle_overview_2026-03-18.svg" alt="Tender bundle overview for case 48-39 showing award documents and bidder offer folders" />
+            <div class="caption">This is the actual public intake bundle for case 48-39-LQ25: three award-record files plus four bidder offer folders, each split into administrative, technical, and economic documents.</div>
+          </div>
+          <div class="route-list">
+            <div class="route">
+              <div class="route-name">Environmental impact</div>
+              <div class="route-reason">A separate task identified from the same tender bundle.</div>
+              <div class="route-status">parallel</div>
+            </div>
+            <div class="route">
+              <div class="route-name">Digital technical-inspection capability</div>
+              <div class="route-reason">This is the branch the rest of the page follows.</div>
+              <div class="route-status selected">selected</div>
+            </div>
+            <div class="route">
+              <div class="route-name">Integrity program</div>
+              <div class="route-reason">Another task identified from the same tender bundle.</div>
+              <div class="route-status">parallel</div>
+            </div>
+          </div>
+          <div class="logic">
+            <div class="logic-row">
+              <div class="logic-index">1</div>
+              <div class="logic-text">
+                <strong>The agent scans the tender for reviewable criteria</strong>
+                <span>It uses the public evaluation record plus the available bidder files to split the tender into task-sized units.</span>
+              </div>
+            </div>
+            <div class="logic-row">
+              <div class="logic-index">2</div>
+              <div class="logic-text">
+                <strong>The rest of the page follows one branch only</strong>
+                <span>From this point onward, the page tracks the digital technical-inspection task and ignores the parallel tasks.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">2</div>
+        <div class="step-head">
+          <div class="step-title">Read the public rule for this selected task</div>
+          <div class="step-tag">rule recovery</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent now follows the selected task branch, reads the public
+            evaluation record for this criterion, and extracts the scoring event.
+            <strong>Its job in this step is to turn one page into a usable task rule.</strong>
+          </div>
+          <div class="artifact-card">
+            <div class="mini-heading">Input artifact</div>
+            <img class="artifact" src="48_39_acta_page10.png" alt="Public evaluation record page for case 48-39" />
+            <div class="caption">This page names the criterion and states the scoring event: `100` if the bidder accredits the software, `0` if it does not.</div>
+          </div>
+          <div class="evidence-card">
+            <div class="mini-heading">What the agent now understands from this page</div>
+            <div class="logic">
+              <div class="logic-row">
+                <div class="logic-index">1</div>
+                <div class="logic-text">
+                  <strong>The job is to judge one specific criterion</strong>
+                      <span>The page is about digital technical-inspection capability as a defined procurement criterion.</span>
+                </div>
+              </div>
+              <div class="logic-row">
+                <div class="logic-index">2</div>
+                <div class="logic-text">
+                  <strong>The scoring event is binary</strong>
+                  <span>This task closes at `100` if the capability is accredited and at `0` if it is not.</span>
+                </div>
+              </div>
+              <div class="logic-row">
+                <div class="logic-index">3</div>
+                <div class="logic-text">
+                  <strong>The next step is to look for proof in the bidder files</strong>
+                  <span>The agent now knows it needs documents that show this exact capability, not a general technical claim.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">3</div>
+        <div class="step-head">
+          <div class="step-title">Choose the review path</div>
+          <div class="step-tag">task routing</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent reads the rule object and classifies the task.
+            <strong>Its job in this step is to choose the right review procedure for this criterion.</strong>
+          </div>
+          <div class="two-up">
+            <div class="evidence-card">
+              <div class="mini-heading">Input features the agent detects</div>
+              <pre>{
+  "criterion_title":
+    "seguimiento digital fiscalización técnica de obras",
+  "score_shape": [100, 0],
+  "requires_narrative_rubric": false,
+  "requires_counting_or_banding": false,
+  "requires_document_accreditation": true,
+  "supporting_files_present": [
+    "Anexo 7",
+    "API matrix",
+    "technical sheets"
+  ]
+}</pre>
+            </div>
+            <div class="evidence-card">
+              <div class="mini-heading">How the agent reasons about the route</div>
+              <div class="logic">
+                <div class="logic-row">
+                  <div class="logic-index">1</div>
+                  <div class="logic-text">
+                    <strong>The agent sees a pass/fail documentary task</strong>
+                    <span>The public rule asks whether the bidder accredited one capability, not how well a narrative proposal was written.</span>
+                  </div>
+                </div>
+                <div class="logic-row">
+                  <div class="logic-index">2</div>
+                  <div class="logic-text">
+                    <strong>The agent sees supporting files it can test against the claim</strong>
+                    <span>Annex 7 is present, and the technical bundle also includes the API matrix and related support files.</span>
+                  </div>
+                </div>
+                <div class="logic-row">
+                  <div class="logic-index">3</div>
+                  <div class="logic-text">
+                    <strong>The agent chooses documentary verification</strong>
+                    <span>This route matches the job because the task turns on documentary proof tied to one capability claim.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="route-list">
+            <div class="route">
+              <div class="route-name">Documentary verification</div>
+              <div class="route-reason">The agent selects this path because the task is a binary `100/0` document-accreditation check with supporting technical files.</div>
+              <div class="route-status selected">selected</div>
+            </div>
+            <div class="route">
+              <div class="route-name">Proposal review</div>
+              <div class="route-reason">The agent rejects this path because no scored narrative section appears in the public rule for this criterion.</div>
+              <div class="route-status">not used</div>
+            </div>
+            <div class="route">
+              <div class="route-name">Count-and-band scoring</div>
+              <div class="route-reason">The agent rejects this path because the rule does not ask for years, staff counts, project counts, or declared values to be placed into score bands.</div>
+              <div class="route-status">not used</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">4</div>
+        <div class="step-head">
+          <div class="step-title">Pull the bidder’s main claim</div>
+          <div class="step-tag">evidence recovery</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent searches the bidder bundle for the first decisive document.
+            <strong>Its job in this step is to find the page where the bidder explicitly claims to have the capability.</strong>
+          </div>
+          <div class="two-up">
+            <div class="artifact-card">
+              <div class="mini-heading">Input artifact</div>
+              <img class="artifact" src="48_39_anexo_7_page1.png" alt="Annex 7 bidder declaration page for case 48-39" />
+              <div class="caption">Annex 7 is the bidder’s public declaration for this criterion.</div>
+            </div>
+            <div class="stack">
+              <div class="evidence-card">
+                <div class="mini-heading">How the agent reasons through this page</div>
+                <div class="logic">
+                  <div class="logic-row">
+                    <div class="logic-index">1</div>
+                    <div class="logic-text">
+                      <strong>The agent looks for a direct statement of the capability</strong>
+                      <span>This step is about finding the bidder’s own claim, not yet checking whether the claim is well supported.</span>
+                    </div>
+                  </div>
+                  <div class="logic-row">
+                    <div class="logic-index">2</div>
+                    <div class="logic-text">
+                      <strong>The agent checks whether the page names the right object</strong>
+                      <span>The useful claim has to name digital technical inspection specifically and tie it to the bidder’s software capability.</span>
+                    </div>
+                  </div>
+                  <div class="logic-row">
+                    <div class="logic-index">3</div>
+                    <div class="logic-text">
+                      <strong>The agent extracts the claim as a citable object</strong>
+                      <span>Once the page states the capability clearly, the agent saves the exact claim and its citation for later comparison.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="evidence-card">
+                <div class="mini-heading">Agent output</div>
+                <pre>{
+  "source_path": "offers/.../04_Anexo_7.pdf",
+  "claim_excerpt":
+    "cuenta con Software de gestión para la Inspección Técnica de Obra Digital",
+  "api_declared": true,
+  "json_output_declared": true,
+  "citation": "04_Anexo_7.pdf#p1"
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">5</div>
+        <div class="step-head">
+          <div class="step-title">Pull the supporting technical file</div>
+          <div class="step-tag">support check</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent now looks for a second document that backs up the claim in Annex 7.
+            <strong>Its job in this step is to find technical support that can be matched to SERVIU’s requirements.</strong>
+          </div>
+          <div class="two-up">
+            <div class="artifact-card">
+              <div class="mini-heading">Input artifact</div>
+              <img class="artifact" src="48_39_api_matrix_page1.png" alt="Supporting API matrix page for case 48-39" />
+              <div class="caption">This public file links SERVIU-required data fields to named software modules.</div>
+            </div>
+            <div class="stack">
+              <div class="evidence-card">
+                <div class="mini-heading">How the agent reasons through this file</div>
+                <div class="logic">
+                  <div class="logic-row">
+                    <div class="logic-index">1</div>
+                    <div class="logic-text">
+                      <strong>The agent looks for a support document that tests the claim</strong>
+                      <span>The agent looks for technical evidence that can be matched against SERVIU’s requirements.</span>
+                    </div>
+                  </div>
+                  <div class="logic-row">
+                    <div class="logic-index">2</div>
+                    <div class="logic-text">
+                      <strong>The agent checks whether the file maps requirements to concrete modules</strong>
+                      <span>A useful support file has to connect named SERVIU data requirements to specific system components or outputs.</span>
+                    </div>
+                  </div>
+                  <div class="logic-row">
+                    <div class="logic-index">3</div>
+                    <div class="logic-text">
+                      <strong>The agent turns the table into evidence it can compare later</strong>
+                      <span>It extracts the rows and key matches so the closure step can test whether the supporting file really backs the claim.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="evidence-card">
+                <div class="mini-heading">Agent output</div>
+                <pre>{
+  "rows_detected": 20,
+  "key_columns": ["REQUERIMIENTO SERVIU", "MODULO CIP"],
+  "module_matches": {
+    "PORCENTAJE DE AVANCE REAL SEMANAL ACTUAL": "EEPP",
+    "CERTIFICACIONES ... CRITERIO DOE": "DRM",
+    "OBSERVACIONES": "NOTAS"
+  }
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">6</div>
+        <div class="step-head">
+          <div class="step-title">Compare rule and evidence</div>
+          <div class="step-tag">closure check</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            The agent now compares the rule from step 2 to the evidence recovered in steps 4 and 5.
+            <strong>Its job in this step is to decide whether the documents close the task.</strong>
+          </div>
+          <div class="check-grid">
+            <div class="check">
+              <h3>Rule requirement</h3>
+              <p>The bidder must accredit software for digital technical inspection, not merely mention software in general.</p>
+            </div>
+            <div class="check">
+              <h3>Evidence found</h3>
+              <p>Annex 7 states the software claim and names API REST and JSON output.</p>
+            </div>
+            <div class="check">
+              <h3>Support requirement</h3>
+              <p>The claim must be backed by supporting technical material.</p>
+            </div>
+            <div class="check">
+              <h3>Support found</h3>
+              <p>The API matrix and module sheets connect SERVIU data requirements to named modules and outputs.</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="step">
+        <div class="step-num">7</div>
+        <div class="step-head">
+          <div class="step-title">Produce the human-review packet</div>
+          <div class="step-tag">review output</div>
+        </div>
+        <div class="step-body">
+          <div class="step-intro">
+            Once the task closes, the agent writes a <strong>review packet for a human reviewer</strong>.
+          </div>
+          <div class="packet">
+            <div class="packet-top">
+              <div>
+                <div class="mini-heading">Provisional result</div>
+                <div class="packet-status">Pass</div>
+              </div>
+              <div class="packet-score">
+                <span class="num">100</span>
+                <span class="label">Score</span>
+              </div>
+            </div>
+            <div class="packet-grid">
+              <div class="packet-box">
+                <h3>Why it closes positively</h3>
+                <p>Annex 7 states the software capability, and the supporting matrix plus module materials show that the claimed capability maps to SERVIU requirements.</p>
+              </div>
+              <div class="packet-box">
+                <h3>Main supporting documents</h3>
+                <ul>
+                  <li>Acta page defining the rule</li>
+                  <li>Annex 7</li>
+                  <li>API requirements matrix</li>
+                  <li>Technical sheets</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
