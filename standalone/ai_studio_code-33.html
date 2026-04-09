@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Presentation</title>
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --text-muted: #666666;
+            --line-color: #000000;
+            --node-border: #000000;
+            --font-main: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "Courier New", Courier, monospace;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-main);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* --- SCROLLYTELLING LAYOUT --- */
+        .layout-container {
+            display: flex;
+            position: relative;
+            width: 100vw;
+        }
+
+        /* Sticky Right Pane (The Graphic) */
+        .visual-pane {
+            position: sticky;
+            top: 0;
+            width: 65vw;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fafafa;
+            border-left: 1px solid #eaeaea;
+            overflow: hidden; /* Hide overflow during zooms */
+        }
+
+        /* Scrolling Left Pane (The Narrative) */
+        .text-pane {
+            width: 35vw;
+            padding: 0 4vw;
+            box-sizing: border-box;
+            background: var(--bg-color);
+            z-index: 10;
+        }
+
+        /* The "Slides" */
+        .step {
+            min-height: 100vh; /* Forces spacing so only one is read at a time */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0.2;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(20px);
+        }
+
+        .step.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .step h2 {
+            font-size: 24px;
+            margin-bottom: 16px;
+            letter-spacing: -0.5px;
+        }
+
+        .step p {
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--text-muted);
+        }
+
+        .step ol {
+            margin: 12px 0 18px 22px;
+            padding: 0;
+            color: var(--text-muted);
+        }
+
+        .step li {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .spacer {
+            height: 20vh; /* Padding at top/bottom of scroll */
+        }
+
+        /* --- DIAGRAM CORE STYLES (TikZ) --- */
+        .diagram-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            /* Animation for pan/zoom */
+            transition: transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-origin: center center;
+        }
+
+        .diagram-group {
+            display: flex;
+            transition: opacity 0.6s ease;
+        }
+
+        .column { display: flex; flex-direction: column; gap: 24px; }
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: opacity 0.6s ease;
+        }
+
+        .node {
+            height: 34px;
+            border: 1px solid var(--node-border);
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 16px;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03); /* Subtle depth */
+            transition: opacity 0.6s ease, box-shadow 0.6s ease, transform 0.6s ease;
+        }
+
+        .shared-wrapper { position: relative; display: flex; justify-content: center; }
+        .attributes-container {
+            position: absolute; top: 100%; display: flex; flex-direction: column; align-items: center; margin-top: 4px;
+            transition: opacity 0.6s ease;
+        }
+        .attributes-list { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+        .attr-item { font-family: var(--font-mono); font-size: 12px; color: #222; white-space: nowrap; }
+
+        .zoomout-container {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s ease;
+            pointer-events: none;
+        }
+
+        .zoom-node {
+            position: absolute;
+            min-height: 28px;
+            border: 1px solid var(--node-border);
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transform: translate(-50%, -50%);
+        }
+
+        .zoom-node-policy { top: 50%; left: calc(50% - 266px); width: 184px; }
+        .zoom-node-portfolio { top: calc(50% - 166px); left: 50%; width: 176px; }
+        .zoom-node-eval { top: calc(50% + 154px); left: 50%; width: 150px; }
+
+        .zoomout-svg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 620px;
+            height: 300px;
+            transform: translate(-50%, -50%);
+        }
+
+        svg { display: block; overflow: visible; transition: opacity 0.6s ease; }
+        path {
+            stroke: var(--line-color);
+            stroke-width: 1px;
+            fill: none;
+            transition: opacity 0.6s ease, stroke-width 0.6s ease;
+        }
+
+        /* --- STATE HIGHLIGHTING (Controlled by JS) --- */
+        
+        /* 1. Overview (Default) */
+        .diagram-wrapper.state-overview { transform: scale(0.85); }
+        
+        /* 2. Ingestion */
+        .diagram-wrapper.state-ingest { transform: scale(1.15) translateX(15%); }
+        .diagram-wrapper.state-ingest .group-shared,
+        .diagram-wrapper.state-ingest .group-ai,
+        .diagram-wrapper.state-ingest .group-output,
+        .diagram-wrapper.state-ingest .arrow-mid,
+        .diagram-wrapper.state-ingest .arrow-right { opacity: 0.15; }
+
+        /* 2A. IMF corpus */
+        .diagram-wrapper.state-imf-corpus { transform: scale(1.35) translateX(22%); }
+        .diagram-wrapper.state-imf-corpus .row-idb,
+        .diagram-wrapper.state-imf-corpus .row-wb,
+        .diagram-wrapper.state-imf-corpus .idb-converge,
+        .diagram-wrapper.state-imf-corpus .wb-converge,
+        .diagram-wrapper.state-imf-corpus .group-shared,
+        .diagram-wrapper.state-imf-corpus .group-ai,
+        .diagram-wrapper.state-imf-corpus .group-output,
+        .diagram-wrapper.state-imf-corpus .arrow-mid,
+        .diagram-wrapper.state-imf-corpus .arrow-right { opacity: 0.08; }
+        .diagram-wrapper.state-imf-corpus .imf-corpus {
+            box-shadow: 0 0 0 2px #000000 inset, 0 10px 24px rgba(0,0,0,0.12);
+            transform: scale(1.04);
+        }
+
+        /* 2B. IMF adapter */
+        .diagram-wrapper.state-imf-adapter { transform: scale(1.35) translateX(12%); }
+        .diagram-wrapper.state-imf-adapter .row-idb,
+        .diagram-wrapper.state-imf-adapter .row-wb,
+        .diagram-wrapper.state-imf-adapter .idb-converge,
+        .diagram-wrapper.state-imf-adapter .wb-converge,
+        .diagram-wrapper.state-imf-adapter .group-shared,
+        .diagram-wrapper.state-imf-adapter .group-ai,
+        .diagram-wrapper.state-imf-adapter .group-output,
+        .diagram-wrapper.state-imf-adapter .arrow-mid,
+        .diagram-wrapper.state-imf-adapter .arrow-right { opacity: 0.08; }
+        .diagram-wrapper.state-imf-adapter .imf-adapter {
+            box-shadow: 0 0 0 2px #000000 inset, 0 10px 24px rgba(0,0,0,0.12);
+            transform: scale(1.04);
+        }
+        .diagram-wrapper.state-imf-adapter .imf-inline path,
+        .diagram-wrapper.state-imf-adapter .imf-converge {
+            stroke-width: 1.4px;
+        }
+
+        /* 2C. IDB adapter */
+        .diagram-wrapper.state-idb-adapter { transform: scale(1.35) translateX(12%); }
+        .diagram-wrapper.state-idb-adapter .row-imf,
+        .diagram-wrapper.state-idb-adapter .row-wb,
+        .diagram-wrapper.state-idb-adapter .imf-converge,
+        .diagram-wrapper.state-idb-adapter .wb-converge,
+        .diagram-wrapper.state-idb-adapter .group-shared,
+        .diagram-wrapper.state-idb-adapter .group-ai,
+        .diagram-wrapper.state-idb-adapter .group-output,
+        .diagram-wrapper.state-idb-adapter .arrow-mid,
+        .diagram-wrapper.state-idb-adapter .arrow-right { opacity: 0.08; }
+        .diagram-wrapper.state-idb-adapter .idb-adapter {
+            box-shadow: 0 0 0 2px #000000 inset, 0 10px 24px rgba(0,0,0,0.12);
+            transform: scale(1.04);
+        }
+        .diagram-wrapper.state-idb-adapter .idb-inline path,
+        .diagram-wrapper.state-idb-adapter .idb-converge {
+            stroke-width: 1.4px;
+        }
+
+        /* 2D. adapter learning / shared architecture */
+        .diagram-wrapper.state-adapter-learning { transform: scale(1.2) translateX(10%); }
+        .diagram-wrapper.state-adapter-learning .group-shared,
+        .diagram-wrapper.state-adapter-learning .group-ai,
+        .diagram-wrapper.state-adapter-learning .group-output,
+        .diagram-wrapper.state-adapter-learning .arrow-mid,
+        .diagram-wrapper.state-adapter-learning .arrow-right { opacity: 0.12; }
+        .diagram-wrapper.state-adapter-learning .node-corpus { opacity: 0.35; }
+        .diagram-wrapper.state-adapter-learning .node-adapter {
+            box-shadow: 0 0 0 2px #000000 inset, 0 10px 24px rgba(0,0,0,0.12);
+            transform: scale(1.03);
+        }
+        .diagram-wrapper.state-adapter-learning .arrow-inline path,
+        .diagram-wrapper.state-adapter-learning .arrow-left path {
+            stroke-width: 1.35px;
+        }
+
+        /* 3. Shared Data */
+        .diagram-wrapper.state-data { transform: scale(1.3) translateX(0); }
+        .diagram-wrapper.state-data .group-ingest,
+        .diagram-wrapper.state-data .group-ai,
+        .diagram-wrapper.state-data .group-output,
+        .diagram-wrapper.state-data .arrow-left,
+        .diagram-wrapper.state-data .arrow-right { opacity: 0.15; }
+
+        /* 4. AI & Outputs */
+        .diagram-wrapper.state-ai { transform: scale(1.15) translateX(-20%); }
+        .diagram-wrapper.state-ai .group-ingest,
+        .diagram-wrapper.state-ai .group-shared,
+        .diagram-wrapper.state-ai .arrow-left { opacity: 0.15; }
+
+        /* 5. Zoom back out */
+        .diagram-wrapper.state-zoom-out { transform: scale(0.85); }
+        .diagram-wrapper.state-zoom-out .group-ingest,
+        .diagram-wrapper.state-zoom-out .arrow-left {
+            opacity: 0;
+        }
+        .diagram-wrapper.state-zoom-out .attributes-container {
+            opacity: 0;
+            visibility: hidden;
+        }
+        .diagram-wrapper.state-zoom-out .zoomout-container {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive layout for smaller screens */
+        @media (max-width: 900px) {
+            .layout-container { flex-direction: column-reverse; }
+            .visual-pane { width: 100vw; height: 50vh; border-left: none; border-bottom: 1px solid #eaeaea; z-index: 20;}
+            .text-pane { width: 100vw; padding: 0 8vw; }
+            .step { min-height: 50vh; }
+            .diagram-wrapper.state-overview { transform: scale(0.6); }
+            .diagram-wrapper.state-ingest { transform: scale(0.8) translateX(25%); }
+            .diagram-wrapper.state-imf-corpus { transform: scale(0.95) translateX(30%); }
+            .diagram-wrapper.state-imf-adapter { transform: scale(0.95) translateX(20%); }
+            .diagram-wrapper.state-idb-adapter { transform: scale(0.95) translateX(20%); }
+            .diagram-wrapper.state-adapter-learning { transform: scale(0.85) translateX(18%); }
+            .diagram-wrapper.state-data { transform: scale(0.9) translateX(0); }
+            .diagram-wrapper.state-ai { transform: scale(0.8) translateX(-25%); }
+            .diagram-wrapper.state-zoom-out { transform: scale(0.6); }
+            .zoomout-svg { width: 560px; height: 270px; }
+            .zoom-node-policy { top: 50%; left: calc(50% - 214px); width: 160px; }
+            .zoom-node-portfolio { top: calc(50% - 136px); left: 50%; width: 152px; }
+            .zoom-node-eval { top: calc(50% + 132px); left: 50%; width: 138px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SVG Definitions -->
+    <svg style="width:0; height:0; position:absolute;">
+        <defs>
+            <marker id="arrow" markerWidth="6" markerHeight="6" refX="5.5" refY="3" orient="auto">
+                <polygon points="0,0 6,3 0,6 1.5,3" fill="#000" />
+            </marker>
+        </defs>
+    </svg>
+
+    <div class="layout-container">
+        
+        <!-- NARRATIVE PANE (Scrolling) -->
+        <div class="text-pane">
+            <div class="spacer"></div>
+
+            <div class="step" data-state="overview">
+                <h2>From Documents To Intelligence</h2>
+                <p>This is the core architecture behind the current policy-intelligence prototype. We start with large institutional document collections that are difficult to compare directly, and we use AI agents to turn them into structured, auditable evidence that can support research, analysis, and decision-making.</p>
+                <p>In the current prototype, that workflow begins with policy document families such as the IMF, IDB, and World Bank. Our current IMF+IDB corpus covers 26 target countries and includes 281 IMF documents, 175 IDB documents, and more than 60,000 extracted rows. The system learns how to read those corpora, recover the operative policy claims inside them, and place those claims into a shared analytical structure that agents can use downstream.</p>
+                <p>Scroll down to see how the system moves from raw source documents to source-specific adapters, from those adapters to a shared data representation, and from that shared representation to AI-supported outputs.</p>
+            </div>
+
+            <div class="step" data-state="ingest">
+                <h2>Source Corpora And Adapters</h2>
+                <p>The process starts with institutional source families such as the <strong>IMF</strong>, <strong>IDB</strong>, and <strong>World Bank</strong>. Each corpus has its own document structures, policy vocabulary, and evidentiary style.</p>
+                <p>The adapters are the methodological core. We use AI agents inside a shared orchestration framework to render and OCR the source files, reconstruct document structure, map the major sections, read the text at paragraph level, extract explicit policy claims, link those claims to institutions, dates, sectors, and policy lanes, and normalize the output into a clean comparable record.</p>
+                <p>Validation is built into that process from the start. We compare the agents against human gold traces, check whether they recover the same policy claims and source links, review where they miss or over-extract, and then refine the orchestration and extraction policy until the adapter performs reliably on that source family.</p>
+            </div>
+
+            <div class="step" data-state="imf-corpus">
+                <h2>Example: The IMF Corpus</h2>
+                <p>The IMF corpus includes Article IV consultations, program reviews, staff reports, and related assessment documents. Across those materials, the same policy lanes appear again and again: fiscal stance, debt sustainability, inflation, monetary conditions, financial stability, structural reform, institutional capacity, and macroeconomic risk.</p>
+                <p>That recurring structure gives our AI agents a strong setting for learned extraction. They can scan a single report across several sections, recover IMF priorities from fiscal chapters, financial-sector discussion, and capacity-building material, and assemble those statements into one coherent representation of IMF priorities.</p>
+            </div>
+
+            <div class="step" data-state="imf-adapter">
+                <h2>Example: The IMF Adapter</h2>
+                <p>The IMF adapter applies that orchestration framework in stages. Our agents render and OCR the report, map the sections most likely to contain operative policy content, read the relevant paragraphs, and extract explicit policy claims linked to institutions, dates, and source passages.</p>
+                <ol>
+                    <li>They reconstruct the report as a navigable document map and identify the sections most likely to contain operative policy content.</li>
+                    <li>They read paragraph-level text in those regions and extract explicit claims about priorities, recommendations, institutions, and timing.</li>
+                    <li>They link each extracted claim back to the supporting source passage so the evidence remains auditable.</li>
+                    <li>They normalize repeated or synonymous claims into a coherent analytical record and compare the result against reviewed examples.</li>
+                </ol>
+            </div>
+
+            <div class="step" data-state="idb-adapter">
+                <h2>Example: The IDB Adapter</h2>
+                <p>The IDB adapter works over a different document grammar. IDB policy-based operations often spread the real action logic across loan proposals, policy matrices, annex tables, and results frameworks, so our agents have to reconstruct both narrative sections and table structures before they can assemble a reliable record of the operation.</p>
+                <ol>
+                    <li>They render and OCR the full document set, including dense policy-matrix pages where key reform content lives in cells rather than in running prose.</li>
+                    <li>They reconstruct the policy matrix as a structured table by recovering rows, columns, actions, institutions, and implementation notes from the page layout.</li>
+                    <li>They align those reconstructed table entries with the surrounding narrative so each action can be interpreted in context.</li>
+                    <li>They normalize duplicated or split formulations, link each extracted action back to the exact page and table region, and compare the result against reviewed examples.</li>
+                </ol>
+            </div>
+
+            <div class="step" data-state="adapter-learning">
+                <h2>Learning The Right Extraction Policy</h2>
+                <p>We make the adapter reliable by evaluating the agents against human gold traces. Those traces show the agents which sections matter, which paragraphs contain the operative policy claims, which fields they should extract, and how they should normalize those claims and link them back to source text.</p>
+                <ol>
+                    <li>We show the agents which sections and paragraphs human reviewers treated as carrying the real policy signal.</li>
+                    <li>We measure how well the agents recover the same claims, fields, and source links.</li>
+                    <li>We refine the orchestration and extraction policy until the agents learn where to look, what to extract, how to distinguish core recommendations from background discussion, and how to preserve provenance in a reliable way.</li>
+                </ol>
+            </div>
+
+            <div class="step" data-state="data">
+                <h2>Shared Data Representation</h2>
+                <p>Once the agents finish extraction and normalization, they place the evidence into a <strong>shared representation</strong> that lets us compare documents from different institutions in the same analytical frame.</p>
+                <ol>
+                    <li>They build a comparable analytical record that organizes priorities, reforms, institutions, sectors, dates, countries, and evidence links in a common format.</li>
+                    <li>They preserve the document maps and intermediate extraction traces produced during the adapter stage.</li>
+                    <li>They keep direct links back to the original pages and passages so every downstream output remains auditable.</li>
+                </ol>
+                <p>The result is richer than a flat table: it combines comparable records with the structural and provenance information needed for audit and reuse.</p>
+            </div>
+
+            <div class="step" data-state="ai">
+                <h2>AI Intelligence And Outputs</h2>
+                <p>Once the shared representation exists, the <strong>AI intelligence layer</strong> can work over it directly. AI agents can retrieve evidence, compare institutions, trace change over time, and assemble outputs on demand.</p>
+                <ol>
+                    <li>They can answer research questions by retrieving the relevant records, returning to the underlying passages, and assembling a grounded response.</li>
+                    <li>They can compare institutions, countries, and time periods across many extracted records at once.</li>
+                    <li>They can produce memos, comparative writeups, and broader decision-support outputs from the same evidence base.</li>
+                </ol>
+                <p>The chatbot is one interface into that layer, alongside more structured analytical products built on the same evidence.</p>
+            </div>
+
+            <div class="step" data-state="zoom-out">
+                <h2>Toward An Institutional Intelligence Layer</h2>
+                <p>This prototype shows one instance of the larger method. We currently apply it to policy document corpora, build source-specific adapters for those materials, and place the results into a shared data representation that agents can use downstream.</p>
+                <p>The same architectural logic can extend to other institutional surfaces as well. We can build adapters for project documents, evaluations, operational records, and other structured or semi-structured sources, then translate those materials into compatible shared representations with the same attention to structure, provenance, and auditability.</p>
+                <p>That is the broader idea behind the system: each new information surface becomes another source of evidence that agents can map, normalize, and connect into a common analytical environment.</p>
+            </div>
+
+            <div class="spacer"></div>
+        </div>
+
+        <!-- VISUAL PANE (Sticky) -->
+        <div class="visual-pane">
+            <div class="diagram-wrapper state-overview" id="diagram">
+                
+                <!-- GROUP 1: Ingest -->
+                <div class="diagram-group group-ingest column">
+                    <div class="row row-imf">
+                        <div class="node node-corpus imf-corpus">IMF CORPUS</div>
+                        <svg width="30" height="34" class="arrow-inline imf-inline"><path d="M 0 17 L 28 17" marker-end="url(#arrow)"/></svg>
+                        <div class="node node-adapter imf-adapter">IMF ADAPTER</div>
+                    </div>
+                    <div class="row row-idb">
+                        <div class="node node-corpus idb-corpus">IDB CORPUS</div>
+                        <svg width="30" height="34" class="arrow-inline idb-inline"><path d="M 0 17 L 28 17" marker-end="url(#arrow)"/></svg>
+                        <div class="node node-adapter idb-adapter">IDB ADAPTER</div>
+                    </div>
+                    <div class="row row-wb">
+                        <div class="node node-corpus wb-corpus">WB CORPUS</div>
+                        <svg width="30" height="34" class="arrow-inline wb-inline"><path d="M 0 17 L 28 17" marker-end="url(#arrow)"/></svg>
+                        <div class="node node-adapter wb-adapter">WB ADAPTER</div>
+                    </div>
+                </div>
+
+                <!-- CONVERGE ARROWS -->
+                <svg width="50" height="150" class="arrow-left">
+                    <path class="imf-converge" d="M 0 17 L 48 65" marker-end="url(#arrow)" />
+                    <path class="idb-converge" d="M 0 75 L 48 75" marker-end="url(#arrow)" />
+                    <path class="wb-converge" d="M 0 133 L 48 85" marker-end="url(#arrow)" />
+                </svg>
+
+                <!-- GROUP 2: Shared Data -->
+                <div class="diagram-group group-shared shared-wrapper">
+                    <div class="node">SHARED DATA REPRESENTATION</div>
+                    <div class="attributes-container">
+                        <svg width="20" height="24">
+                            <path d="M 10 0 L 10 22" marker-end="url(#arrow)"/>
+                        </svg>
+                        <div class="attributes-list">
+                            <div class="attr-item">[ priorities ]</div>
+                            <div class="attr-item">[ reforms / actions ]</div>
+                            <div class="attr-item">[ institutions ]</div>
+                            <div class="attr-item">[ sectors ]</div>
+                            <div class="attr-item">[ dates / periods ]</div>
+                            <div class="attr-item">[ countries ]</div>
+                            <div class="attr-item">[ source passages ]</div>
+                            <div class="attr-item">[ evidence links ]</div>
+                        </div>
+                    </div>
+                    <div class="zoomout-container">
+                        <svg class="zoomout-svg" viewBox="0 0 620 300" preserveAspectRatio="none">
+                            <path d="M 161 150 L 189 150" marker-end="url(#arrow)"/>
+                            <path d="M 310 20 L 310 120" marker-end="url(#arrow)"/>
+                            <path d="M 310 282 L 310 186" marker-end="url(#arrow)"/>
+                        </svg>
+                        <div class="zoom-node zoom-node-policy">POLICY DOCUMENTS</div>
+                        <div class="zoom-node zoom-node-portfolio">PORTFOLIO DATA</div>
+                        <div class="zoom-node zoom-node-eval">EVALUATIONS</div>
+                    </div>
+                </div>
+
+                <!-- MIDDLE ARROW -->
+                <svg width="30" height="34" class="arrow-mid">
+                    <path d="M 0 17 L 28 17" marker-end="url(#arrow)"/>
+                </svg>
+
+                <!-- GROUP 3: AI Layer -->
+                <div class="diagram-group group-ai node">AI INTELLIGENCE LAYER</div>
+
+                <!-- DIVERGE ARROWS -->
+                <svg width="50" height="208" class="arrow-right">
+                    <path d="M 0 95 L 48 17" marker-end="url(#arrow)" />
+                    <path d="M 0 101 L 48 75" marker-end="url(#arrow)" />
+                    <path d="M 0 107 L 48 133" marker-end="url(#arrow)" />
+                    <path d="M 0 113 L 48 191" marker-end="url(#arrow)" />
+                </svg>
+
+                <!-- GROUP 4: Outputs -->
+                <div class="diagram-group group-output column">
+                    <div class="node">CHATBOT</div>
+                    <div class="node">MEMOS / REPORTS</div>
+                    <div class="node">COMPARATIVE ANALYSIS</div>
+                    <div class="node">BI / DECISION SUPPORT</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- JS FOR SCROLL DETECTION -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const steps = document.querySelectorAll(".step");
+            const diagram = document.getElementById("diagram");
+
+            // Setup the Intersection Observer
+            const observerOptions = {
+                root: null, // use viewport
+                rootMargin: "-45% 0px -45% 0px", // Trigger when element hits the middle 10% of screen
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // 1. Highlight active text
+                        steps.forEach(s => s.classList.remove("active"));
+                        entry.target.classList.add("active");
+
+                        // 2. Update diagram state class
+                        const state = entry.target.getAttribute("data-state");
+                        diagram.className = `diagram-wrapper state-${state}`;
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all text blocks
+            steps.forEach(step => observer.observe(step));
+        });
+    </script>
+</body>
+</html>
