@@ -478,6 +478,12 @@
             height: 96px;
             border: 2px solid #FFFFFF;
             object-fit: cover;
+            transition: border-color 160ms ease;
+        }
+
+        .person-card:hover .person-photo,
+        .person-card.is-expanded .person-photo {
+            border-color: var(--primary);
         }
 
         .person-card p {
@@ -519,6 +525,25 @@
         .work-copy .work-item.is-expanded {
             border-left-color: var(--primary);
             border-bottom-color: var(--primary);
+        }
+
+        @media (hover: none) and (pointer: coarse) {
+            .work-copy .work-item:hover:not(.is-expanded) {
+                border-left-color: var(--text);
+                border-bottom-color: var(--text);
+            }
+
+            .person-card:hover:not(.is-expanded) {
+                border-bottom-color: #FFFFFF;
+            }
+
+            .person-card:hover:not(.is-expanded) summary {
+                color: #FFFFFF;
+            }
+
+            .person-card:hover:not(.is-expanded) .person-photo {
+                border-color: #FFFFFF;
+            }
         }
 
         .work-copy .work-item p {
@@ -757,8 +782,8 @@
         <section class="slide dark" id="quienes-somos">
             <div class="container about-copy">
                 <h2>Quiénes somos.</h2>
-                <p>CachAI Labs reúne investigación, consultoría, política pública y desarrollo de sistemas.</p>
-                <p>El equipo combina experiencia académica, tecnológica, pública y organizacional.</p>
+                <p>CachAI Labs aplica IA a problemas concretos de organizaciones públicas, privadas y sociales.</p>
+                <p>Combinamos investigación, desarrollo de sistemas, consultoría y experiencia en política pública para diseñar herramientas útiles, trazables y adoptables.</p>
                 <div class="people-list">
                     <details class="person-card">
                         <summary>
