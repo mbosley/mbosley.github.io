@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cachai | Consultoría B2B</title>
+    
+    <!-- Space Grotesk for the Brutalist aesthetic -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- RESET & VARIABLES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        :root {
+            --bg: #FFFFFF;
+            --text: #000000;
+            --primary: #E0FF00; /* Highlighter Lime Green */
+            --border-width: 3px;
+            --border: 3px solid #000000;
+            --shadow: 6px 6px 0px #000000;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* --- STICKY HEADER --- */
+        header {
+            position: sticky;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--bg);
+            padding: 24px 48px;
+            border-bottom: var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 40;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.05em;
+        }
+
+        /* The Double-Line Menu Button */
+        .menu-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 8px; /* Space between lines */
+            padding: 5px;
+            z-index: 60; /* Keeps it above the overlay if needed, but we'll use a close button inside */
+        }
+
+        .menu-line {
+            width: 36px;
+            height: 3px; /* Thick lines to match brutalism */
+            background-color: var(--text);
+            transition: transform 0.2s ease;
+        }
+
+        .menu-btn:hover .menu-line:first-child {
+            transform: translateX(-4px);
+        }
+        .menu-btn:hover .menu-line:last-child {
+            transform: translateX(4px);
+        }
+
+        /* --- SLIDES / SCROLLING SECTIONS --- */
+        .slide {
+            min-height: 100vh;
+            padding: 48px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: var(--border);
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        /* --- SLIDE 1: HERO (Recreating your image) --- */
+        h1 {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            line-height: 1.05;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            max-width: 900px;
+        }
+
+        p.hero-sub {
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
+            font-weight: 400;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+            max-width: 800px;
+        }
+
+        .hero-punch {
+            display: inline-block;
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            font-weight: 700;
+            line-height: 0.95;
+            background: none;
+            color: var(--text);
+            border: 0;
+            box-shadow: none;
+            padding: 0;
+            margin-bottom: 3rem;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 16px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        input {
+            flex: 1;
+            padding: 20px 24px;
+            font-size: 1.2rem;
+            background-color: var(--bg);
+            color: var(--text);
+            border: var(--border);
+            border-radius: 0;
+            outline: none;
+            box-shadow: var(--shadow);
+            transition: all 0.2s ease;
+        }
+
+        input::placeholder { color: #666666; }
+
+        input:focus {
+            box-shadow: 8px 8px 0px #000000;
+            transform: translate(-2px, -2px);
+        }
+
+        button.brutalist-btn {
+            padding: 20px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            background-color: var(--primary);
+            color: var(--text);
+            border: var(--border);
+            border-radius: 0;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            text-transform: uppercase;
+            transition: all 0.1s ease;
+            white-space: nowrap;
+        }
+
+        button.brutalist-btn:active {
+            box-shadow: 0px 0px 0px #000000;
+            transform: translate(6px, 6px);
+        }
+
+        /* --- SLIDE 2: DARK MODE B2B PITCH --- */
+        .slide.dark {
+            background-color: #000000;
+            color: #FFFFFF;
+            /* Invert the border at the bottom for the dark slide */
+            border-bottom: 3px solid #FFFFFF; 
+        }
+
+        .slide.dark h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1;
+            margin-bottom: 4rem;
+            text-transform: uppercase;
+            color: var(--primary); /* Lime green text on black */
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 32px;
+        }
+
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 28px;
+        }
+
+        .brutalist-card {
+            background-color: #000000;
+            border: 3px solid #FFFFFF;
+            padding: 32px;
+            box-shadow: 6px 6px 0px var(--primary); /* Lime shadow on dark bg */
+            transition: transform 0.2s ease;
+        }
+        
+        .brutalist-card:hover {
+            transform: translate(-4px, -4px);
+            box-shadow: 10px 10px 0px var(--primary);
+        }
+
+        .brutalist-card h3 { font-size: 1.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+        .brutalist-card p { font-size: 1.1rem; line-height: 1.5; color: #CCCCCC; }
+
+        .work-list {
+            display: grid;
+            gap: 24px;
+            max-width: 900px;
+        }
+
+        .work-item {
+            border-left: 8px solid var(--primary);
+            padding-left: 24px;
+        }
+
+        .work-item h3 {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            line-height: 1;
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .work-item p {
+            color: #CCCCCC;
+            font-size: clamp(1.1rem, 2vw, 1.5rem);
+            line-height: 1.35;
+        }
+
+        .about-copy {
+            max-width: 900px;
+        }
+
+        .about-copy h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+            text-transform: uppercase;
+        }
+
+        .about-copy p {
+            font-size: clamp(1.25rem, 2.5vw, 2rem);
+            line-height: 1.35;
+            margin-bottom: 1.25rem;
+        }
+
+        .work-copy h2 {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            line-height: 1;
+            margin-bottom: 3rem;
+            text-transform: uppercase;
+        }
+
+        .work-copy .work-item {
+            border-left-color: var(--text);
+        }
+
+        .work-copy .work-item p {
+            color: var(--text);
+        }
+
+        /* --- FULL SCREEN OVERLAY MENU --- */
+        #menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000000;
+            color: #FFFFFF;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 48px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-header .logo { color: #FFFFFF; }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: #FFFFFF;
+            font-size: 3rem;
+            font-weight: 300;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+        }
+
+        .menu-links {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .menu-links a {
+            color: #FFFFFF;
+            text-decoration: none;
+            font-size: clamp(3rem, 7vw, 6rem);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: -0.03em;
+            transition: color 0.2s ease, padding-left 0.2s ease;
+        }
+
+        .menu-links a:hover {
+            color: var(--primary); /* Hover turns lime green */
+            padding-left: 20px; /* Brutalist physical movement shift */
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            header, #menu-overlay { padding: 20px 24px; }
+            .slide { padding: 40px 24px; }
+            .cta-form { flex-direction: column; }
+            button.brutalist-btn { width: 100%; }
+            .work-item { padding-left: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STICKY HEADER -->
+    <header>
+        <div class="logo">cachai</div>
+        <button class="menu-btn" onclick="toggleMenu()">
+            <!-- The Double Line Menu -->
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+        </button>
+    </header>
+
+    <!-- FULL SCREEN DARK OVERLAY MENU -->
+    <div id="menu-overlay">
+        <div class="menu-header">
+            <div class="logo">cachai</div>
+            <button class="close-btn" onclick="toggleMenu()">&#10005;</button>
+        </div>
+        
+        <div class="menu-links">
+            <a href="#enfoque" onclick="toggleMenu()">01. Enfoque</a>
+            <a href="#proceso" onclick="toggleMenu()">02. Proceso</a>
+            <a href="#trabajo" onclick="toggleMenu()">03. Trabajo</a>
+            <a href="#quienes-somos" onclick="toggleMenu()">04. Quiénes somos</a>
+            <a href="#contacto" onclick="toggleMenu()">05. Contacto</a>
+        </div>
+    </div>
+
+    <!-- MAIN SCROLLABLE CONTENT -->
+    <main>
+        
+        <!-- SLIDE 1: HERO -->
+        <section class="slide" id="enfoque">
+            <div class="container">
+                <h1>IA PARA TU EMPRESA.<br>SIN HUMO.</h1>
+                <p class="hero-sub">Nosotros la implementamos.<br>Tú la entiendes.</p>
+                <p class="hero-punch">¿Cachai?</p>
+                
+                <form action="#" method="POST" class="cta-form">
+                    <input type="email" placeholder="Email..." required>
+                    <button type="submit" class="brutalist-btn">Empezar ahora</button>
+                </form>
+            </div>
+        </section>
+
+        <!-- SLIDE 2: DARK MODE FEATURES -->
+        <section class="slide dark" id="proceso">
+            <div class="container">
+                <h2>IA construida desde tus procesos, para tu forma de trabajar.</h2>
+                <div class="grid-4">
+                    <div class="brutalist-card">
+                        <h3>1. Auditoría</h3>
+                        <p>Mapeamos tus flujos de trabajo, datos y decisiones para identificar dónde la IA puede crear valor real ahora.</p>
+                    </div>
+                    <div class="brutalist-card">
+                        <h3>2. Integración</h3>
+                        <p>Diseñamos sistemas seguros que conectan modelos, datos y procesos internos sin perder control ni trazabilidad.</p>
+                    </div>
+                    <div class="brutalist-card">
+                        <h3>3. Operación</h3>
+                        <p>Entrenamos a tu equipo, documentamos la lógica y dejamos capacidades instaladas para que el sistema pueda escalar.</p>
+                    </div>
+                    <div class="brutalist-card">
+                        <h3>4. Soporte</h3>
+                        <p>Acompañamos la adopción, ajustamos los sistemas con usuarios reales y dejamos rutinas de mejora continua.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3: WORK -->
+        <section class="slide" id="trabajo">
+            <div class="container work-copy">
+                <h2>Trabajo en curso.</h2>
+                <div class="work-list">
+                    <div class="work-item">
+                        <h3>Inteligencia documental</h3>
+                        <p>Convertimos reportes, contratos, bases internas y archivos institucionales en sistemas de consulta, análisis y síntesis.</p>
+                    </div>
+                    <div class="work-item">
+                        <h3>Inteligencia legislativa</h3>
+                        <p>Seguimos sesiones, proyectos, actores y riesgos desde fuentes públicas, con briefs auditables y revisión humana.</p>
+                    </div>
+                    <div class="work-item">
+                        <h3>Automatización de conocimiento</h3>
+                        <p>Diseñamos flujos donde la IA ayuda a leer, ordenar, sintetizar y dar seguimiento al trabajo sin perder contexto ni trazabilidad.</p>
+                    </div>
+                    <div class="work-item">
+                        <h3>Capacitación aplicada</h3>
+                        <p>Entrenamos equipos para pasar del uso individual de chatbots a sistemas de trabajo con IA, criterio y control.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4: ABOUT -->
+        <section class="slide dark" id="quienes-somos">
+            <div class="container about-copy">
+                <h2>Quiénes somos</h2>
+                <p>Somos un equipo de investigadores, consultores y constructores de sistemas.</p>
+                <p>Ayudamos a organizaciones a incorporar IA en procesos reales, con criterio técnico, trazabilidad y sentido institucional.</p>
+            </div>
+        </section>
+
+        <!-- SLIDE 5: FINAL CTA -->
+        <section class="slide" id="contacto">
+            <div class="container">
+                <h1>¿LISTO PARA EMPEZAR?</h1>
+                <p class="hero-sub">Cuéntanos cómo trabaja tu organización.<br>Veamos dónde la IA puede aportar valor.</p>
+                <button class="brutalist-btn" style="padding: 24px 64px; font-size: 1.5rem;">Agendar diagnóstico</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript to control the menu overlay -->
+    <script>
+        function toggleMenu() {
+            const menu = document.getElementById('menu-overlay');
+            const body = document.body;
+            
+            menu.classList.toggle('active');
+            
+            // Prevent scrolling on the main page when menu is open
+            if(menu.classList.contains('active')) {
+                body.style.overflow = 'hidden';
+            } else {
+                body.style.overflow = 'auto';
+            }
+        }
+    </script>
+
+</body>
+</html>
