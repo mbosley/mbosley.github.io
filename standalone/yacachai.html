@@ -283,12 +283,39 @@
             max-width: 760px;
         }
 
-        .people-list div {
+        .person-card {
             border-bottom: 2px solid #FFFFFF;
+            padding-bottom: 12px;
+        }
+
+        .person-card summary {
+            cursor: pointer;
             font-size: clamp(1.35rem, 3vw, 2.4rem);
             font-weight: 700;
             line-height: 1.1;
-            padding-bottom: 12px;
+            list-style: none;
+        }
+
+        .person-card summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .person-card summary::after {
+            content: "+";
+            float: right;
+            color: var(--primary);
+        }
+
+        .person-card[open] summary::after {
+            content: "-";
+        }
+
+        .person-card p {
+            color: #CCCCCC;
+            font-size: clamp(1rem, 2vw, 1.35rem);
+            line-height: 1.4;
+            margin: 0.85rem 0 0;
+            max-width: 760px;
         }
 
         .work-copy h2 {
@@ -486,12 +513,30 @@
                 <p>CachAI Labs reúne investigación, consultoría, política pública y desarrollo de sistemas.</p>
                 <p>El equipo en formación combina experiencia académica, tecnológica, pública y organizacional.</p>
                 <div class="people-list">
-                    <div>Mitchell Bosley</div>
-                    <div>Juan Pablo Luna</div>
-                    <div>Naím Bro</div>
-                    <div>Andrés Abeliuk</div>
-                    <div>Sergio Toro</div>
-                    <div>Rafael Palacios</div>
+                    <details class="person-card">
+                        <summary>Juan Pablo Luna</summary>
+                        <p>Politólogo con trayectoria académica y pública en Chile y América Latina. Aporta lectura estratégica del entorno político, institucional y social.</p>
+                    </details>
+                    <details class="person-card">
+                        <summary>Mitchell Bosley</summary>
+                        <p>Investigador y constructor de sistemas de IA aplicada a documentos, procesos públicos, análisis político y flujos de trabajo con agentes.</p>
+                    </details>
+                    <details class="person-card">
+                        <summary>Naím Bro</summary>
+                        <p>Académico en gobierno y ciencias sociales computacionales. Trabaja en cruces entre datos, política y análisis social.</p>
+                    </details>
+                    <details class="person-card">
+                        <summary>Andrés Abeliuk</summary>
+                        <p>Académico en computación e investigador asociado a CENIA, con trabajo en inteligencia artificial, datos y sistemas sociales.</p>
+                    </details>
+                    <details class="person-card">
+                        <summary>Sergio Toro</summary>
+                        <p>Politólogo con experiencia en análisis político, instituciones y opinión pública.</p>
+                    </details>
+                    <details class="person-card">
+                        <summary>Rafael “Rafa” Palacios</summary>
+                        <p>Abogado y consultor en asuntos públicos, regulación y estrategia institucional.</p>
+                    </details>
                 </div>
             </div>
         </section>
