@@ -312,11 +312,13 @@
         .work-toggle::after {
             left: 50%;
             width: 4px;
+            opacity: 1;
             transform: translateX(-50%);
+            transition: opacity 140ms ease;
         }
 
         .work-item[open] .work-toggle::after {
-            display: none;
+            opacity: 0;
         }
 
         .work-detail {
@@ -324,6 +326,10 @@
             gap: 0.9rem;
             margin-top: 1.25rem;
             max-width: 920px;
+        }
+
+        .work-item[open] .work-detail {
+            animation: drawer-reveal 160ms ease-out both;
         }
 
         .work-detail p {
@@ -399,11 +405,13 @@
         }
 
         .person-toggle::after {
+            opacity: 1;
             transform: translateY(-50%) rotate(90deg);
+            transition: opacity 140ms ease;
         }
 
         .person-card[open] .person-toggle::after {
-            display: none;
+            opacity: 0;
         }
 
         .person-body {
@@ -412,6 +420,21 @@
             gap: 20px;
             align-items: start;
             margin-top: 1rem;
+        }
+
+        .person-card[open] .person-body {
+            animation: drawer-reveal 160ms ease-out both;
+        }
+
+        @keyframes drawer-reveal {
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .person-photo {
