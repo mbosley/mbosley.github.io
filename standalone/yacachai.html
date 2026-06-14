@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>cachai | Consultoría B2B</title>
+    <title>CachAI Labs | Consultoría B2B</title>
     
     <!-- Space Grotesk for the Brutalist aesthetic -->
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
@@ -51,10 +51,29 @@
             z-index: 40;
         }
 
-        .logo {
+        .brand-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-text {
             font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.05em;
+        }
+
+        .logo-badge {
+            font-size: 0.8rem;
+            font-weight: 700;
+            background-color: var(--primary);
+            color: #000000;
+            padding: 2px 8px;
+            border: 2px solid #000000;
+            box-shadow: 2px 2px 0px #000000;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transform: translateY(-2px);
         }
 
         /* The Double-Line Menu Button */
@@ -301,7 +320,7 @@
             align-items: center;
         }
 
-        .menu-header .logo { color: #FFFFFF; }
+        #menu-overlay .logo-text { color: #FFFFFF; }
 
         .close-btn {
             background: none;
@@ -352,7 +371,10 @@
 
     <!-- STICKY HEADER -->
     <header>
-        <div class="logo">cachai</div>
+        <div class="brand-wrapper">
+            <div class="logo-text">cachAI</div>
+            <div class="logo-badge">LABS</div>
+        </div>
         <button class="menu-btn" onclick="toggleMenu()">
             <!-- The Double Line Menu -->
             <div class="menu-line"></div>
@@ -363,7 +385,10 @@
     <!-- FULL SCREEN DARK OVERLAY MENU -->
     <div id="menu-overlay">
         <div class="menu-header">
-            <div class="logo">cachai</div>
+            <div class="brand-wrapper">
+                <div class="logo-text">cachAI</div>
+                <div class="logo-badge">LABS</div>
+            </div>
             <button class="close-btn" onclick="toggleMenu()">&#10005;</button>
         </div>
         
