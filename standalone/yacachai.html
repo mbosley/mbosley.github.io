@@ -24,6 +24,7 @@
             --border-width: 3px;
             --border: 3px solid #000000;
             --shadow: 6px 6px 0px #000000;
+            --header-offset: 78px;
         }
 
         body {
@@ -34,7 +35,7 @@
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: 96px;
+            scroll-padding-top: var(--header-offset);
         }
 
         /* --- STICKY HEADER --- */
@@ -116,7 +117,7 @@
             flex-direction: column;
             justify-content: center;
             border-bottom: var(--border);
-            scroll-margin-top: 96px;
+            scroll-margin-top: var(--header-offset);
         }
 
         .container {
@@ -532,9 +533,8 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
-            html { scroll-padding-top: 84px; }
             header, #menu-overlay { padding: 20px 24px; }
-            .slide { padding: 40px 24px; scroll-margin-top: 84px; }
+            .slide { padding: 40px 24px; }
             .cta-form { flex-direction: column; }
             button.brutalist-btn { width: 100%; }
             .work-item { padding-left: 18px; }
@@ -779,6 +779,16 @@
 
     <!-- JavaScript to control the menu overlay -->
     <script>
+        function syncHeaderOffset() {
+            const header = document.querySelector('header');
+            if (!header) return;
+            document.documentElement.style.setProperty('--header-offset', `${header.offsetHeight}px`);
+        }
+
+        window.addEventListener('load', syncHeaderOffset);
+        window.addEventListener('resize', syncHeaderOffset);
+        syncHeaderOffset();
+
         function toggleMenu() {
             const menu = document.getElementById('menu-overlay');
             const body = document.body;
