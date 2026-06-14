@@ -34,6 +34,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: 96px;
         }
 
         /* --- STICKY HEADER --- */
@@ -115,6 +116,7 @@
             flex-direction: column;
             justify-content: center;
             border-bottom: var(--border);
+            scroll-margin-top: 96px;
         }
 
         .container {
@@ -530,8 +532,9 @@
 
         /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
+            html { scroll-padding-top: 84px; }
             header, #menu-overlay { padding: 20px 24px; }
-            .slide { padding: 40px 24px; }
+            .slide { padding: 40px 24px; scroll-margin-top: 84px; }
             .cta-form { flex-direction: column; }
             button.brutalist-btn { width: 100%; }
             .work-item { padding-left: 18px; }
