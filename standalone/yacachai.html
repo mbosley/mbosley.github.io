@@ -321,13 +321,10 @@
         .work-toggle::after {
             opacity: 1;
             transform: translateY(-50%) rotate(90deg);
-            transition: opacity var(--drawer-duration) var(--drawer-ease),
-                transform var(--drawer-duration) var(--drawer-ease);
         }
 
         .work-item.is-expanded .work-toggle::after {
             opacity: 0;
-            transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
 
         .work-detail {
@@ -413,13 +410,10 @@
         .person-toggle::after {
             opacity: 1;
             transform: translateY(-50%) rotate(90deg);
-            transition: opacity var(--drawer-duration) var(--drawer-ease),
-                transform var(--drawer-duration) var(--drawer-ease);
         }
 
         .person-card.is-expanded .person-toggle::after {
             opacity: 0;
-            transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
 
         .person-body {
@@ -817,22 +811,25 @@
                     const isOpen = drawer.open;
                     const duration = 190;
                     const easing = 'cubic-bezier(0.2, 0, 0, 1)';
-                    const transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
+                    const transition = `height ${duration}ms ${easing}, margin-top ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
 
                     const cleanup = () => {
                         content.style.height = '';
+                        content.style.marginTop = '';
                         content.style.opacity = '';
                         content.style.transition = '';
                         drawer.dataset.animating = 'false';
                     };
 
-                    const animateContent = ({ fromHeight, toHeight, fromOpacity, toOpacity, onDone }) => {
+                    const animateContent = ({ fromHeight, toHeight, fromMargin, toMargin, fromOpacity, toOpacity, onDone }) => {
                         content.style.height = `${fromHeight}px`;
+                        content.style.marginTop = `${fromMargin}px`;
                         content.style.opacity = String(fromOpacity);
                         content.style.transition = 'none';
                         content.offsetHeight;
                         content.style.transition = transition;
                         content.style.height = `${toHeight}px`;
+                        content.style.marginTop = `${toMargin}px`;
                         content.style.opacity = String(toOpacity);
 
                         content.addEventListener('transitionend', function onTransitionEnd(event) {
@@ -845,10 +842,13 @@
 
                     if (isOpen) {
                         const fullHeight = content.scrollHeight;
+                        const fullMargin = parseFloat(getComputedStyle(content).marginTop) || 0;
                         drawer.classList.remove('is-expanded');
                         animateContent({
                             fromHeight: fullHeight,
                             toHeight: 0,
+                            fromMargin: fullMargin,
+                            toMargin: 0,
                             fromOpacity: 1,
                             toOpacity: 0,
                             onDone: () => {
@@ -857,11 +857,14 @@
                         });
                     } else {
                         drawer.open = true;
+                        const fullMargin = parseFloat(getComputedStyle(content).marginTop) || 0;
                         const fullHeight = content.scrollHeight;
                         drawer.classList.add('is-expanded');
                         animateContent({
                             fromHeight: 0,
                             toHeight: fullHeight,
+                            fromMargin: 0,
+                            toMargin: fullMargin,
                             fromOpacity: 0,
                             toOpacity: 1,
                             onDone: () => {},
