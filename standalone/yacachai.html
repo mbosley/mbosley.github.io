@@ -20,7 +20,7 @@
         :root {
             --bg: #FFFFFF;
             --text: #000000;
-            --primary: #E0FF00; /* Highlighter Lime Green */
+            --primary: #FF5A1F; /* Signal orange */
             --border-width: 3px;
             --border: 3px solid #000000;
             --shadow: 6px 6px 0px #000000;
@@ -72,6 +72,8 @@
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            appearance: none;
+            font-family: inherit;
             font-size: 0.9rem;
             font-weight: 700;
             line-height: 1;
@@ -80,9 +82,27 @@
             min-height: 28px;
             padding: 0 9px;
             border: 2px solid #000000;
+            margin: 0;
             box-shadow: 2px 2px 0px #000000;
             text-transform: uppercase;
             letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: transform 120ms ease, box-shadow 120ms ease, background-color 120ms ease;
+        }
+
+        .logo-badge:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 3px 3px 0px #000000;
+        }
+
+        .logo-badge:active {
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #000000;
+        }
+
+        .logo-badge:focus-visible {
+            outline: 3px solid var(--text);
+            outline-offset: 4px;
         }
 
         /* The Double-Line Menu Button */
@@ -219,7 +239,7 @@
             line-height: 1;
             margin-bottom: 4rem;
             text-transform: uppercase;
-            color: var(--primary); /* Lime green text on black */
+            color: var(--primary); /* Signal orange text on black */
         }
 
         #trabajo,
@@ -237,7 +257,7 @@
             background-color: #000000;
             border: 3px solid #FFFFFF;
             padding: 32px;
-            box-shadow: 6px 6px 0px var(--primary); /* Lime shadow on dark bg */
+            box-shadow: 6px 6px 0px var(--primary); /* Orange shadow on dark bg */
             transition: transform 0.2s ease;
         }
         
@@ -339,8 +359,17 @@
             font-size: clamp(1rem, 2vw, 1.15rem);
         }
 
-        .work-example {
-            font-style: italic;
+        .work-detail ul {
+            margin: 0;
+            padding-left: 1.2em;
+            display: grid;
+            gap: 0.45rem;
+            max-width: 900px;
+        }
+
+        .work-detail li {
+            font-size: clamp(1rem, 2vw, 1.15rem);
+            line-height: 1.35;
         }
 
         .about-copy h2 {
@@ -537,7 +566,7 @@
         }
 
         .menu-links a:hover {
-            color: var(--primary); /* Hover turns lime green */
+            color: var(--primary); /* Hover turns orange */
             padding-left: 20px; /* Brutalist physical movement shift */
         }
 
@@ -557,7 +586,7 @@
     <header>
         <div class="brand-wrapper">
             <div class="logo-text">cachAI</div>
-            <div class="logo-badge">LABS</div>
+            <button class="logo-badge" type="button" aria-label="Cambiar color de acento">LABS</button>
         </div>
         <button class="menu-btn" onclick="toggleMenu()">
             <!-- The Double Line Menu -->
@@ -571,7 +600,7 @@
         <div class="menu-header">
             <div class="brand-wrapper">
                 <div class="logo-text">cachAI</div>
-                <div class="logo-badge">LABS</div>
+                <button class="logo-badge" type="button" aria-label="Cambiar color de acento">LABS</button>
             </div>
             <button class="close-btn" onclick="toggleMenu()">&#10005;</button>
         </div>
@@ -592,7 +621,7 @@
         <section class="slide" id="enfoque">
             <div class="container">
                 <h1>IA PARA TU EMPRESA.<br>SIN HUMO.</h1>
-                <p class="hero-sub">Nosotros la implementamos.<br>Tú la entiendes.</p>
+                <p class="hero-sub">La implementamos.<br>Tu equipo la entiende.</p>
                 <p class="hero-punch">¿Cachai?</p>
                 
                 <form action="#" method="POST" class="cta-form" id="hero-contact-form">
@@ -605,11 +634,11 @@
         <!-- SLIDE 2: DARK MODE FEATURES -->
         <section class="slide dark" id="proceso">
             <div class="container">
-                <h2>IA construida desde tus procesos, para tu forma de trabajar.</h2>
+                <h2>IA diseñada a partir de tus procesos, para tu forma de trabajar.</h2>
                 <div class="grid-3">
                     <div class="brutalist-card">
                         <h3>1. Auditoría</h3>
-                        <p>Mapeamos tus flujos de trabajo, datos y decisiones para identificar dónde la IA puede crear valor real ahora.</p>
+                        <p>Levantamos tus flujos de trabajo, datos y decisiones para identificar dónde la IA puede crear valor real ahora.</p>
                     </div>
                     <div class="brutalist-card">
                         <h3>2. Integración</h3>
@@ -617,7 +646,7 @@
                     </div>
                     <div class="brutalist-card">
                         <h3>3. Operación</h3>
-                        <p>Entrenamos a tu equipo, documentamos la lógica y ajustamos los sistemas con usuarios reales para que puedan escalar.</p>
+                        <p>Entrenamos a tu equipo, documentamos la lógica y ajustamos los sistemas con usuarios reales para que el uso pueda crecer sin perder control.</p>
                     </div>
                 </div>
             </div>
@@ -626,7 +655,7 @@
         <!-- SLIDE 3: WORK -->
         <section class="slide" id="trabajo">
             <div class="container work-copy">
-                <h2>Trabajo en curso.</h2>
+                <h2>Líneas de trabajo.</h2>
                 <div class="work-list">
                     <details class="work-item">
                         <summary>
@@ -634,9 +663,12 @@
                             <p>Convertimos reportes, contratos, bases internas y archivos institucionales en sistemas de consulta, análisis y síntesis.</p>
                         </summary>
                         <div class="work-detail">
-                            <p>Para equipos que trabajan con muchos documentos y necesitan encontrar evidencia, comparar casos, generar reportes o mantener trazabilidad.</p>
-                            <p>Podemos construir bases estructuradas, pipelines de extracción, sistemas de búsqueda o agentes que preparan briefs revisables desde documentos complejos.</p>
-                            <p class="work-example">Ejemplos: documentos de organismos multilaterales, matrices de política pública, contratos, informes internos y archivos de proyecto.</p>
+                            <ul>
+                                <li>Bases consultables a partir de reportes, contratos o archivos internos.</li>
+                                <li>Agentes que preparan briefs con citas y trazabilidad.</li>
+                                <li>Extracción estructurada desde documentos complejos.</li>
+                                <li>Comparación de casos, contratos, políticas o expedientes.</li>
+                            </ul>
                         </div>
                     </details>
                     <details class="work-item">
@@ -645,9 +677,12 @@
                             <p>Seguimos decisiones públicas, actores, señales ciudadanas y riesgos regulatorios desde fuentes abiertas y revisión humana.</p>
                         </summary>
                         <div class="work-detail">
-                            <p>Para organizaciones que necesitan entender qué está pasando en el Congreso, en territorios, en comunidades relevantes o en entornos regulatorios.</p>
-                            <p>Combinamos fuentes oficiales, documentos, video, transcripción, opinión pública y análisis de stakeholders para producir briefs claros, auditables y orientados a decisiones.</p>
-                            <p class="work-example">Ejemplos: seguimiento legislativo, mapas de actores, riesgos regulatorios, escucha pública y oportunidades de incidencia.</p>
+                            <ul>
+                                <li>Seguimiento legislativo y regulatorio.</li>
+                                <li>Mapas de actores, intereses y posiciones.</li>
+                                <li>Informes breves auditables desde sesiones, documentos y fuentes abiertas.</li>
+                                <li>Alertas sobre riesgos, oportunidades y cambios relevantes.</li>
+                            </ul>
                         </div>
                     </details>
                     <details class="work-item">
@@ -656,20 +691,26 @@
                             <p>Integramos señales ciudadanas, territoriales y organizacionales para entender demandas, riesgos y oportunidades de acción.</p>
                         </summary>
                         <div class="work-detail">
-                            <p>Para equipos que necesitan leer mejor a públicos, territorios, comunidades, usuarios, clientes, instituciones o coaliciones.</p>
-                            <p>Combinamos encuestas, entrevistas, documentos, redes, prensa, reclamos, audiencias y otros insumos para producir diagnósticos vivos y comparables.</p>
-                            <p class="work-example">Ejemplos: escucha territorial, monitoreo de audiencias públicas, mapas de actores, lectura temprana de conflictos, simulación de escenarios y seguimiento de percepción pública.</p>
+                            <ul>
+                                <li>Lectura de señales ciudadanas desde encuestas, entrevistas, prensa, redes o reclamos.</li>
+                                <li>Mapas de demandas, conflictos y actores territoriales.</li>
+                                <li>Monitoreo de audiencias públicas y participación.</li>
+                                <li>Escenarios para anticipar respuestas de públicos relevantes.</li>
+                            </ul>
                         </div>
                     </details>
                     <details class="work-item">
                         <summary>
                             <h3>Adopción organizacional <span class="work-toggle"></span></h3>
-                            <p>Acompañamos equipos para convertir la IA en una capacidad instalada: flujos, formación, gobernanza y operación cotidiana.</p>
+                            <p>Acompañamos a equipos para convertir la IA en una capacidad instalada, con flujos claros, formación, gobernanza y operación cotidiana.</p>
                         </summary>
                         <div class="work-detail">
-                            <p>Para organizaciones que quieren pasar del uso individual de chatbots a sistemas de trabajo compartidos, con criterio, trazabilidad y control.</p>
-                            <p>Combinamos rediseño de procesos, capacitación aplicada, memoria organizacional, agentes internos y rutinas de revisión para que la IA entre en la forma real de trabajar.</p>
-                            <p class="work-example">Ejemplos: talleres ejecutivos, bootcamps de agentes, sistemas tipo chief of staff, bandejas de entrada inteligentes, memoria de proyectos y acompañamiento a líderes internos.</p>
+                            <ul>
+                                <li>Talleres ejecutivos y bootcamps de agentes.</li>
+                                <li>Sistemas que ayudan a priorizar, coordinar tareas y dar seguimiento al trabajo.</li>
+                                <li>Memoria de proyectos y bandejas de entrada inteligentes.</li>
+                                <li>Rediseño de flujos de trabajo con IA, revisión humana y trazabilidad.</li>
+                            </ul>
                         </div>
                     </details>
                 </div>
@@ -681,7 +722,7 @@
             <div class="container about-copy">
                 <h2>Quiénes somos.</h2>
                 <p>CachAI Labs reúne investigación, consultoría, política pública y desarrollo de sistemas.</p>
-                <p>El equipo en formación combina experiencia académica, tecnológica, pública y organizacional.</p>
+                <p>El equipo combina experiencia académica, tecnológica, pública y organizacional.</p>
                 <div class="people-list">
                     <details class="person-card">
                         <summary>
@@ -704,7 +745,7 @@
                         <div class="person-body">
                             <img class="person-photo" src="assets/cachai-labs/people/mitchell-bosley.jpg" alt="Mitchell Bosley">
                             <div>
-                                <p>Investigador postdoctoral en CENIA y computational social scientist. Diseña sistemas de inteligencia documental y flujos de trabajo con agentes para transformar reportes, bases, entrevistas y trazas de proceso en análisis revisable y usable por equipos.</p>
+                                <p>Investigador postdoctoral en CENIA y científico social computacional. Diseña sistemas de inteligencia documental y flujos de trabajo con agentes para transformar reportes, bases, entrevistas y trazas de proceso en análisis revisable y útil para equipos.</p>
                                 <a class="profile-note" href="https://mbosley.github.io/" target="_blank" rel="noopener noreferrer">Ver perfil</a>
                             </div>
                         </div>
@@ -769,7 +810,7 @@
         <section class="slide" id="contacto">
             <div class="container">
                 <h1>¿LISTO PARA EMPEZAR?</h1>
-                <p class="hero-sub">Cuéntanos cómo trabaja tu organización.<br>Veamos dónde la IA puede aportar valor.</p>
+                <p class="hero-sub">Cuéntanos cómo trabaja tu organización.<br>Veamos dónde la IA puede aportar valor real.</p>
                 <button class="brutalist-btn" id="diagnostic-button" style="padding: 24px 64px; font-size: 1.5rem;">Agendar diagnóstico</button>
             </div>
         </section>
@@ -875,6 +916,21 @@
         }
 
         setupAnimatedDrawers();
+
+        const accentColors = ['#FF5A1F', '#E0FF00', '#00E5FF', '#245BFF', '#FF4F7B'];
+        let accentIndex = 0;
+
+        function cycleAccentColor() {
+            accentIndex = (accentIndex + 1) % accentColors.length;
+            document.documentElement.style.setProperty('--primary', accentColors[accentIndex]);
+        }
+
+        document.querySelectorAll('.logo-badge').forEach((badge) => {
+            badge.addEventListener('click', (event) => {
+                event.stopPropagation();
+                cycleAccentColor();
+            });
+        });
 
         const contactEmail = 'contacto@cachailabs.ai';
 
