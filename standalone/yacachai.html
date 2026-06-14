@@ -326,10 +326,7 @@
             gap: 0.9rem;
             margin-top: 1.25rem;
             max-width: 920px;
-        }
-
-        .work-item[open] .work-detail {
-            animation: drawer-reveal 160ms ease-out both;
+            overflow: hidden;
         }
 
         .work-detail p {
@@ -420,21 +417,7 @@
             gap: 20px;
             align-items: start;
             margin-top: 1rem;
-        }
-
-        .person-card[open] .person-body {
-            animation: drawer-reveal 160ms ease-out both;
-        }
-
-        @keyframes drawer-reveal {
-            from {
-                opacity: 0;
-                transform: translateY(-6px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            overflow: hidden;
         }
 
         .person-photo {
@@ -799,6 +782,68 @@
         window.addEventListener('load', syncHeaderOffset);
         window.addEventListener('resize', syncHeaderOffset);
         syncHeaderOffset();
+
+        function setupAnimatedDrawers() {
+            const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const drawers = document.querySelectorAll('details.work-item, details.person-card');
+
+            drawers.forEach((drawer) => {
+                const summary = drawer.querySelector('summary');
+                const content = drawer.querySelector('.work-detail, .person-body');
+                if (!summary || !content) return;
+
+                summary.addEventListener('click', (event) => {
+                    if (reduceMotion) return;
+                    event.preventDefault();
+                    if (drawer.dataset.animating === 'true') return;
+
+                    drawer.dataset.animating = 'true';
+                    const isOpen = drawer.open;
+                    const duration = 170;
+
+                    const cleanup = () => {
+                        content.style.height = '';
+                        content.style.opacity = '';
+                        content.style.transition = '';
+                        drawer.dataset.animating = 'false';
+                    };
+
+                    if (isOpen) {
+                        content.style.height = `${content.scrollHeight}px`;
+                        content.style.opacity = '1';
+                        content.style.transition = 'none';
+                        content.offsetHeight;
+                        content.style.transition = `height ${duration}ms ease, opacity ${duration - 40}ms ease`;
+                        content.style.height = '0px';
+                        content.style.opacity = '0';
+
+                        content.addEventListener('transitionend', function onCloseTransition(event) {
+                            if (event.propertyName !== 'height') return;
+                            content.removeEventListener('transitionend', onCloseTransition);
+                            drawer.open = false;
+                            cleanup();
+                        });
+                    } else {
+                        drawer.open = true;
+                        content.style.height = '0px';
+                        content.style.opacity = '0';
+                        content.style.transition = 'none';
+                        content.offsetHeight;
+                        content.style.transition = `height ${duration}ms ease, opacity ${duration - 40}ms ease`;
+                        content.style.height = `${content.scrollHeight}px`;
+                        content.style.opacity = '1';
+
+                        content.addEventListener('transitionend', function onOpenTransition(event) {
+                            if (event.propertyName !== 'height') return;
+                            content.removeEventListener('transitionend', onOpenTransition);
+                            cleanup();
+                        });
+                    }
+                });
+            });
+        }
+
+        setupAnimatedDrawers();
 
         function toggleMenu() {
             const menu = document.getElementById('menu-overlay');
