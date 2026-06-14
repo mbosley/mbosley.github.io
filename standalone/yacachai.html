@@ -595,8 +595,8 @@
                 <p class="hero-sub">Nosotros la implementamos.<br>Tú la entiendes.</p>
                 <p class="hero-punch">¿Cachai?</p>
                 
-                <form action="#" method="POST" class="cta-form">
-                    <input type="email" placeholder="Tu correo de trabajo" required>
+                <form action="#" method="POST" class="cta-form" id="hero-contact-form">
+                    <input type="email" placeholder="Tu correo de trabajo" required id="hero-email">
                     <button type="submit" class="brutalist-btn">Empezar ahora</button>
                 </form>
             </div>
@@ -770,7 +770,7 @@
             <div class="container">
                 <h1>¿LISTO PARA EMPEZAR?</h1>
                 <p class="hero-sub">Cuéntanos cómo trabaja tu organización.<br>Veamos dónde la IA puede aportar valor.</p>
-                <button class="brutalist-btn" style="padding: 24px 64px; font-size: 1.5rem;">Agendar diagnóstico</button>
+                <button class="brutalist-btn" id="diagnostic-button" style="padding: 24px 64px; font-size: 1.5rem;">Agendar diagnóstico</button>
             </div>
         </section>
 
@@ -875,6 +875,35 @@
         }
 
         setupAnimatedDrawers();
+
+        const contactEmail = 'contacto@cachailabs.ai';
+
+        function openContactDraft({ subject, body }) {
+            const mailto = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.location.href = mailto;
+        }
+
+        const heroContactForm = document.getElementById('hero-contact-form');
+        if (heroContactForm) {
+            heroContactForm.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const email = document.getElementById('hero-email')?.value.trim() || '';
+                openContactDraft({
+                    subject: 'Interes en CachAI Labs',
+                    body: `Hola,\n\nMe interesa conversar sobre como CachAI Labs podria apoyar a mi organizacion.\n\nMi correo de trabajo es: ${email}\n\nOrganizacion:\nRol:\nPrincipal desafio o proceso que queremos mejorar:\n\nSaludos,`,
+                });
+            });
+        }
+
+        const diagnosticButton = document.getElementById('diagnostic-button');
+        if (diagnosticButton) {
+            diagnosticButton.addEventListener('click', () => {
+                openContactDraft({
+                    subject: 'Agendar diagnostico CachAI Labs',
+                    body: 'Hola,\n\nMe gustaria agendar un diagnostico con CachAI Labs.\n\nOrganizacion:\nRol:\nTema o proceso que queremos revisar:\nHorarios posibles:\n\nSaludos,',
+                });
+            });
+        }
 
         function toggleMenu() {
             const menu = document.getElementById('menu-overlay');
