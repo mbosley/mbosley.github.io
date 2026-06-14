@@ -280,6 +280,13 @@
             border-left: 8px solid var(--text);
             border-bottom: var(--border);
             padding: 0 0 22px 24px;
+            transition: border-color 160ms ease;
+        }
+
+        .work-item:hover,
+        .work-item.is-expanded {
+            border-left-color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         .work-item summary {
@@ -397,6 +404,12 @@
         .person-card {
             border-bottom: 2px solid #FFFFFF;
             padding-bottom: 12px;
+            transition: border-color 160ms ease;
+        }
+
+        .person-card:hover,
+        .person-card.is-expanded {
+            border-bottom-color: var(--primary);
         }
 
         .person-card summary {
@@ -409,6 +422,12 @@
             align-items: flex-start;
             justify-content: space-between;
             gap: 20px;
+            transition: color 160ms ease;
+        }
+
+        .person-card:hover summary,
+        .person-card.is-expanded summary {
+            color: var(--primary);
         }
 
         .person-card summary::-webkit-details-marker {
@@ -493,6 +512,13 @@
 
         .work-copy .work-item {
             border-left-color: var(--text);
+            border-bottom-color: var(--text);
+        }
+
+        .work-copy .work-item:hover,
+        .work-copy .work-item.is-expanded {
+            border-left-color: var(--primary);
+            border-bottom-color: var(--primary);
         }
 
         .work-copy .work-item p {
