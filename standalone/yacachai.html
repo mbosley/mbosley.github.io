@@ -294,31 +294,65 @@
             font-weight: 700;
             line-height: 1.1;
             list-style: none;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 20px;
         }
 
         .person-card summary::-webkit-details-marker {
             display: none;
         }
 
-        .person-card summary::after {
-            content: "+";
-            float: right;
+        .person-toggle {
             color: var(--primary);
+            min-width: 1ch;
         }
 
-        .person-card[open] summary::after {
+        .person-toggle::before {
+            content: "+";
+        }
+
+        .person-card[open] .person-toggle::before {
             content: "-";
+        }
+
+        .person-body {
+            display: grid;
+            grid-template-columns: 96px minmax(0, 1fr);
+            gap: 20px;
+            align-items: start;
+            margin-top: 1rem;
+            max-width: 900px;
+        }
+
+        .person-photo {
+            width: 96px;
+            height: 96px;
+            border: 2px solid #FFFFFF;
+            object-fit: cover;
         }
 
         .person-card p {
             color: #CCCCCC;
             font-size: clamp(1rem, 2vw, 1.35rem);
             line-height: 1.4;
-            margin: 0.85rem 0 0;
+            margin: 0;
             max-width: 760px;
         }
 
         .profile-link {
+            color: var(--primary);
+            font-size: clamp(1.1rem, 2.4vw, 1.7rem);
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .profile-link:hover {
+            color: #FFFFFF;
+        }
+
+        .profile-note {
             display: inline-block;
             color: var(--primary);
             font-size: 1rem;
@@ -329,7 +363,7 @@
             text-transform: uppercase;
         }
 
-        .profile-link:hover {
+        .profile-note:hover {
             text-decoration: underline;
         }
 
@@ -529,34 +563,76 @@
                 <p>El equipo en formación combina experiencia académica, tecnológica, pública y organizacional.</p>
                 <div class="people-list">
                     <details class="person-card">
-                        <summary>Juan Pablo Luna</summary>
-                        <p>Politólogo con trayectoria académica y pública en Chile y América Latina. Aporta lectura estratégica del entorno político, institucional y social.</p>
-                        <a class="profile-link" href="https://gobierno.uc.cl/profesores/juan-pablo-luna/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Juan Pablo Luna</span>
+                            <span><a class="profile-link" href="https://gobierno.uc.cl/profesores/juan-pablo-luna/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/juan-pablo-luna.jpg" alt="Juan Pablo Luna">
+                            <div>
+                                <p>Politólogo con trayectoria académica y pública en Chile y América Latina. Aporta lectura estratégica del entorno político, institucional y social, especialmente para proyectos donde la tecnología entra en organizaciones y procesos de decisión.</p>
+                            </div>
+                        </div>
                     </details>
                     <details class="person-card">
-                        <summary>Mitchell Bosley</summary>
-                        <p>Investigador y constructor de sistemas de IA aplicada a documentos, procesos públicos, análisis político y flujos de trabajo con agentes.</p>
-                        <a class="profile-link" href="https://mbosley.github.io/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Mitchell Bosley</span>
+                            <span><a class="profile-link" href="https://mbosley.github.io/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/mitchell-bosley.jpg" alt="Mitchell Bosley">
+                            <div>
+                                <p>Computational social scientist working on AI, politics, public policy and agentic systems. Builds document-intelligence and workflow systems that connect analysis, evidence, human review and operational traces.</p>
+                            </div>
+                        </div>
                     </details>
                     <details class="person-card">
-                        <summary>Naím Bro</summary>
-                        <p>Académico en gobierno y ciencias sociales computacionales. Trabaja en cruces entre datos, política y análisis social.</p>
-                        <a class="profile-link" href="https://naimbro.github.io/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Naím Bro</span>
+                            <span><a class="profile-link" href="https://naimbro.github.io/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/naim-bro.jpg" alt="Naím Bro">
+                            <div>
+                                <p>Académico en gobierno y ciencias sociales computacionales. Trabaja en cruces entre datos, política y análisis social, con foco en cómo medir y modelar fenómenos públicos complejos.</p>
+                            </div>
+                        </div>
                     </details>
                     <details class="person-card">
-                        <summary>Andrés Abeliuk</summary>
-                        <p>Académico en computación e investigador asociado a CENIA, con trabajo en inteligencia artificial, datos y sistemas sociales.</p>
-                        <a class="profile-link" href="https://aabeliuk.github.io/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Andrés Abeliuk</span>
+                            <span><a class="profile-link" href="https://aabeliuk.github.io/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/andres-abeliuk.jpg" alt="Andrés Abeliuk">
+                            <div>
+                                <p>Académico en computación e investigador asociado a CENIA, con trabajo en inteligencia artificial, datos y sistemas sociales. Aporta criterio técnico para diseñar sistemas robustos y evaluables.</p>
+                            </div>
+                        </div>
                     </details>
                     <details class="person-card">
-                        <summary>Sergio Toro</summary>
-                        <p>Politólogo con experiencia en análisis político, instituciones y opinión pública.</p>
-                        <a class="profile-link" href="https://researchers.umayor.cl/en/persons/sergio-toro/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Sergio Toro</span>
+                            <span><a class="profile-link" href="https://researchers.umayor.cl/en/persons/sergio-toro/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/sergio-toro.jpg" alt="Sergio Toro">
+                            <div>
+                                <p>Politólogo con experiencia en análisis político, instituciones y opinión pública. Aporta lectura aplicada del sistema político y de los entornos donde se toman decisiones públicas.</p>
+                            </div>
+                        </div>
                     </details>
                     <details class="person-card">
-                        <summary>Rafael Palacios</summary>
-                        <p>Abogado y consultor en asuntos públicos, regulación y estrategia institucional.</p>
-                        <a class="profile-link" href="https://politicaspublicas.uc.cl/equipo/rafael-palacios/" target="_blank" rel="noopener noreferrer">Perfil</a>
+                        <summary>
+                            <span>Rafael Palacios</span>
+                            <span><a class="profile-link" href="https://politicaspublicas.uc.cl/equipo/rafael-palacios/" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">↗</a> <span class="person-toggle"></span></span>
+                        </summary>
+                        <div class="person-body">
+                            <img class="person-photo" src="assets/cachai-labs/people/rafael-palacios.jpg" alt="Rafael Palacios">
+                            <div>
+                                <p>Abogado y consultor en asuntos públicos, regulación y estrategia institucional. Aporta experiencia en conversaciones con clientes, marcos regulatorios y posicionamiento público.</p>
+                            </div>
+                        </div>
                     </details>
                 </div>
             </div>
