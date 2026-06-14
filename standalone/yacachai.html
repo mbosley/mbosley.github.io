@@ -812,6 +812,7 @@
                     const isOpen = drawer.open;
                     const duration = 190;
                     const easing = 'cubic-bezier(0.2, 0, 0, 1)';
+                    const transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
 
                     const cleanup = () => {
                         content.style.height = '';
@@ -820,37 +821,45 @@
                         drawer.dataset.animating = 'false';
                     };
 
-                    if (isOpen) {
-                        drawer.classList.remove('is-expanded');
-                        content.style.height = `${content.scrollHeight}px`;
-                        content.style.opacity = '1';
+                    const animateContent = ({ fromHeight, toHeight, fromOpacity, toOpacity, onDone }) => {
+                        content.style.height = `${fromHeight}px`;
+                        content.style.opacity = String(fromOpacity);
                         content.style.transition = 'none';
                         content.offsetHeight;
-                        content.style.transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
-                        content.style.height = '0px';
-                        content.style.opacity = '0';
+                        content.style.transition = transition;
+                        content.style.height = `${toHeight}px`;
+                        content.style.opacity = String(toOpacity);
 
-                        content.addEventListener('transitionend', function onCloseTransition(event) {
+                        content.addEventListener('transitionend', function onTransitionEnd(event) {
                             if (event.propertyName !== 'height') return;
-                            content.removeEventListener('transitionend', onCloseTransition);
-                            drawer.open = false;
+                            content.removeEventListener('transitionend', onTransitionEnd);
+                            onDone();
                             cleanup();
+                        });
+                    };
+
+                    if (isOpen) {
+                        const fullHeight = content.scrollHeight;
+                        drawer.classList.remove('is-expanded');
+                        animateContent({
+                            fromHeight: fullHeight,
+                            toHeight: 0,
+                            fromOpacity: 1,
+                            toOpacity: 0,
+                            onDone: () => {
+                                drawer.open = false;
+                            },
                         });
                     } else {
                         drawer.open = true;
+                        const fullHeight = content.scrollHeight;
                         drawer.classList.add('is-expanded');
-                        content.style.height = '0px';
-                        content.style.opacity = '0';
-                        content.style.transition = 'none';
-                        content.offsetHeight;
-                        content.style.transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
-                        content.style.height = `${content.scrollHeight}px`;
-                        content.style.opacity = '1';
-
-                        content.addEventListener('transitionend', function onOpenTransition(event) {
-                            if (event.propertyName !== 'height') return;
-                            content.removeEventListener('transitionend', onOpenTransition);
-                            cleanup();
+                        animateContent({
+                            fromHeight: 0,
+                            toHeight: fullHeight,
+                            fromOpacity: 0,
+                            toOpacity: 1,
+                            onDone: () => {},
                         });
                     }
                 });
