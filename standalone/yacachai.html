@@ -299,26 +299,27 @@
         .work-toggle::after {
             content: "";
             position: absolute;
-            inset: 0;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 4px;
             background: var(--primary);
+            transform: translateY(-50%);
         }
 
         .work-toggle::before {
-            top: 50%;
-            height: 4px;
             transform: translateY(-50%);
         }
 
         .work-toggle::after {
-            left: 50%;
-            width: 4px;
             opacity: 1;
-            transform: translateX(-50%);
-            transition: opacity 140ms ease;
+            transform: translateY(-50%) rotate(90deg);
+            transition: opacity 150ms ease, transform 150ms ease;
         }
 
         .work-item[open] .work-toggle::after {
             opacity: 0;
+            transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
 
         .work-detail {
@@ -404,11 +405,12 @@
         .person-toggle::after {
             opacity: 1;
             transform: translateY(-50%) rotate(90deg);
-            transition: opacity 140ms ease;
+            transition: opacity 150ms ease, transform 150ms ease;
         }
 
         .person-card[open] .person-toggle::after {
             opacity: 0;
+            transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
 
         .person-body {
