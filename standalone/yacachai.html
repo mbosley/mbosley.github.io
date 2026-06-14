@@ -237,13 +237,23 @@
 
         .work-list {
             display: grid;
-            gap: 24px;
-            max-width: 900px;
+            gap: 18px;
+            width: 100%;
         }
 
         .work-item {
-            border-left: 8px solid var(--primary);
-            padding-left: 24px;
+            border-left: 8px solid var(--text);
+            border-bottom: var(--border);
+            padding: 0 0 22px 24px;
+        }
+
+        .work-item summary {
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .work-item summary::-webkit-details-marker {
+            display: none;
         }
 
         .work-item h3 {
@@ -251,12 +261,45 @@
             line-height: 1;
             margin-bottom: 0.75rem;
             text-transform: uppercase;
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            gap: 20px;
         }
 
         .work-item p {
-            color: #CCCCCC;
+            color: var(--text);
             font-size: clamp(1.1rem, 2vw, 1.5rem);
             line-height: 1.35;
+            max-width: 920px;
+        }
+
+        .work-toggle {
+            color: var(--primary);
+            min-width: 1ch;
+            -webkit-text-stroke: 1px var(--text);
+        }
+
+        .work-toggle::before {
+            content: "+";
+        }
+
+        .work-item[open] .work-toggle::before {
+            content: "-";
+        }
+
+        .work-detail {
+            display: grid;
+            gap: 0.9rem;
+            margin-top: 1.25rem;
+        }
+
+        .work-detail p {
+            font-size: clamp(1rem, 1.8vw, 1.3rem);
+        }
+
+        .work-example {
+            font-weight: 700;
         }
 
         .about-copy h2 {
@@ -520,22 +563,50 @@
             <div class="container work-copy">
                 <h2>Trabajo en curso.</h2>
                 <div class="work-list">
-                    <div class="work-item">
-                        <h3>Inteligencia documental</h3>
-                        <p>Convertimos reportes, contratos, bases internas y archivos institucionales en sistemas de consulta, análisis y síntesis.</p>
-                    </div>
-                    <div class="work-item">
-                        <h3>Inteligencia legislativa</h3>
-                        <p>Seguimos sesiones, proyectos, actores y riesgos desde fuentes públicas, con briefs auditables y revisión humana.</p>
-                    </div>
-                    <div class="work-item">
-                        <h3>Automatización de conocimiento</h3>
-                        <p>Diseñamos flujos donde la IA ayuda a leer, ordenar, sintetizar y dar seguimiento al trabajo sin perder contexto ni trazabilidad.</p>
-                    </div>
-                    <div class="work-item">
-                        <h3>Capacitación aplicada</h3>
-                        <p>Entrenamos equipos para pasar del uso individual de chatbots a sistemas de trabajo con IA, criterio y control.</p>
-                    </div>
+                    <details class="work-item">
+                        <summary>
+                            <h3>Inteligencia documental <span class="work-toggle"></span></h3>
+                            <p>Convertimos reportes, contratos, bases internas y archivos institucionales en sistemas de consulta, análisis y síntesis.</p>
+                        </summary>
+                        <div class="work-detail">
+                            <p>Para equipos que trabajan con muchos documentos y necesitan encontrar evidencia, comparar casos, generar reportes o mantener trazabilidad.</p>
+                            <p>Podemos construir bases estructuradas, pipelines de extracción, sistemas de búsqueda o agentes que preparan briefs revisables desde documentos complejos.</p>
+                            <p class="work-example">Ejemplos: documentos de organismos multilaterales, matrices de política pública, contratos, informes internos y archivos de proyecto.</p>
+                        </div>
+                    </details>
+                    <details class="work-item">
+                        <summary>
+                            <h3>Inteligencia legislativa <span class="work-toggle"></span></h3>
+                            <p>Seguimos sesiones, proyectos, actores y riesgos desde fuentes públicas, con briefs auditables y revisión humana.</p>
+                        </summary>
+                        <div class="work-detail">
+                            <p>Para organizaciones que necesitan entender qué está pasando en el Congreso, quién interviene, qué riesgos aparecen y qué evidencia sostiene cada interpretación.</p>
+                            <p>Combinamos fuentes oficiales, video, transcripción, documentos y revisión humana para producir briefs claros, auditables y orientados a decisiones.</p>
+                            <p class="work-example">Ejemplos: seguimiento de comisiones, proyectos de ley, actores relevantes, riesgos regulatorios y oportunidades de incidencia.</p>
+                        </div>
+                    </details>
+                    <details class="work-item">
+                        <summary>
+                            <h3>Automatización de conocimiento <span class="work-toggle"></span></h3>
+                            <p>Diseñamos flujos donde la IA ayuda a leer, ordenar, sintetizar y dar seguimiento al trabajo sin perder contexto ni trazabilidad.</p>
+                        </summary>
+                        <div class="work-detail">
+                            <p>Para equipos que tienen mucho conocimiento distribuido entre documentos, conversaciones, tareas, correos y decisiones.</p>
+                            <p>Diseñamos sistemas donde los agentes trabajan con contexto compartido, escriben resultados revisables, dejan registros y ayudan a mantener continuidad entre sesiones de trabajo.</p>
+                            <p class="work-example">Ejemplos: sistemas tipo chief of staff, bandejas de entrada inteligentes, memoria de proyectos y coordinación de tareas.</p>
+                        </div>
+                    </details>
+                    <details class="work-item">
+                        <summary>
+                            <h3>Capacitación aplicada <span class="work-toggle"></span></h3>
+                            <p>Entrenamos equipos para pasar del uso individual de chatbots a sistemas de trabajo con IA, criterio y control.</p>
+                        </summary>
+                        <div class="work-detail">
+                            <p>Para organizaciones que quieren que sus equipos usen IA de forma práctica, segura y conectada con el trabajo real.</p>
+                            <p>La capacitación combina principios, práctica guiada y construcción de flujos propios: cómo trabajar con Codex, cómo organizar contexto, cómo revisar outputs y cómo convertir tareas repetidas en sistemas.</p>
+                            <p class="work-example">Ejemplos: talleres ejecutivos, bootcamps de agentes, formación de equipos técnicos y acompañamiento a líderes internos.</p>
+                        </div>
+                    </details>
                 </div>
             </div>
         </section>
