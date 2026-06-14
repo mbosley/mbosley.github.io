@@ -276,20 +276,33 @@
         }
 
         .work-toggle {
-            color: var(--primary);
             flex: 0 0 auto;
-            font-size: 1.25em;
-            line-height: 0.8;
-            min-width: 1ch;
-            -webkit-text-stroke: 1px var(--text);
+            position: relative;
+            width: 0.72em;
+            height: 0.72em;
+            min-width: 0.72em;
+            transform: translateY(0.03em);
         }
 
-        .work-toggle::before {
-            content: "+";
+        .work-toggle::before,
+        .work-toggle::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 0.16em;
+            background: var(--primary);
+            box-shadow: 0 0 0 1px var(--text);
+            transform: translateY(-50%);
         }
 
-        .work-item[open] .work-toggle::before {
-            content: "-";
+        .work-toggle::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .work-item[open] .work-toggle::after {
+            display: none;
         }
 
         .work-detail {
@@ -351,19 +364,32 @@
         }
 
         .person-toggle {
-            color: var(--primary);
             flex: 0 0 auto;
-            font-size: 1.35em;
-            line-height: 0.8;
-            min-width: 1ch;
+            position: relative;
+            width: 0.7em;
+            height: 0.7em;
+            min-width: 0.7em;
+            transform: translateY(0.04em);
         }
 
-        .person-toggle::before {
-            content: "+";
+        .person-toggle::before,
+        .person-toggle::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 0.16em;
+            background: var(--primary);
+            transform: translateY(-50%);
         }
 
-        .person-card[open] .person-toggle::before {
-            content: "-";
+        .person-toggle::after {
+            transform: translateY(-50%) rotate(90deg);
+        }
+
+        .person-card[open] .person-toggle::after {
+            display: none;
         }
 
         .person-body {
