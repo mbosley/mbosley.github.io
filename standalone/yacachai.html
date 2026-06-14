@@ -55,6 +55,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
+            line-height: 1;
         }
 
         .logo-text {
@@ -64,16 +65,20 @@
         }
 
         .logo-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 0.8rem;
             font-weight: 700;
+            line-height: 1;
             background-color: var(--primary);
             color: #000000;
-            padding: 2px 8px;
+            min-height: 24px;
+            padding: 0 8px;
             border: 2px solid #000000;
             box-shadow: 2px 2px 0px #000000;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            transform: translateY(-2px);
         }
 
         /* The Double-Line Menu Button */
