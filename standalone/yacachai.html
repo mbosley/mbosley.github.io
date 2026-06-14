@@ -483,7 +483,7 @@
         .menu-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
         }
 
         #menu-overlay .logo-text { color: #FFFFFF; }
@@ -492,8 +492,13 @@
             background: none;
             border: none;
             color: #FFFFFF;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-size: 3rem;
             font-weight: 300;
+            width: 42px;
+            height: 42px;
             cursor: pointer;
             line-height: 1;
             padding: 0;
@@ -672,7 +677,7 @@
         <!-- SLIDE 4: ABOUT -->
         <section class="slide dark" id="quienes-somos">
             <div class="container about-copy">
-                <h2>Quiénes somos</h2>
+                <h2>Quiénes somos.</h2>
                 <p>CachAI Labs reúne investigación, consultoría, política pública y desarrollo de sistemas.</p>
                 <p>El equipo en formación combina experiencia académica, tecnológica, pública y organizacional.</p>
                 <div class="people-list">
