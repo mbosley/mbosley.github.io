@@ -907,8 +907,12 @@
                             },
                         });
                     } else {
-                        drawer.open = true;
                         const fullMargin = parseFloat(getComputedStyle(content).marginTop) || 0;
+                        content.style.height = '0px';
+                        content.style.marginTop = '0px';
+                        content.style.opacity = '0';
+                        content.style.transition = 'none';
+                        drawer.open = true;
                         const fullHeight = content.scrollHeight;
                         drawer.classList.add('is-expanded');
                         animateContent({
