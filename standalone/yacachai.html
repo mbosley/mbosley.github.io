@@ -25,6 +25,8 @@
             --border: 3px solid #000000;
             --shadow: 6px 6px 0px #000000;
             --header-offset: 78px;
+            --drawer-duration: 190ms;
+            --drawer-ease: cubic-bezier(0.2, 0, 0, 1);
         }
 
         body {
@@ -314,10 +316,11 @@
         .work-toggle::after {
             opacity: 1;
             transform: translateY(-50%) rotate(90deg);
-            transition: opacity 150ms ease, transform 150ms ease;
+            transition: opacity var(--drawer-duration) var(--drawer-ease),
+                transform var(--drawer-duration) var(--drawer-ease);
         }
 
-        .work-item[open] .work-toggle::after {
+        .work-item.is-expanded .work-toggle::after {
             opacity: 0;
             transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
@@ -405,10 +408,11 @@
         .person-toggle::after {
             opacity: 1;
             transform: translateY(-50%) rotate(90deg);
-            transition: opacity 150ms ease, transform 150ms ease;
+            transition: opacity var(--drawer-duration) var(--drawer-ease),
+                transform var(--drawer-duration) var(--drawer-ease);
         }
 
-        .person-card[open] .person-toggle::after {
+        .person-card.is-expanded .person-toggle::after {
             opacity: 0;
             transform: translateY(-50%) rotate(0deg) scaleX(0.7);
         }
@@ -793,6 +797,11 @@
                 const summary = drawer.querySelector('summary');
                 const content = drawer.querySelector('.work-detail, .person-body');
                 if (!summary || !content) return;
+                drawer.classList.toggle('is-expanded', drawer.open);
+                drawer.addEventListener('toggle', () => {
+                    if (drawer.dataset.animating === 'true') return;
+                    drawer.classList.toggle('is-expanded', drawer.open);
+                });
 
                 summary.addEventListener('click', (event) => {
                     if (reduceMotion) return;
@@ -801,7 +810,8 @@
 
                     drawer.dataset.animating = 'true';
                     const isOpen = drawer.open;
-                    const duration = 170;
+                    const duration = 190;
+                    const easing = 'cubic-bezier(0.2, 0, 0, 1)';
 
                     const cleanup = () => {
                         content.style.height = '';
@@ -811,11 +821,12 @@
                     };
 
                     if (isOpen) {
+                        drawer.classList.remove('is-expanded');
                         content.style.height = `${content.scrollHeight}px`;
                         content.style.opacity = '1';
                         content.style.transition = 'none';
                         content.offsetHeight;
-                        content.style.transition = `height ${duration}ms ease, opacity ${duration - 40}ms ease`;
+                        content.style.transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
                         content.style.height = '0px';
                         content.style.opacity = '0';
 
@@ -827,11 +838,12 @@
                         });
                     } else {
                         drawer.open = true;
+                        drawer.classList.add('is-expanded');
                         content.style.height = '0px';
                         content.style.opacity = '0';
                         content.style.transition = 'none';
                         content.offsetHeight;
-                        content.style.transition = `height ${duration}ms ease, opacity ${duration - 40}ms ease`;
+                        content.style.transition = `height ${duration}ms ${easing}, opacity ${duration}ms ${easing}`;
                         content.style.height = `${content.scrollHeight}px`;
                         content.style.opacity = '1';
 
