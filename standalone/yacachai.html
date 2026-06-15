@@ -249,7 +249,7 @@
 
         .grid-3 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 32px;
         }
 
@@ -266,7 +266,12 @@
             box-shadow: 10px 10px 0px var(--primary);
         }
 
-        .brutalist-card h3 { font-size: 1.8rem; margin-bottom: 1rem; text-transform: uppercase; }
+        .brutalist-card h3 {
+            font-size: clamp(1.35rem, 1.8vw, 1.8rem);
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
         .brutalist-card p { font-size: 1.1rem; line-height: 1.5; color: #CCCCCC; }
 
         .work-list {
@@ -639,6 +644,12 @@
             button.brutalist-btn { width: 100%; }
             .work-item { padding-left: 18px; }
         }
+
+        @media (max-width: 900px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -681,8 +692,8 @@
         <!-- SLIDE 1: HERO -->
         <section class="slide" id="enfoque">
             <div class="container">
-                <h1>IA PARA TU EMPRESA.<br>SIN HUMO.</h1>
-                <p class="hero-sub">La implementamos.<br>Tu equipo la entiende.</p>
+                <h1>IA PARA TU ORGANIZACIÓN.<br>CON OFICIO ACADÉMICO.</h1>
+                <p class="hero-sub">Investigamos, diseñamos<br>e implementamos contigo.</p>
                 <p class="hero-punch">¿Cachai?</p>
                 
                 <form action="#" method="POST" class="cta-form" id="hero-contact-form">
@@ -782,7 +793,7 @@
         <section class="slide dark" id="quienes-somos">
             <div class="container about-copy">
                 <h2>Quiénes somos.</h2>
-                <p>CachAI Labs aplica IA a problemas concretos de organizaciones públicas, privadas y sociales.</p>
+                <p>Somos académicos, investigadores y constructores de sistemas que aplican IA a problemas concretos de organizaciones públicas, privadas y sociales.</p>
                 <p>Combinamos investigación, desarrollo de sistemas, consultoría y experiencia en política pública para diseñar herramientas útiles, trazables y adoptables.</p>
                 <div class="people-list">
                     <details class="person-card">
@@ -871,7 +882,7 @@
         <section class="slide" id="contacto">
             <div class="container">
                 <h1>¿LISTO PARA EMPEZAR?</h1>
-                <p class="hero-sub">Cuéntanos cómo trabaja tu organización.<br>Veamos dónde la IA puede aportar valor real.</p>
+                <p class="hero-sub">Miramos tus procesos reales y te decimos exactamente por dónde partir.</p>
                 <button class="brutalist-btn" id="diagnostic-button" style="padding: 24px 64px; font-size: 1.5rem;">Agendar diagnóstico</button>
             </div>
         </section>
