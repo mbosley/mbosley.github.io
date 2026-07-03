@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Brazil 2019 Policy Rollup Example</title>
+  <style>
+    :root {
+      --ink: #202124;
+      --muted: #5f6673;
+      --line: #d8dde6;
+      --wash: #f6f7f9;
+      --episode: #0f766e;
+      --action: #b45309;
+      --mention: #2563eb;
+      --soft: #7c3aed;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.35;
+    }
+
+    main {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 36px 34px;
+    }
+
+    header {
+      border-bottom: 2px solid var(--ink);
+      padding-bottom: 14px;
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 30px;
+      letter-spacing: 0;
+      line-height: 1.08;
+    }
+
+    .dek {
+      margin: 8px 0 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .meta {
+      text-align: right;
+      color: var(--muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    section {
+      min-width: 0;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .tree {
+      border: 1px solid var(--line);
+      background: var(--wash);
+      padding: 18px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 13px;
+      overflow: auto;
+      white-space: pre;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid var(--line);
+      padding: 3px 7px;
+      background: #fff;
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .episode { color: var(--episode); font-weight: 700; }
+    .action { color: var(--action); font-weight: 700; }
+    .mention { color: var(--mention); font-weight: 700; }
+    .soft { color: var(--soft); font-weight: 700; }
+
+    .panel {
+      border-top: 1px solid var(--line);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .panel:first-child {
+      margin-top: 0;
+      padding-top: 0;
+      border-top: 0;
+    }
+
+    p {
+      margin: 0 0 9px;
+      font-size: 14px;
+    }
+
+    ul {
+      margin: 8px 0 0;
+      padding-left: 18px;
+    }
+
+    li {
+      margin: 5px 0;
+      font-size: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+
+    th, td {
+      border: 1px solid var(--line);
+      padding: 7px 8px;
+      vertical-align: top;
+      text-align: left;
+    }
+
+    th {
+      background: var(--wash);
+      font-weight: 700;
+    }
+
+    .callout {
+      margin-top: 18px;
+      border-left: 4px solid var(--episode);
+      background: #f0fdfa;
+      padding: 12px 14px;
+    }
+
+    .schema {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .schema div {
+      border: 1px solid var(--line);
+      padding: 10px;
+      background: #fff;
+      min-height: 92px;
+    }
+
+    .schema strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 13px;
+    }
+
+    .schema span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    @media print {
+      main { padding: 18px 22px; }
+      .grid { grid-template-columns: 1.05fr 0.95fr; gap: 18px; }
+      h1 { font-size: 26px; }
+      .tree { font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Brazil 2019: From Mentions to a Reform Episode</h1>
+        <p class="dek">A proposed ontology for rolling paragraph-level extractions into coherent policy actions, and then into a broader productivity reform episode.</p>
+      </div>
+      <div class="meta">
+        IDB LLMs 2.0<br>
+        Meeting prep · 2026-06-08
+      </div>
+    </header>
+
+    <div class="grid">
+      <section>
+        <h2>Rollup Example</h2>
+        <div class="legend">
+          <span class="pill"><span class="dot" style="background: var(--episode)"></span>Reform episode</span>
+          <span class="pill"><span class="dot" style="background: var(--action)"></span>Policy action</span>
+          <span class="pill"><span class="dot" style="background: var(--mention)"></span>Paragraph mention</span>
+        </div>
+        <div class="tree"><span class="episode">REFORM EPISODE</span>
+Brazil productivity reform
+Objective: raise productivity growth
+Status: ongoing / reform agenda
+
+├── <span class="action">Policy action A</span>
+│   Trim bureaucracy
+│
+│   ├── <span class="mention">Mention A1</span>
+│   │   Main-text span discussing structural reform
+│   │
+│   └── <span class="mention">Mention A2</span>
+│       Later evidence span qualifying the same action
+│
+├── <span class="action">Policy action B</span>
+│   Reduce barriers to firm entry
+│
+│   └── <span class="mention">Mention B1</span>
+│       Evidence span for this specific instrument
+│
+├── <span class="action">Policy action C</span>
+│   Improve trademarks and patents procedures
+│
+│   └── <span class="mention">Mention C1</span>
+│       Evidence span for this specific instrument</div>
+
+        <div class="callout">
+          <p><strong>Core idea:</strong> the ontology preserves each paragraph mention as evidence while giving analysts a cleaner rollup view of the policy action and the broader reform episode.</p>
+        </div>
+      </section>
+
+      <section>
+        <div class="panel">
+          <h2>Ontology</h2>
+          <div class="schema">
+            <div>
+              <strong class="episode">Reform episode</strong>
+              <span>Broader agenda or process: productivity reform, fiscal reform, pension reform.</span>
+            </div>
+            <div>
+              <strong class="action">Policy action</strong>
+              <span>Concrete government move or instrument that can be implemented, delayed, revised, or abandoned.</span>
+            </div>
+            <div>
+              <strong class="mention">Paragraph mention</strong>
+              <span>One evidence span from the document, with page, paragraph, stance, urgency, and source text.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>Aggregation Rule</h2>
+          <p>Do not collapse row-level extractions directly. Preserve every mention as evidence, then assign each mention to a policy action and, when relevant, assign policy actions to a reform episode.</p>
+          <ul>
+            <li>Same concrete instrument or government move: same <code>policy_action_id</code>.</li>
+            <li>Different instruments under one agenda: different <code>policy_action_id</code>, same <code>reform_episode_id</code>.</li>
+            <li>Each paragraph mention remains available underneath the rollup as traceable evidence.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h2>Ontology In Practice</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Layer</th>
+                <th>Brazil productivity example</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Reform episode</td>
+                <td>Brazil productivity reform.</td>
+              </tr>
+              <tr>
+                <td>Policy actions</td>
+                <td>Trim bureaucracy; reduce barriers to entry; improve trademarks and patents; possibly other concrete instruments.</td>
+              </tr>
+              <tr>
+                <td>Paragraph mentions</td>
+                <td>Individual evidence spans that mention, repeat, qualify, or contextualize each policy action.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
