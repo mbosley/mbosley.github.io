@@ -1,0 +1,1189 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A proposed three-arm experiment testing truthful disclosure to human, AI, and self-administered elicitation modes.">
+  <title>Are respondents more truthful with an AI interviewer?</title>
+  <style>
+    :root {
+      --ink: #111317;
+      --muted: #5e6570;
+      --line: #d9dde3;
+      --line-strong: #a8afb9;
+      --blue: #1747b8;
+      --teal: #087f8c;
+      --violet: #6941c6;
+      --coral: #e65b52;
+      --soft-blue: #f5f7ff;
+      --soft-coral: #fff7f5;
+      --page: #ffffff;
+      --max: 1180px;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      color-scheme: light;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      width: min(calc(100% - 48px), var(--max));
+      margin: 0 auto;
+      padding: 64px 0 56px;
+    }
+
+    header {
+      max-width: 860px;
+      margin-bottom: 52px;
+    }
+
+    h1 {
+      max-width: 820px;
+      margin: 0 0 14px;
+      font-size: clamp(2.8rem, 6vw, 5.35rem);
+      line-height: .98;
+      letter-spacing: -.058em;
+      font-weight: 750;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1.05rem, 1.8vw, 1.35rem);
+      letter-spacing: -.015em;
+    }
+
+    .flow {
+      position: relative;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-bottom: 48px;
+    }
+
+    .step {
+      position: relative;
+      z-index: 1;
+      background: var(--page);
+      min-width: 0;
+    }
+
+    .step-number {
+      display: grid;
+      width: 54px;
+      height: 54px;
+      margin-bottom: 16px;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      background: var(--page);
+      color: var(--blue);
+      font-size: 1.3rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .step h2 {
+      margin: 0 0 5px;
+      font-size: 1.05rem;
+      line-height: 1.22;
+      letter-spacing: -.02em;
+    }
+
+    .step p {
+      max-width: 220px;
+      margin: 0;
+      color: var(--muted);
+      font-size: .91rem;
+      line-height: 1.4;
+    }
+
+    .task-demo {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr 1fr 1fr;
+      margin: 0 0 52px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .demo-intro,
+    .demo-stage {
+      position: relative;
+      min-height: 176px;
+      padding: 24px;
+    }
+
+    .demo-stage {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .demo-stage:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: -11px;
+      z-index: 2;
+      width: 22px;
+      background: var(--page);
+      color: var(--line-strong);
+      font-size: 1.25rem;
+      line-height: 1;
+      text-align: center;
+      transform: translateY(-50%);
+    }
+
+    .demo-label {
+      display: block;
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .demo-intro h2 {
+      margin: 0 0 10px;
+      font-size: 1.4rem;
+      line-height: 1.08;
+      letter-spacing: -.03em;
+    }
+
+    .demo-intro p,
+    .demo-stage p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.42;
+    }
+
+    .demo-value {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin: 8px 0 16px;
+    }
+
+    .die {
+      display: grid;
+      width: 54px;
+      height: 54px;
+      flex: 0 0 auto;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 9px;
+      font-size: 1.55rem;
+      font-weight: 750;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .reported .die {
+      color: var(--coral);
+      border-color: var(--coral);
+      background: var(--soft-coral);
+    }
+
+    .demo-value strong {
+      display: block;
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .demo-value small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .76rem;
+    }
+
+    .mismatch {
+      background: var(--soft-coral);
+    }
+
+    .mismatch .demo-label { color: var(--coral); }
+
+    .mismatch strong {
+      display: block;
+      margin: 12px 0 7px;
+      color: var(--coral);
+      font-size: 1.05rem;
+    }
+
+    .branch-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .branch-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .arms {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 52px;
+    }
+
+    .arm {
+      --arm: var(--blue);
+      display: flex;
+      min-height: 300px;
+      flex-direction: column;
+      padding: 26px;
+      border: 1px solid var(--arm);
+      border-radius: var(--radius);
+      background: var(--page);
+    }
+
+    .arm.ai { --arm: var(--teal); }
+    .arm.survey { --arm: var(--violet); }
+
+    .arm-index {
+      margin-bottom: 26px;
+      color: var(--arm);
+      font-size: .76rem;
+      font-weight: 800;
+      letter-spacing: .09em;
+      text-transform: uppercase;
+    }
+
+    .arm h3 {
+      margin: 0 0 10px;
+      color: var(--arm);
+      font-size: 1.35rem;
+      line-height: 1.12;
+      letter-spacing: -.025em;
+    }
+
+    .arm > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .embedded {
+      margin-top: auto;
+      padding-top: 22px;
+      border-top: 1px solid color-mix(in srgb, var(--arm) 45%, white);
+    }
+
+    .embedded strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--arm);
+      font-size: .74rem;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+    }
+
+    .embedded blockquote {
+      margin: 0;
+      font-size: .96rem;
+      line-height: 1.42;
+      font-weight: 600;
+    }
+
+    .boundary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin-bottom: 52px;
+      border: 1px solid var(--ink);
+      border-radius: var(--radius);
+    }
+
+    .boundary-item {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 17px;
+      padding: 26px 30px;
+      align-items: start;
+    }
+
+    .boundary-item + .boundary-item {
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .boundary-icon {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border: 1px solid var(--ink);
+      border-radius: 50%;
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .boundary-item:last-child .boundary-icon {
+      color: var(--coral);
+      border-color: var(--coral);
+    }
+
+    .boundary h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+
+    .boundary p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .93rem;
+    }
+
+    .matrix-wrap {
+      margin-bottom: 52px;
+    }
+
+    .literature {
+      margin-bottom: 52px;
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .literature-head {
+      padding: 24px 0 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .literature-head .section-title {
+      margin-bottom: 7px;
+    }
+
+    .literature-head p,
+    .literature-synthesis {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .literature-argument {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .literature-item {
+      display: grid;
+      grid-template-columns: 46px minmax(200px, .72fr) 1.65fr;
+      gap: 28px;
+      padding: 22px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .literature-number {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border: 1px solid var(--line-strong);
+      border-radius: 50%;
+      color: var(--blue);
+      font-size: .8rem;
+      font-weight: 800;
+    }
+
+    .literature-item h3 {
+      margin: 3px 0 0;
+      font-size: 1rem;
+      line-height: 1.3;
+      letter-spacing: -.018em;
+    }
+
+    .literature-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.52;
+    }
+
+    .literature-item a {
+      color: var(--blue);
+      font-weight: 750;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+
+    .literature-gap {
+      padding: 20px 22px;
+      border-left: 3px solid var(--blue);
+      background: var(--soft-blue);
+    }
+
+    .literature-gap strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--blue);
+      font-size: .75rem;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+    }
+
+    .literature-gap p {
+      max-width: 940px;
+      margin: 0;
+      font-size: .94rem;
+      line-height: 1.5;
+    }
+
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 1.6rem;
+      line-height: 1.1;
+      letter-spacing: -.035em;
+    }
+
+    .matrix {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      border-top: 1px solid var(--ink);
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .cell {
+      min-height: 98px;
+      padding: 18px 20px;
+      border-right: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .cell.header {
+      min-height: auto;
+      padding-top: 11px;
+      padding-bottom: 11px;
+      background: #fafafa;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    .cell.rowhead {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-weight: 750;
+    }
+
+    .cell.rowhead span {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 500;
+    }
+
+    .cell.rowhead.misreported { color: var(--coral); }
+    .cell.rowhead.honest { color: var(--teal); }
+
+    .result {
+      display: grid;
+      grid-template-columns: 29px 1fr;
+      gap: 11px;
+      align-items: start;
+    }
+
+    .mark {
+      display: grid;
+      width: 29px;
+      height: 29px;
+      place-items: center;
+      border: 1px solid currentColor;
+      border-radius: 50%;
+      color: var(--teal);
+      font-size: .92rem;
+      font-weight: 800;
+    }
+
+    .result.false .mark { color: var(--coral); }
+
+    .result strong {
+      display: block;
+      margin: 1px 0 3px;
+      font-size: .96rem;
+    }
+
+    .result p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .analysis {
+      margin-bottom: 52px;
+      border-top: 1px solid var(--ink);
+    }
+
+    .analysis-head {
+      padding: 24px 0 28px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .analysis-head .section-title { margin: 0; }
+
+    .analysis-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .framework {
+      display: grid;
+      grid-template-columns: 190px 1fr;
+      gap: 34px;
+      padding: 24px;
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--soft-blue);
+    }
+
+    .framework strong {
+      color: var(--blue);
+      font-size: .76rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .framework p {
+      max-width: 820px;
+      margin: 0;
+      font-size: .95rem;
+      line-height: 1.52;
+    }
+
+    .hypotheses {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .hypothesis {
+      min-height: 168px;
+      padding: 24px;
+    }
+
+    .hypothesis + .hypothesis {
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .hypothesis span {
+      display: block;
+      margin-bottom: 14px;
+      color: var(--blue);
+      font-size: .73rem;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .hypothesis h3 {
+      margin: 0 0 8px;
+      font-size: 1.03rem;
+      line-height: 1.25;
+      letter-spacing: -.018em;
+    }
+
+    .hypothesis p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.42;
+    }
+
+    .estimand {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 1px solid var(--line-strong);
+    }
+
+    .estimand > div {
+      padding: 24px;
+    }
+
+    .estimand > div + div {
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .estimand strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: .92rem;
+    }
+
+    .estimand code {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: var(--blue);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: .83rem;
+    }
+
+    .estimand p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .power {
+      padding: 24px;
+      background: var(--soft-blue);
+    }
+
+    .power h3 {
+      margin: 0 0 6px;
+      font-size: 1rem;
+    }
+
+    .power p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .83rem;
+      line-height: 1.4;
+    }
+
+    .power-table {
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      min-width: 420px;
+      border-top: 1px solid var(--line-strong);
+      border-left: 1px solid var(--line-strong);
+    }
+
+    .power-scroll {
+      margin-top: 20px;
+      overflow-x: auto;
+      overscroll-behavior-inline: contain;
+    }
+
+    .power-cell {
+      padding: 12px 14px;
+      border-right: 1px solid var(--line-strong);
+      border-bottom: 1px solid var(--line-strong);
+      background: var(--page);
+      font-size: .84rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .power-cell.head {
+      color: var(--muted);
+      font-size: .7rem;
+      font-weight: 800;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+    }
+
+    .power-cell strong {
+      color: var(--blue);
+    }
+
+    .power-result {
+      margin-top: 16px !important;
+      color: var(--ink) !important;
+      font-size: .9rem !important;
+    }
+
+    .power-note {
+      margin-top: 8px !important;
+      color: var(--muted);
+      font-size: .76rem !important;
+    }
+
+    footer {
+      display: grid;
+      grid-template-columns: 1.35fr .65fr;
+      border-top: 3px solid var(--blue);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .takeaway,
+    .open-question {
+      padding: 30px;
+    }
+
+    .takeaway {
+      background: var(--soft-blue);
+    }
+
+    .open-question {
+      border-left: 1px solid var(--line-strong);
+      background: var(--page);
+    }
+
+    footer strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--blue);
+      font-size: .78rem;
+      letter-spacing: .075em;
+      text-transform: uppercase;
+    }
+
+    .open-question strong { color: var(--teal); }
+
+    footer p {
+      margin: 0;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+
+    .takeaway p {
+      max-width: 720px;
+      font-size: 1.15rem;
+      font-weight: 650;
+      letter-spacing: -.014em;
+    }
+
+    @media (max-width: 820px) {
+      main {
+        width: min(calc(100% - 32px), var(--max));
+        padding-top: 38px;
+      }
+
+      header { margin-bottom: 38px; }
+
+      .flow {
+        grid-template-columns: 1fr;
+        gap: 0;
+        margin-bottom: 38px;
+        padding-left: 0;
+      }
+
+      .flow::before {
+        content: "";
+        position: absolute;
+        top: 22px;
+        bottom: 22px;
+        left: 22px;
+        right: auto;
+        width: 1px;
+        height: auto;
+        background: var(--line-strong);
+      }
+
+      .step {
+        display: grid;
+        grid-template-columns: 46px 1fr;
+        column-gap: 16px;
+        padding-bottom: 24px;
+      }
+
+      .step-number {
+        grid-row: span 2;
+        width: 46px;
+        height: 46px;
+        margin: 0;
+      }
+
+      .step h2 { align-self: end; }
+      .step p { max-width: none; }
+
+      .task-demo {
+        grid-template-columns: 1fr;
+      }
+
+      .demo-intro,
+      .demo-stage {
+        min-height: auto;
+      }
+
+      .demo-stage {
+        border-top: 1px solid var(--line-strong);
+        border-left: 0;
+      }
+
+      .demo-stage:not(:last-child)::after {
+        content: "↓";
+        top: auto;
+        right: 24px;
+        bottom: -12px;
+        transform: none;
+      }
+
+      .arms { grid-template-columns: 1fr; }
+      .arm { min-height: 260px; }
+
+      .boundary { grid-template-columns: 1fr; }
+      .boundary-item + .boundary-item {
+        border-top: 1px solid var(--line-strong);
+        border-left: 0;
+      }
+
+      .matrix {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .matrix .corner { display: none; }
+
+      .cell.rowhead {
+        grid-column: 1 / -1;
+        min-height: auto;
+        padding: 12px 16px;
+        background: #fafafa;
+      }
+
+      .hypotheses,
+      .estimand,
+      .framework {
+        grid-template-columns: 1fr;
+      }
+
+      .framework { gap: 8px; }
+
+      .literature-item {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .hypothesis + .hypothesis,
+      .estimand > div + div {
+        border-top: 1px solid var(--line-strong);
+        border-left: 0;
+      }
+
+      .hypothesis { min-height: auto; }
+
+      footer { grid-template-columns: 1fr; }
+
+      .open-question {
+        border-top: 1px solid var(--line-strong);
+        border-left: 0;
+      }
+    }
+
+    @media (max-width: 500px) {
+      h1 { font-size: 2.65rem; }
+      .arm { padding: 22px; }
+      .boundary-item {
+        grid-template-columns: 1fr;
+        padding: 22px;
+      }
+      .cell { padding: 14px; }
+      .result {
+        grid-template-columns: 1fr;
+        gap: 6px;
+      }
+      .takeaway,
+      .open-question { padding: 22px; }
+    }
+
+    @media print {
+      @page { size: A4; margin: 11mm; }
+      body { font-size: 11px; }
+      main {
+        width: 100%;
+        padding: 0;
+      }
+      h1 { font-size: 38px; }
+      header { margin-bottom: 28px; }
+      .flow,
+      .arms,
+      .boundary,
+      .matrix-wrap { margin-bottom: 24px; }
+      .arm { min-height: 220px; }
+      .cell { min-height: 72px; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Are respondents more truthful with an AI interviewer?</h1>
+      <p class="subtitle">A three-arm experiment with observed behavioral ground truth.</p>
+    </header>
+
+    <section class="flow" aria-label="Experimental flow">
+      <article class="step">
+        <div class="step-number">1</div>
+        <h2>Behavioral task</h2>
+        <p>A participant sees a privately presented outcome and can misreport it for a financial benefit.</p>
+      </article>
+      <article class="step">
+        <div class="step-number">2</div>
+        <h2>Ground truth recorded</h2>
+        <p>The backend stores the generated outcome and the participant’s report.</p>
+      </article>
+      <article class="step">
+        <div class="step-number">3</div>
+        <h2>Random assignment</h2>
+        <p>Only after the task, the participant enters one of three elicitation modes.</p>
+      </article>
+      <article class="step">
+        <div class="step-number">4</div>
+        <h2>Disclosure measured</h2>
+        <p>The same direct question is embedded within a broader interaction.</p>
+      </article>
+    </section>
+
+    <section class="task-demo" aria-labelledby="task-demo-title">
+      <div class="demo-intro">
+        <span class="demo-label">Behavioral task</span>
+        <h2 id="task-demo-title">A private roll with an incentive to misreport</h2>
+        <p>The survey generates and records the outcome for research analysis. The interviewer receives the participant’s subsequent conversation responses. A higher reported number earns a larger bonus.</p>
+      </div>
+      <div class="demo-stage">
+        <span class="demo-label">What the participant sees</span>
+        <div class="demo-value">
+          <div class="die" aria-label="Actual die outcome: 2">2</div>
+          <div>
+            <strong>Actual roll</strong>
+            <small>Privately displayed</small>
+          </div>
+        </div>
+        <p>The backend records the generated value.</p>
+      </div>
+      <div class="demo-stage reported">
+        <span class="demo-label">What the participant reports</span>
+        <div class="demo-value">
+          <div class="die" aria-label="Reported die outcome: 6">6</div>
+          <div>
+            <strong>Reported roll</strong>
+            <small>Higher report, larger bonus</small>
+          </div>
+        </div>
+        <p>The participant receives the payoff associated with the report.</p>
+      </div>
+      <div class="demo-stage mismatch">
+        <span class="demo-label">What the research record establishes</span>
+        <strong>2 ≠ 6 · Misreported</strong>
+        <p>This creates individual ground truth for evaluating the later admission or denial. Ground truth remains isolated in the research backend during elicitation.</p>
+      </div>
+    </section>
+
+    <div class="branch-label">Three elicitation modes</div>
+
+    <section class="arms" id="elicitation-modes" aria-label="Experimental treatment arms">
+      <article class="arm human">
+        <div class="arm-index">Arm 1</div>
+        <h3>Human interviewer</h3>
+        <p>A human interviewer asks a short series of questions about general attitudes and experiences.</p>
+        <div class="embedded">
+          <strong>Key question</strong>
+          <blockquote>“In the earlier die-roll task, did you report a number different from the one you actually rolled?”</blockquote>
+        </div>
+      </article>
+
+      <article class="arm ai">
+        <div class="arm-index">Arm 2</div>
+        <h3>AI interviewer</h3>
+        <p>An AI interviewer asks the same questions and briefly follows up on participants’ answers.</p>
+        <div class="embedded">
+          <strong>Key question</strong>
+          <blockquote>“In the earlier die-roll task, did you report a number different from the one you actually rolled?”</blockquote>
+        </div>
+      </article>
+
+      <article class="arm survey">
+        <div class="arm-index">Arm 3</div>
+        <h3>Standard survey</h3>
+        <p>Participants answer the same questions in a standard online form.</p>
+        <div class="embedded">
+          <strong>Key question</strong>
+          <blockquote>“In the earlier die-roll task, did you report a number different from the one you actually rolled?”</blockquote>
+        </div>
+      </article>
+    </section>
+
+    <section class="boundary" aria-label="Information boundary">
+      <article class="boundary-item">
+        <div class="boundary-icon" aria-hidden="true">DB</div>
+        <div>
+          <h3>Research backend knows</h3>
+          <p>The generated outcome, the participant’s report, and whether the report was accurate.</p>
+        </div>
+      </article>
+      <article class="boundary-item">
+        <div class="boundary-icon" aria-hidden="true">—</div>
+        <div>
+          <h3>Interviewer receives</h3>
+          <p>The participant’s conversation responses. Behavioral ground truth stays in the separate research record during the interaction.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="matrix-wrap" aria-labelledby="matrix-title">
+      <h2 class="section-title" id="matrix-title">Individual truthfulness becomes observable</h2>
+      <div class="matrix" role="table" aria-label="Truthfulness classification matrix">
+        <div class="cell header corner" role="columnheader">Actual behavior</div>
+        <div class="cell header" role="columnheader">Admits misreporting</div>
+        <div class="cell header" role="columnheader">Denies misreporting</div>
+
+        <div class="cell rowhead misreported" role="rowheader">
+          Misreported
+          <span>Behavioral record: dishonest</span>
+        </div>
+        <div class="cell" role="cell">
+          <div class="result">
+            <div class="mark" aria-hidden="true">✓</div>
+            <div>
+              <strong>Truthful admission</strong>
+              <p>The elicitation mode recovers the observed behavior.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cell" role="cell">
+          <div class="result false">
+            <div class="mark" aria-hidden="true">×</div>
+            <div>
+              <strong>False denial</strong>
+              <p>The disclosure response differs from the observed behavior.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="cell rowhead honest" role="rowheader">
+          Reported honestly
+          <span>Behavioral record: honest</span>
+        </div>
+        <div class="cell" role="cell">
+          <div class="result false">
+            <div class="mark" aria-hidden="true">×</div>
+            <div>
+              <strong>False admission</strong>
+              <p>The participant reports misreporting absent from the behavioral record.</p>
+            </div>
+          </div>
+        </div>
+        <div class="cell" role="cell">
+          <div class="result">
+            <div class="mark" aria-hidden="true">✓</div>
+            <div>
+              <strong>Truthful denial</strong>
+              <p>The elicitation mode correctly recovers honest behavior.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="literature" aria-labelledby="literature-title">
+      <div class="literature-head">
+        <h2 class="section-title" id="literature-title">Relevant literature</h2>
+        <p>The prior work establishes two mechanisms and one unresolved measurement problem.</p>
+      </div>
+      <ol class="literature-argument">
+        <li class="literature-item">
+          <div class="literature-number" aria-hidden="true">1</div>
+          <h3>Social presence changes honesty and disclosure.</h3>
+          <p><a href="https://doi.org/10.1287/mnsc.2021.3985" target="_blank" rel="noreferrer">Cohn, Gesche &amp; Maréchal (2022)</a> find substantially more financially motivated cheating during machine interaction than human interaction, consistent with social-image concerns. <a href="https://doi.org/10.1016/j.dss.2018.08.011" target="_blank" rel="noreferrer">Schuetzler et al. (2018)</a> show that conversational agents, face-to-face interviews, and online surveys elicit different responses to sensitive questions—and that more humanlike conversation can increase socially desirable responding. Together, these studies make the perceived social audience a central mechanism.</p>
+        </li>
+        <li class="literature-item">
+          <div class="literature-number" aria-hidden="true">2</div>
+          <h3>Admission rates require behavioral validation.</h3>
+          <p><a href="https://doi.org/10.1111/jeea.12014" target="_blank" rel="noreferrer">Fischbacher &amp; Föllmi-Heusi (2013)</a> establish the incentivized die-roll paradigm, while <a href="https://doi.org/10.1371/journal.pone.0201770" target="_blank" rel="noreferrer">Höglinger &amp; Jann (2018)</a> add an individually recorded roll. Their validation shows why both false denials and false admissions matter: a method can produce more sensitive admissions while also creating more incorrect ones.</p>
+        </li>
+        <li class="literature-item">
+          <div class="literature-number" aria-hidden="true">3</div>
+          <h3>Validation requires an independent truth benchmark.</h3>
+          <p><a href="https://imai.fas.harvard.edu/research/files/validate.pdf" target="_blank" rel="noreferrer">Rosenfeld, Imai &amp; Shapiro (2016)</a> demonstrate that sensitive-question methods should be evaluated against known outcomes. Höglinger and Jann extend that principle to the individual level, where truthful admissions, false denials, truthful denials, and false admissions can be separated directly.</p>
+        </li>
+      </ol>
+      <div class="literature-gap">
+        <strong>The open gap</strong>
+        <p>Prior studies contribute separate pieces: the social audience during behavior, the mode used for sensitive disclosure, and validation against known outcomes. This experiment brings those pieces together. It records behavior first and then randomizes human, AI, or self-administered elicitation, isolating the effect of interviewer mode on truthful disclosure.</p>
+      </div>
+    </section>
+
+    <section class="analysis" aria-labelledby="analysis-title">
+      <div class="analysis-head">
+        <h2 class="section-title" id="analysis-title">Theoretical framework, hypotheses, and analysis</h2>
+      </div>
+
+      <div class="framework">
+        <strong>Theoretical framework</strong>
+        <p>Admitting dishonest behavior can feel socially costly. A human interviewer may heighten concern about judgment. A standard survey removes that interpersonal audience. An AI interviewer may combine the privacy of self-administration with the engagement of a conversation, making truthful admission easier.</p>
+      </div>
+
+      <div class="hypotheses">
+        <article class="hypothesis">
+          <span>Primary · H1</span>
+          <h3>More people who misreported will admit it to an AI interviewer than to a human interviewer.</h3>
+          <p>This is the main comparison.</p>
+        </article>
+        <article class="hypothesis">
+          <span>Secondary · H2</span>
+          <h3>More people who misreported will admit it to an AI interviewer than on a standard survey.</h3>
+          <p>This tests whether an AI conversation adds value beyond private self-administration.</p>
+        </article>
+        <article class="hypothesis">
+          <span>Secondary · H3</span>
+          <h3>More people who misreported will admit it on a standard survey than to a human interviewer.</h3>
+          <p>This tests whether human social presence discourages truthful admission.</p>
+        </article>
+      </div>
+
+      <div class="estimand">
+        <div>
+          <strong>Primary analysis</strong>
+          <code>Among verified misreporters: who admits it?</code>
+          <p>Compare the percentage who truthfully admit misreporting across the three arms. AI versus human is the primary test.</p>
+        </div>
+        <div>
+          <strong>Accuracy safeguard</strong>
+          <code>Among verified honest reporters: who says they misreported?</code>
+          <p>Compare false admissions across the three arms. This distinguishes truthful disclosure from a general increase in “yes” responses.</p>
+        </div>
+      </div>
+
+      <div class="power">
+        <h3>What can we learn with 600 participants?</h3>
+        <p>With 200 participants in each arm, the study is powered to detect a large difference between AI and human interviewers. If approximately 30% of participants misreport during the behavioral task, AI would need to increase truthful admissions from about 25% to 50% for us to detect the effect reliably.</p>
+        <div class="power-scroll">
+          <div class="power-table" role="table" aria-label="Approximate sample sizes for detectable differences">
+            <div class="power-cell head" role="columnheader">Difference we want to detect</div>
+            <div class="power-cell head" role="columnheader">Approximate total sample</div>
+
+            <div class="power-cell" role="cell">Large · 25 percentage points</div>
+            <div class="power-cell" role="cell"><strong>600</strong></div>
+
+            <div class="power-cell" role="cell">Moderate · 20 percentage points</div>
+            <div class="power-cell" role="cell"><strong>936</strong></div>
+
+            <div class="power-cell" role="cell">Smaller · 15 percentage points</div>
+            <div class="power-cell" role="cell"><strong>1,635</strong></div>
+          </div>
+        </div>
+        <p class="power-note">Planning estimates assume 80% power, equal allocation across three arms, and 30% misreporting. A pilot will provide stronger inputs for the final calculation.</p>
+      </div>
+    </section>
+
+    <footer id="conclusion">
+      <div class="takeaway">
+        <strong>Core contribution</strong>
+        <p>By recording behavior before randomizing the elicitation mode, the study isolates whether human, AI, or self-administered interviews most effectively elicit truthful disclosure.</p>
+      </div>
+      <div class="open-question">
+        <strong>Before fielding</strong>
+        <p>Pilot the behavioral task to confirm a credible opportunity to misreport, estimate the misreporting rate, and finalize the sample size.</p>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
