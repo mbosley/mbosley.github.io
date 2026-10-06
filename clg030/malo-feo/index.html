@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>¿Malo o feo? ¿Quién es responsable?</title>
+<style>
+  :root {
+    --fondo: #F3F3F1;
+    --tarjeta: #FFFFFF;
+    --texto: #24272B;
+    --titulo: #1F2A37;
+    --acento: #2F6DB5;
+    --alerta: #C2413A;
+    --borde: #D5D6D3;
+    --suave: #5B6169;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--fondo);
+    color: var(--texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 20px 14px 60px; }
+  h1 { color: var(--titulo); font-size: 1.65rem; line-height: 1.25; margin: 8px 0 4px; }
+  .subtitulo { color: var(--suave); margin: 0 0 6px; }
+  .privado { color: var(--suave); font-size: 0.9rem; margin: 0 0 18px; }
+  h2 { color: var(--titulo); font-size: 1.25rem; margin: 0 0 14px; }
+  .tarjeta {
+    background: var(--tarjeta);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    padding: 18px 16px;
+    margin: 0 0 18px;
+  }
+  .caso { border-left: 5px solid var(--titulo); }
+  .caso p { margin: 0; }
+  .caso strong { color: var(--titulo); }
+  .nombres { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  @media (min-width: 560px) { .nombres { grid-template-columns: 1fr 1fr; } }
+  label { display: block; font-weight: 600; color: var(--titulo); margin: 0 0 6px; }
+  .nombres label { font-weight: 500; color: var(--suave); font-size: 0.92rem; margin-bottom: 4px; }
+  input[type="text"], textarea {
+    width: 100%;
+    font: inherit;
+    font-size: 17px; /* evita el zoom automático de iPhone */
+    color: var(--texto);
+    background: #FFFFFF;
+    border: 1px solid #B9BBB7;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  textarea { min-height: 96px; resize: vertical; display: block; }
+  input[type="text"]:focus, textarea:focus { outline: 3px solid rgba(47, 109, 181, 0.35); border-color: var(--acento); }
+  .pregunta + .pregunta { margin-top: 20px; }
+  .num { color: var(--acento); }
+
+  /* Cuadro */
+  .modos { display: flex; gap: 10px; flex-wrap: wrap; margin: 12px 0 14px; }
+  .modo {
+    font: inherit; font-weight: 600;
+    min-height: 46px; padding: 8px 18px;
+    border-radius: 999px;
+    border: 2px solid var(--titulo);
+    background: #FFFFFF; color: var(--titulo);
+    cursor: pointer;
+  }
+  .modo[aria-pressed="true"] { background: var(--titulo); color: #FFFFFF; }
+  .modo .punto {
+    display: inline-block; width: 1.4em; height: 1.4em; line-height: 1.4em;
+    border-radius: 50%; text-align: center; color: #FFFFFF; font-size: 0.85em;
+    margin-right: 6px; vertical-align: 1px;
+  }
+  .punto-l { background: var(--acento); }
+  .punto-h { background: var(--titulo); box-shadow: 0 0 0 2px #FFFFFF inset; }
+  .cuadro {
+    display: grid;
+    grid-template-columns: auto auto 1fr 1fr;
+    grid-template-rows: auto auto auto;
+    column-gap: 6px;
+    row-gap: 4px;
+    margin: 6px 0 8px;
+  }
+  .eje-sup { grid-column: 3 / 5; grid-row: 1; text-align: center; font-weight: 700; color: var(--titulo); }
+  .col-et { grid-row: 2; text-align: center; font-weight: 600; color: var(--suave); }
+  .col-no { grid-column: 3; }
+  .col-si { grid-column: 4; }
+  .eje-izq {
+    grid-column: 1; grid-row: 3;
+    writing-mode: vertical-rl; transform: rotate(180deg);
+    text-align: center; font-weight: 700; color: var(--titulo);
+    line-height: 1.2; font-size: 0.95rem;
+  }
+  .fil-et { grid-column: 2; grid-row: 3; display: flex; flex-direction: column; }
+  .fil-et span { flex: 1; display: flex; align-items: center; font-weight: 600; color: var(--suave); }
+  .area {
+    grid-column: 3 / 5; grid-row: 3;
+    position: relative;
+    aspect-ratio: 1.45 / 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2px;
+    background: var(--titulo);
+    border: 2px solid var(--titulo);
+    cursor: crosshair;
+    touch-action: manipulation;
+    -webkit-user-select: none; user-select: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .celda { padding: 8px 10px; font-weight: 700; color: var(--titulo); font-size: 1rem; }
+  .c-bueno { background: #DCE8EC; }
+  .c-feo { background: #F2D6D4; color: var(--alerta); }
+  .c-malo { background: #E6E7E8; }
+  .c-ambos { background: #E9E2E2; }
+  .marca {
+    position: absolute;
+    width: 38px; height: 38px; margin: -19px 0 0 -19px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-weight: 800; font-size: 19px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+  }
+  .marca[hidden] { display: none; }
+  .marca-l { background: var(--acento); border: 2px solid #FFFFFF; }
+  .marca-h { background: var(--titulo); border: 3px solid #FFFFFF; outline: 2px solid var(--titulo); }
+  .ubicacion { font-weight: 600; color: var(--titulo); margin: 10px 0 4px; }
+  .fuente { color: var(--suave); font-size: 0.85rem; margin: 0 0 20px; }
+  .aviso { color: var(--alerta); font-size: 0.92rem; min-height: 1.4em; margin: 0; }
+
+  /* Acciones */
+  .acciones { text-align: center; margin-top: 8px; }
+  .descargar {
+    font: inherit; font-size: 1.15rem; font-weight: 700;
+    width: 100%; max-width: 420px; min-height: 56px;
+    border: 0; border-radius: 12px;
+    background: var(--acento); color: #FFFFFF;
+    cursor: pointer;
+  }
+  .descargar:active { filter: brightness(0.92); }
+  .pista { color: var(--suave); font-size: 0.92rem; margin: 10px auto 0; max-width: 460px; }
+  .estado { margin: 12px 0 0; min-height: 1.4em; color: var(--titulo); }
+  .estado a { color: var(--acento); font-weight: 600; }
+  .borrar {
+    font: inherit; font-size: 0.95rem;
+    background: none; border: 0; padding: 12px;
+    color: var(--suave); text-decoration: underline; cursor: pointer;
+    margin-top: 18px;
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>¿Malo o feo? ¿Quién es responsable?</h1>
+  <p class="subtitulo">Actividad previa a la charla sobre IA y ética, 6 de octubre de 2026</p>
+  <p class="privado">Las respuestas se guardan solo en este dispositivo. Al final, descarguen el PDF y súbanlo a Canvas.</p>
+
+  <section class="tarjeta" aria-labelledby="t-integrantes">
+    <h2 id="t-integrantes">Integrantes</h2>
+    <div class="nombres">
+      <div><label for="n1">Integrante 1</label><input type="text" id="n1" data-campo="n1" autocomplete="off"></div>
+      <div><label for="n2">Integrante 2</label><input type="text" id="n2" data-campo="n2" autocomplete="off"></div>
+      <div><label for="n3">Integrante 3</label><input type="text" id="n3" data-campo="n3" autocomplete="off"></div>
+      <div><label for="n4">Integrante 4</label><input type="text" id="n4" data-campo="n4" autocomplete="off"></div>
+    </div>
+  </section>
+
+  <section class="tarjeta caso">
+    <p><strong>El caso.</strong> Un hospital usa un algoritmo para priorizar pacientes de alto riesgo. En las pruebas iniciales no se detectaron diferencias entre grupos. Un año después, es menos preciso con mujeres y ciertos grupos socioeconómicos. Corregirlo costaría mucho y retrasaría su implementación nacional. El hospital decidió seguir usándolo mientras busca financiamiento.</p>
+  </section>
+
+  <section class="tarjeta" aria-labelledby="t-caso">
+    <h2 id="t-caso">El caso</h2>
+    <div class="pregunta">
+      <label for="q1"><span class="num">1.</span> ¿Es un problema «malo», «feo» o ambos? ¿Por qué?</label>
+      <textarea id="q1" data-campo="q1"></textarea>
+    </div>
+    <div class="pregunta">
+      <label for="q2"><span class="num">2.</span> ¿Qué sabían los actores involucrados?</label>
+      <textarea id="q2" data-campo="q2"></textarea>
+    </div>
+    <div class="pregunta">
+      <label for="q3"><span class="num">3.</span> ¿Quién se beneficia y quién asume los costos?</label>
+      <textarea id="q3" data-campo="q3"></textarea>
+    </div>
+  </section>
+
+  <section class="tarjeta" aria-labelledby="t-cuadro">
+    <h2 id="t-cuadro">El cuadro</h2>
+    <p id="p4" style="font-weight:600;color:var(--titulo);margin:0;"><span class="num">4.</span> En el cuadro, marquen una L donde estaba el caso al lanzarlo y una H donde está hoy.</p>
+    <div class="modos" role="group" aria-label="Qué marca colocar">
+      <button type="button" class="modo" id="modo-l" aria-pressed="true"><span class="punto punto-l">L</span>Colocar L</button>
+      <button type="button" class="modo" id="modo-h" aria-pressed="false"><span class="punto punto-h">H</span>Colocar H</button>
+    </div>
+    <div class="cuadro">
+      <div class="eje-sup">¿Hay una violación ética?</div>
+      <div class="col-et col-no">No</div>
+      <div class="col-et col-si">Sí</div>
+      <div class="eje-izq">¿Funciona como se diseñó?</div>
+      <div class="fil-et"><span>Sí</span><span>No</span></div>
+      <div class="area" id="area" aria-describedby="p4">
+        <div class="celda c-bueno">Lo bueno</div>
+        <div class="celda c-feo">Lo feo</div>
+        <div class="celda c-malo">Lo malo</div>
+        <div class="celda c-ambos">Ambos</div>
+        <div class="marca marca-l" id="marca-l" hidden aria-label="Marca L">L</div>
+        <div class="marca marca-h" id="marca-h" hidden aria-label="Marca H">H</div>
+      </div>
+    </div>
+    <p class="ubicacion" id="ubicacion" aria-live="polite"></p>
+    <p class="fuente">Basado en Mery, Arriagada-Bruneau y Dunstan (2026), tabla 4.</p>
+    <div class="pregunta">
+      <label for="q5"><span class="num">5.</span> ¿En qué momento exacto se movió?</label>
+      <textarea id="q5" data-campo="q5"></textarea>
+    </div>
+  </section>
+
+  <section class="tarjeta" aria-labelledby="t-charla">
+    <h2 id="t-charla">Para la charla</h2>
+    <div class="pregunta">
+      <label for="q6">Una pregunta para hacerle a quien da la charla:</label>
+      <textarea id="q6" data-campo="q6"></textarea>
+    </div>
+  </section>
+
+  <div class="acciones">
+    <button type="button" class="descargar" id="descargar">Descargar PDF</button>
+    <p class="pista">En iPhone, se abre el PDF: toquen Compartir y luego Guardar en Archivos para subirlo a Canvas.</p>
+    <p class="estado" id="estado" aria-live="polite"></p>
+    <button type="button" class="borrar" id="borrar">Borrar todo</button>
+  </div>
+</main>
+
+<script src="jspdf.umd.min.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var CLAVE = "clg030-malo-feo-v1";
+  var CAMPOS = ["n1", "n2", "n3", "n4", "q1", "q2", "q3", "q5", "q6"];
+  var CELDAS = { bueno: "Lo bueno", feo: "Lo feo", malo: "Lo malo", ambos: "Ambos" };
+
+  var estado = { campos: {}, marcas: { L: null, H: null } };
+  var modo = "L";
+  var urlPdf = null;
+
+  // Guardado local; si el navegador lo bloquea, la página sigue funcionando.
+  function guardar() {
+    try { localStorage.setItem(CLAVE, JSON.stringify(estado)); } catch (e) {}
+  }
+  function cargar() {
+    try {
+      var crudo = localStorage.getItem(CLAVE);
+      if (!crudo) return;
+      var datos = JSON.parse(crudo);
+      if (datos && typeof datos === "object") {
+        estado.campos = datos.campos || {};
+        estado.marcas = datos.marcas || { L: null, H: null };
+      }
+    } catch (e) {}
+  }
+
+  function campo(id) { return document.querySelector('[data-campo="' + id + '"]'); }
+
+  function ajustarAltura(t) {
+    t.style.height = "auto";
+    t.style.height = Math.max(96, t.scrollHeight + 2) + "px";
+  }
+
+  // Celda del cuadro según la posición en fracciones (0 a 1).
+  function celdaDe(p) {
+    if (!p) return null;
+    var derecha = p.x >= 0.5;
+    var abajo = p.y >= 0.5;
+    if (!abajo) return derecha ? "feo" : "bueno";
+    return derecha ? "ambos" : "malo";
+  }
+
+  function textoUbicacion() {
+    var partes = [];
+    ["L", "H"].forEach(function (m) {
+      var c = celdaDe(estado.marcas[m]);
+      partes.push(c ? m + " está en «" + CELDAS[c] + "»." : "Falta marcar la " + m + ".");
+    });
+    return partes.join(" ");
+  }
+
+  function pintarMarcas() {
+    ["L", "H"].forEach(function (m) {
+      var el = document.getElementById("marca-" + m.toLowerCase());
+      var p = estado.marcas[m];
+      if (p) {
+        el.style.left = (p.x * 100) + "%";
+        el.style.top = (p.y * 100) + "%";
+        el.hidden = false;
+      } else {
+        el.hidden = true;
+      }
+    });
+    document.getElementById("ubicacion").textContent = textoUbicacion();
+  }
+
+  function elegirModo(m) {
+    modo = m;
+    document.getElementById("modo-l").setAttribute("aria-pressed", m === "L" ? "true" : "false");
+    document.getElementById("modo-h").setAttribute("aria-pressed", m === "H" ? "true" : "false");
+  }
+
+  function iniciar() {
+    cargar();
+    CAMPOS.forEach(function (id) {
+      var el = campo(id);
+      el.value = estado.campos[id] || "";
+      if (el.tagName === "TEXTAREA") ajustarAltura(el);
+      el.addEventListener("input", function () {
+        estado.campos[id] = el.value;
+        if (el.tagName === "TEXTAREA") ajustarAltura(el);
+        guardar();
+      });
+    });
+
+    document.getElementById("modo-l").addEventListener("click", function () { elegirModo("L"); });
+    document.getElementById("modo-h").addEventListener("click", function () { elegirModo("H"); });
+
+    var area = document.getElementById("area");
+    area.addEventListener("click", function (ev) {
+      var r = area.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var x = (ev.clientX - r.left) / r.width;
+      var y = (ev.clientY - r.top) / r.height;
+      x = Math.min(1, Math.max(0, x));
+      y = Math.min(1, Math.max(0, y));
+      estado.marcas[modo] = { x: Math.round(x * 1000) / 1000, y: Math.round(y * 1000) / 1000 };
+      guardar();
+      pintarMarcas();
+    });
+
+    document.getElementById("descargar").addEventListener("click", descargar);
+    document.getElementById("borrar").addEventListener("click", borrarTodo);
+
+    elegirModo("L");
+    pintarMarcas();
+  }
+
+  function borrarTodo() {
+    if (!window.confirm("¿Borrar todas las respuestas y las marcas de este dispositivo? No se puede deshacer.")) return;
+    estado = { campos: {}, marcas: { L: null, H: null } };
+    try { localStorage.removeItem(CLAVE); } catch (e) {}
+    CAMPOS.forEach(function (id) {
+      var el = campo(id);
+      el.value = "";
+      if (el.tagName === "TEXTAREA") ajustarAltura(el);
+    });
+    elegirModo("L");
+    pintarMarcas();
+    document.getElementById("estado").textContent = "";
+  }
+
+  // Deja el texto dentro de lo que la fuente Helvetica del PDF puede mostrar
+  // (letras latinas con tilde, ñ, ¿, ¡, « y »); cambia comillas tipográficas,
+  // guiones largos y puntos suspensivos por equivalentes simples y quita el resto
+  // (por ejemplo, emojis).
+  function limpiar(s) {
+    s = String(s || "");
+    if (s.normalize) s = s.normalize("NFC");
+    return s
+      .replace(/\r\n?/g, "\n")
+      .replace(/\t/g, " ")
+      .replace(/[‘’‚‛′]/g, "'")
+      .replace(/[“”„‟″]/g, '"')
+      .replace(/[‐-―−]/g, "-")
+      .replace(/…/g, "...")
+      .replace(/[•●▪]/g, "-")
+      .replace(/[  -  ]/g, " ")
+      .replace(/[^\n -~¡-ÿ]/g, "")
+      .replace(/ {2,}/g, " ")
+      .replace(/ *\n */g, "\n")
+      .trim();
+  }
+
+  function nombreArchivo() {
+    var partes = [];
+    ["n1", "n2", "n3", "n4"].forEach(function (id) {
+      var palabras = (estado.campos[id] || "").trim().split(/\s+/).filter(Boolean);
+      if (!palabras.length) return;
+      // Primer apellido: la segunda palabra si la hay; si no, la única.
+      partes.push(palabras.length >= 2 ? palabras[1] : palabras[0]);
+    });
+    var base = partes.join("-");
+    if (base.normalize) base = base.normalize("NFD").replace(/[̀-ͯ]/g, "");
+    base = base.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 60).replace(/-+$/, "");
+    return base ? "malo-o-feo-" + base + ".pdf" : "malo-o-feo-hoja.pdf";
+  }
+
+  function construirPdf() {
+    var jsPDF = window.jspdf.jsPDF;
+    var doc = new jsPDF({ unit: "mm", format: "letter", orientation: "portrait" });
+    var ANCHO = doc.internal.pageSize.getWidth();
+    var ALTO = doc.internal.pageSize.getHeight();
+    var M = 18;
+    var W = ANCHO - 2 * M;
+    var PT = 0.3528; // milímetros por punto tipográfico
+    var y = M;
+
+    function altoLinea(tam) { return tam * PT * 1.38; }
+    function espacio(h) {
+      if (y + h > ALTO - M) { doc.addPage(); y = M; }
+    }
+    // Escribe un párrafo con salto de línea y de página.
+    function parrafo(texto, opc) {
+      opc = opc || {};
+      var tam = opc.tam || 11;
+      var x = M + (opc.sangria || 0);
+      doc.setFont("helvetica", opc.estilo || "normal");
+      doc.setFontSize(tam);
+      doc.setTextColor(opc.gris != null ? opc.gris : 0);
+      var lineas = doc.splitTextToSize(texto, W - (opc.sangria || 0));
+      var h = altoLinea(tam);
+      lineas.forEach(function (l) {
+        espacio(h);
+        doc.text(l, x, y + tam * PT * 0.8);
+        y += h;
+      });
+      doc.setTextColor(0);
+    }
+    function seccion(titulo) {
+      y += 4;
+      espacio(14);
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.setTextColor(0);
+      doc.text(titulo, M, y + 13 * PT * 0.8);
+      y += altoLinea(13) + 0.5;
+      doc.setDrawColor(0);
+      doc.setLineWidth(0.3);
+      doc.line(M, y, M + W, y);
+      y += 3;
+    }
+    function pregunta(texto, respuesta) {
+      espacio(altoLinea(11) * 3);
+      parrafo(texto, { estilo: "bold" });
+      y += 1;
+      var r = limpiar(respuesta);
+      if (r) parrafo(r, { sangria: 4 });
+      else parrafo("(sin respuesta)", { sangria: 4, estilo: "italic", gris: 110 });
+      y += 3;
+    }
+
+    // Encabezado
+    parrafo("¿Malo o feo? ¿Quién es responsable?", { tam: 18, estilo: "bold" });
+    y += 1;
+    parrafo("Actividad previa a la charla sobre IA y ética, 6 de octubre de 2026", { tam: 11, gris: 70 });
+    var ahora = new Date();
+    var dosDig = function (n) { return (n < 10 ? "0" : "") + n; };
+    parrafo("PDF generado el " + ahora.getDate() + "/" + (ahora.getMonth() + 1) + "/" + ahora.getFullYear() +
+      " a las " + dosDig(ahora.getHours()) + ":" + dosDig(ahora.getMinutes()) + ".", { tam: 9, gris: 90 });
+    y += 3;
+
+    // Integrantes
+    var nombres = ["n1", "n2", "n3", "n4"].map(function (id) { return limpiar(estado.campos[id]); }).filter(Boolean);
+    parrafo("Integrantes:", { estilo: "bold" });
+    if (nombres.length) {
+      nombres.forEach(function (n, i) { parrafo((i + 1) + ". " + n, { sangria: 4 }); });
+    } else {
+      parrafo("(sin nombres)", { sangria: 4, estilo: "italic", gris: 110 });
+    }
+    y += 3;
+
+    // El caso, en un recuadro
+    var textoCaso = "Un hospital usa un algoritmo para priorizar pacientes de alto riesgo. En las pruebas iniciales no se detectaron diferencias entre grupos. Un año después, es menos preciso con mujeres y ciertos grupos socioeconómicos. Corregirlo costaría mucho y retrasaría su implementación nacional. El hospital decidió seguir usándolo mientras busca financiamiento.";
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    var lineasCaso = doc.splitTextToSize(textoCaso, W - 8);
+    var hCaso = 4 + altoLinea(11) + lineasCaso.length * altoLinea(10.5) + 3;
+    espacio(hCaso);
+    doc.setDrawColor(0);
+    doc.setLineWidth(0.4);
+    doc.rect(M, y, W, hCaso);
+    var yCaja = y;
+    y += 3;
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.text("El caso", M + 4, y + 11 * PT * 0.8);
+    y += altoLinea(11);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10.5);
+    lineasCaso.forEach(function (l) {
+      doc.text(l, M + 4, y + 10.5 * PT * 0.8);
+      y += altoLinea(10.5);
+    });
+    y = yCaja + hCaso + 2;
+
+    seccion("El caso");
+    pregunta("1. ¿Es un problema «malo», «feo» o ambos? ¿Por qué?", estado.campos.q1);
+    pregunta("2. ¿Qué sabían los actores involucrados?", estado.campos.q2);
+    pregunta("3. ¿Quién se beneficia y quién asume los costos?", estado.campos.q3);
+
+    seccion("El cuadro");
+    var cw = 62, ch = 30, gap = 1.2;
+    var anchoEje = 12, anchoFila = 9;
+    var gW = 2 * cw + gap, gH = 2 * ch + gap;
+    var hCuadro = 26 + gH + 22;
+    espacio(altoLinea(11) * 2 + hCuadro);
+    parrafo("4. En el cuadro, marquen una L donde estaba el caso al lanzarlo y una H donde está hoy.", { estilo: "bold" });
+    y += 3;
+    var gx = M + (W - (anchoEje + anchoFila + gW)) / 2 + anchoEje + anchoFila;
+    // Títulos de los ejes
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11.5);
+    doc.text("¿Hay una violación ética?", gx + gW / 2, y + 4, { align: "center" });
+    doc.setFontSize(11);
+    doc.setTextColor(60);
+    doc.text("No", gx + cw / 2, y + 10, { align: "center" });
+    doc.text("Sí", gx + cw + gap + cw / 2, y + 10, { align: "center" });
+    var gy = y + 13;
+    doc.text("Sí", gx - 3, gy + ch / 2 + 1.5, { align: "right" });
+    doc.text("No", gx - 3, gy + ch + gap + ch / 2 + 1.5, { align: "right" });
+    doc.setTextColor(0);
+    doc.setFontSize(11.5);
+    var ejeX = gx - anchoFila - 4;
+    // Texto girado 90 grados: se escribe de abajo hacia arriba, así que se
+    // parte bajo el centro, a la mitad del ancho de cada línea.
+    ["¿Funciona como", "se diseñó?"].forEach(function (t, i) {
+      var w = doc.getTextWidth(t);
+      doc.text(t, ejeX - 4.5 + i * 4.5, gy + gH / 2 + w / 2, { angle: 90 });
+    });
+    // Celdas: gris claro, contorno negro
+    var celdas = [
+      { n: "Lo bueno", x: gx, y: gy, g: 250 },
+      { n: "Lo feo", x: gx + cw + gap, y: gy, g: 205 },
+      { n: "Lo malo", x: gx, y: gy + ch + gap, g: 235 },
+      { n: "Ambos", x: gx + cw + gap, y: gy + ch + gap, g: 220 }
+    ];
+    doc.setLineWidth(0.4);
+    doc.setDrawColor(0);
+    celdas.forEach(function (c) {
+      doc.setFillColor(c.g, c.g, c.g);
+      doc.rect(c.x, c.y, cw, ch, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11.5);
+      doc.text(c.n, c.x + 2.5, c.y + 5.5);
+    });
+    // Marcas L (círculo negro, letra blanca) y H (círculo blanco con borde, letra negra)
+    ["L", "H"].forEach(function (m) {
+      var p = estado.marcas[m];
+      if (!p) return;
+      var cx = gx + p.x * gW, cy = gy + p.y * gH, rad = 4.2;
+      doc.setLineWidth(0.6);
+      doc.setDrawColor(0);
+      if (m === "L") { doc.setFillColor(0, 0, 0); doc.setTextColor(255); }
+      else { doc.setFillColor(255, 255, 255); doc.setTextColor(0); }
+      doc.circle(cx, cy, rad, "FD");
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(13);
+      doc.text(m, cx, cy, { align: "center", baseline: "middle" });
+      doc.setTextColor(0);
+    });
+    y = gy + gH + 4;
+    parrafo(textoUbicacion(), { estilo: "bold" });
+    y += 0.5;
+    parrafo("Basado en Mery, Arriagada-Bruneau y Dunstan (2026), tabla 4.", { tam: 8.5, gris: 90 });
+    y += 4;
+    pregunta("5. ¿En qué momento exacto se movió?", estado.campos.q5);
+
+    seccion("Para la charla");
+    pregunta("Una pregunta para hacerle a quien da la charla:", estado.campos.q6);
+
+    // Pie con número de página
+    var total = doc.getNumberOfPages();
+    for (var i = 1; i <= total; i++) {
+      doc.setPage(i);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(110);
+      doc.text("Página " + i + " de " + total, ANCHO - M, ALTO - 9, { align: "right" });
+      doc.setTextColor(0);
+    }
+    return doc;
+  }
+
+  function descargar() {
+    var aviso = document.getElementById("estado");
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+      aviso.textContent = "No se pudo cargar el generador de PDF. Recarguen la página e intenten de nuevo.";
+      return;
+    }
+    var archivo = nombreArchivo();
+    var doc;
+    try {
+      doc = construirPdf();
+    } catch (e) {
+      aviso.textContent = "No se pudo crear el PDF. Recarguen la página e intenten de nuevo.";
+      return;
+    }
+    var blob = doc.output("blob");
+    if (urlPdf) { try { URL.revokeObjectURL(urlPdf); } catch (e) {} }
+    urlPdf = URL.createObjectURL(blob);
+    try { doc.save(archivo); } catch (e) {}
+    aviso.textContent = "";
+    aviso.appendChild(document.createTextNode("PDF listo: " + archivo + ". Si no se descargó, "));
+    var a = document.createElement("a");
+    a.href = urlPdf;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = "ábranlo aquí";
+    aviso.appendChild(a);
+    aviso.appendChild(document.createTextNode("."));
+  }
+
+  // Para pruebas locales: permite generar el PDF sin descargarlo.
+  window.__maloFeo = { construirPdf: function () { return construirPdf(); }, nombreArchivo: nombreArchivo, estado: function () { return estado; } };
+
+  iniciar();
+})();
+</script>
+</body>
+</html>
