@@ -90,6 +90,11 @@ input[type=range]{width:100%}
 .verdict.bad{background:var(--warn-bg);color:var(--warn)}
 #sumtable td:first-child{white-space:nowrap;color:var(--muted)}
 .note{font-size:.9rem;color:var(--muted)}
+.reading{margin:16px 0}
+.reading h3{margin-top:0}
+.reading .kicker{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--brand);margin:0 0 2px;font-weight:600}
+blockquote{margin:10px 0;padding:6px 14px;border-left:4px solid var(--brand);background:var(--bg);font-style:italic}
+
 .kbd{font-family:ui-monospace,Menlo,monospace;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:0 5px}
 .tip{background:var(--info-bg);color:var(--info);border-radius:8px;padding:8px 12px;font-size:.93rem;margin:10px 0}
 @media print{
@@ -387,6 +392,49 @@ input[type=range]{width:100%}
 <!-- ============ PARTE 4 ============ -->
 <h2>Parte 4. Del cálculo a la realidad <span class="note">(15 min)</span></h2>
 
+<p>En esta parte se usan dos textos breves. Aquí está lo esencial de cada uno; el texto completo está en el enlace.</p>
+
+<div class="card reading">
+  <p class="kicker">Lectura 1</p>
+  <h3>¿Con cuánta lluvia se desborda un río?</h3>
+  <p class="note">Alvarez-Garreton, Garreaud, Scaff, Krogh, Boisier, Zambrano-Bigiarini y Arumí (2026). Análisis CR2. <a href="https://www.cr2.cl/analisis-cr2-con-cuanta-lluvia-se-desborda-un-rio/" target="_blank" rel="noopener">Leer el artículo completo</a></p>
+  <p>La respuesta del artículo es «depende». El caudal de un río no depende solo de cuánta lluvia cae, sino de cómo es la tormenta y del estado en que encuentra a la cuenca. Además, el agua que pasa por un punto del río viene de toda la cuenca que está aguas arriba, incluida la precordillera y la alta cordillera.</p>
+  <p><b>La temperatura de la tormenta.</b> La temperatura decide si cae lluvia o nieve.</p>
+  <blockquote>«En una tormenta fría, el nivel de la isoterma cero —la altura sobre la cual la precipitación cae como nieve en lugar de lluvia— se ubica relativamente baja. Esto hace que gran parte de la precipitación en la cordillera quede almacenada temporalmente como nieve y no llegue inmediatamente al río».</blockquote>
+  <p>En una tormenta cálida ocurre lo contrario: una cantidad parecida de agua cae sobre todo como lluvia y llega rápido al río.</p>
+  <p><b>Lluvia sobre nieve.</b> Si llueve sobre nieve que ya estaba acumulada y está templada (cerca de 0 °C), la lluvia acelera el derretimiento y aporta agua extra al río. Si la nieve está fría, puede guardar parte de la lluvia y atenuar la crecida.</p>
+  <p><b>La humedad del suelo.</b> Un suelo seco absorbe parte de la lluvia por un tiempo. Un suelo húmedo o saturado ya no puede absorber más, y una fracción mayor de la lluvia escurre hacia el río. Por eso, dos tormentas parecidas pueden producir crecidas muy distintas.</p>
+  <p><b>La forma del cauce.</b> Un mismo caudal puede pasar sin problemas por un tramo angosto y encajonado, y desbordarse al llegar a un valle más ancho o a una planicie.</p>
+  <p><b>Un ejemplo con datos reales.</b> En julio de 2026, varios sistemas frontales afectaron la Región del Maule. En el río Achibueno (estación La Recova) ocurrió esto:</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Tormenta</th><th class="n">Lluvia acumulada</th><th>Qué pasó con el río</th></tr></thead>
+    <tbody>
+      <tr><td>1.ª (16 al 20 de julio)</td><td class="n">≈ 260 mm</td><td>Hizo frío en la cordillera: parte quedó como nieve y el suelo se humedeció. El caudal subió muy poco.</td></tr>
+      <tr><td>2.ª (25 al 27 de julio)</td><td class="n">112 mm</td><td>Más cálida y sobre suelos ya muy húmedos: una crecida mayor que la primera, con menos de la mitad de la lluvia.</td></tr>
+      <tr><td>3.ª (25 al 27 de julio)</td><td class="n">96 mm</td><td>La que menos llovió produjo el mayor caudal y superó el umbral de alerta roja.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="note" style="margin-top:6px">Datos de la Figura 2 del artículo (estaciones de la DGA y de la Universidad de Concepción).</p>
+</div>
+
+<div class="card reading">
+  <p class="kicker">Lectura 2</p>
+  <h3>Inundaciones: cuando el riesgo deja de ser de todos</h3>
+  <p class="note">Gironás, J. (2026). Carta al director, El Mostrador. <a href="https://www.elmostrador.cl/noticias/opinion/cartas/2026/07/31/inundaciones-cuando-el-riesgo-deja-de-ser-de-todos/" target="_blank" rel="noopener">Leer la carta completa</a></p>
+  <p>La carta parte de una pregunta: ¿por qué Chile convive bien con los terremotos, pero sigue sufriendo con las lluvias? Su respuesta usa el concepto de riesgo.</p>
+  <blockquote>«El riesgo, entendido como la probabilidad de que una amenaza afecte negativamente a sectores expuestos de la sociedad, depende de tres factores: la amenaza, la vulnerabilidad y la exposición».</blockquote>
+  <p>En palabras simples:</p>
+  <ul>
+    <li><b>Amenaza:</b> el fenómeno que puede causar daño, como un terremoto, una lluvia intensa o una crecida.</li>
+    <li><b>Exposición:</b> quiénes y qué están en el lugar donde ocurre: personas, viviendas, caminos.</li>
+    <li><b>Vulnerabilidad:</b> qué tan preparados están para resistirlo: cómo se construye, qué normas hay, si existen alertas.</li>
+  </ul>
+  <p><b>Terremotos.</b> Nadie puede evitar un gran terremoto y todos estamos expuestos. Por eso Chile redujo la vulnerabilidad: normas sísmicas exigentes, buenos diseños, fiscalización y décadas de aprendizaje.</p>
+  <p><b>Inundaciones.</b> La lluvia intensa tampoco se puede controlar, pero la exposición se concentra en quebradas, planicies de inundación y sectores bajos. Ahí suelen vivir familias de menores ingresos y personas que no pueden elegir dónde vivir. Así, el riesgo deja de ser un problema compartido y pierde fuerza la presión por reducirlo.</p>
+  <p><b>Qué propone.</b> Planificar mejor las ciudades, evitar ocupar zonas inundables, recuperar cauces y humedales, fortalecer la infraestructura y mejorar los sistemas de alerta.</p>
+</div>
+
+
 <section class="step" data-step="9" id="s9">
   <h3><span class="num">9</span>Limitaciones del cálculo</h3>
   <p>Observen la elevación de la cuenca en la Figura 1. Considerando lo que explican Alvarez-Garreton et al. (2026), ¿qué limitación tendría nuestro cálculo? ¿Y qué limitación tendría respecto de la humedad del suelo? Justifiquen.</p>
@@ -485,8 +533,8 @@ const hints={
  6:'En el panel B de la Figura 4, el ancho es la flecha horizontal de la caja azul y la altura es la flecha vertical.',
  7:'Hazlo en orden: (1) Q · n, (2) b · √S, (3) divide lo primero por lo segundo, (4) eleva el resultado a 0,6.',
  8:'Compara tu h con tu H. Si h es mayor que H, el agua pasa el borde de la caja.',
- 9:'Piensa en lo que pasa con la precipitación a distintas alturas, y en cómo cambia el escurrimiento si el suelo ya estaba mojado.',
- 10:'Piensa en qué parte del riesgo calculamos nosotros y qué parte falta, según Gironás.'
+ 9:'Relean la Lectura 1 y miren la Figura 1: ¿qué pasa con la precipitación en la parte alta de esta cuenca según la temperatura de la tormenta? ¿Y qué cambia si el suelo ya estaba mojado?',
+ 10:'Relean la Lectura 2: ¿cuál de los tres componentes del riesgo calculamos nosotros, y cuáles faltan para hablar de Monte Patria?'
 };
 document.addEventListener('click',e=>{
   const t=e.target.closest('button'); if(!t) return;
